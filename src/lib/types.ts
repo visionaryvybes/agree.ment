@@ -11,6 +11,7 @@ export type ContractCategory =
   | 'nda'
   | 'employment'
   | 'freelance'
+  | 'partnership'
   | 'roommate'
   | 'family'
   | 'custom';
@@ -88,6 +89,7 @@ export interface ContractTemplate {
   name: string;
   category: ContractCategory;
   description: string;
+  image?: string;
   icon: string;
   clauses: ContractClause[];
   fields: TemplateField[];
