@@ -4,6 +4,11 @@ import { useContracts } from '@/store/contracts';
 import Link from 'next/link';
 import { FilePlus, ArrowUpRight, AlertTriangle, ChevronRight, FileText, Activity, Users, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { EmptyState } from '@/components/empty-state';
 
 const container = {
   hidden: { opacity: 0 },
@@ -30,13 +35,22 @@ const STATUS_DOT: Record<string, string> = {
   expired: 'dot-gray',
 };
 
-const STATUS_LABEL: Record<string, { label: string; cls: string }> = {
-  active: { label: 'Active', cls: 'badge-green' },
-  pending_signature: { label: 'Pending', cls: 'badge-amber' },
-  completed: { label: 'Completed', cls: 'badge-blue' },
-  disputed: { label: 'Disputed', cls: 'badge-red' },
-  draft: { label: 'Draft', cls: 'badge-gray' },
-  expired: { label: 'Expired', cls: 'badge-gray' },
+const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'info' | 'danger' | 'secondary'> = {
+  active: 'success',
+  pending_signature: 'warning',
+  completed: 'info',
+  disputed: 'danger',
+  draft: 'secondary',
+  expired: 'secondary',
+};
+
+const STATUS_LABEL_TEXT: Record<string, string> = {
+  active: 'Active',
+  pending_signature: 'Pending',
+  completed: 'Completed',
+  disputed: 'Disputed',
+  draft: 'Draft',
+  expired: 'Expired',
 };
 
 export default function Dashboard() {
@@ -77,14 +91,16 @@ export default function Dashboard() {
           </p>
         </div>
         <div className="dashboard-actions">
-          <button className="btn btn-secondary dashboard-btn">
+          <Button variant="outline" size="lg">
             <Activity size={18} />
             <span>View Insights</span>
-          </button>
-          <Link href="/contracts/new" className="btn btn-primary no-underline dashboard-btn">
-            <FilePlus size={18} />
-            <span>New Agreement</span>
-          </Link>
+          </Button>
+          <Button variant="premium" size="lg" asChild>
+            <Link href="/contracts/new" className="no-underline">
+              <FilePlus size={18} />
+              <span>New Agreement</span>
+            </Link>
+          </Button>
         </div>
       </motion.div>
 
@@ -94,7 +110,7 @@ export default function Dashboard() {
         <motion.div variants={item} className="card-premium dashboard-viz-card">
           <div className="card-header-compact">
             <div className="serif" style={{ fontSize: '1.25rem' }}>Agreement Velocity</div>
-            <div className="badge badge-blue">Last 7 Days</div>
+            <Badge variant="info">Last 7 Days</Badge>
           </div>
           <div className="card-body-viz">
             {/* Enhanced AI Visualization Chart */}
@@ -271,9 +287,9 @@ export default function Dashboard() {
                       </td>
                       <td style={{ padding: '24px 32px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span className={`badge ${STATUS_LABEL[c.status]?.cls || 'badge-gray'}`}>
-                            {STATUS_LABEL[c.status]?.label || c.status}
-                          </span>
+                          <Badge variant={STATUS_VARIANT[c.status] || 'secondary'}>
+                            {STATUS_LABEL_TEXT[c.status] || c.status}
+                          </Badge>
                           <ArrowUpRight size={16} strokeWidth={2.5} style={{ color: 'var(--text-3)', opacity: 0.8 }} />
                         </div>
                       </td>

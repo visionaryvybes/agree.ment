@@ -4,8 +4,14 @@ import { useState } from 'react';
 import { contractTemplates } from '@/data/templates';
 import { ContractCategory } from '@/lib/types';
 import Link from 'next/link';
-import { Search, Star, Layers, ChevronRight, Gavel, Briefcase, Home, Shield, Zap, Info, Compass, Sparkles } from 'lucide-react';
+import { Search, Star, Layers, ChevronRight, Gavel, Briefcase, Home, Shield, Zap, Info, Compass, Sparkles, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { EmptyState } from '@/components/empty-state';
+import { Button } from '@/components/ui/button';
 
 const categories: { value: ContractCategory | 'all'; label: string }[] = [
   { value: 'all', label: 'All Library' },
@@ -24,7 +30,7 @@ const container = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05,
+      staggerChildren: 0.04,
       delayChildren: 0.1,
     },
   },
@@ -35,22 +41,22 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
+const CATEGORY_ICONS: Record<string, any> = {
+  loan: Gavel,
+  sale: Zap,
+  service: Briefcase,
+  rental: Home,
+  nda: Shield,
+  freelance: Compass,
+  roommate: Info,
+  employment: Briefcase,
+  partnership: Layers,
+  custom: Sparkles,
+};
+
 export default function TemplatesPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<ContractCategory | 'all'>('all');
-
-  const CATEGORY_ICONS: Record<string, any> = {
-    loan: Gavel,
-    sale: Zap,
-    service: Briefcase,
-    rental: Home,
-    nda: Shield,
-    freelance: Compass,
-    roommate: Info,
-    employment: Briefcase,
-    partnership: Layers,
-    custom: Sparkles,
-  };
 
   const filtered = contractTemplates.filter(t => {
     const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase()) || t.description.toLowerCase().includes(search.toLowerCase());
@@ -68,9 +74,7 @@ export default function TemplatesPage() {
       {/* ─── Header ─────────────────────────────────────── */}
       <motion.div variants={item} className="templates-header">
         <div className="templates-header-badge-row">
-          <div className="framework-badge">
-            Legal Frameworks
-          </div>
+          <Badge variant="premium">Legal Frameworks</Badge>
         </div>
         <h1 className="heading-1 templates-title">
           Contract Templates.
@@ -84,8 +88,8 @@ export default function TemplatesPage() {
       <motion.div variants={item} className="templates-filter-bar">
         <div className="templates-search-container">
           <Search size={18} className="templates-search-icon" />
-          <input
-            className="field templates-search-field"
+          <Input
+            className="templates-search-field border-0 shadow-none bg-transparent"
             placeholder="Search the legal library..."
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -93,13 +97,15 @@ export default function TemplatesPage() {
         </div>
         <div className="templates-categories-scroll">
           {categories.map(cat => (
-            <button
+            <Button
               key={cat.value}
+              variant={category === cat.value ? 'default' : 'ghost'}
+              size="sm"
               onClick={() => setCategory(cat.value)}
-              className={`template-cat-btn ${category === cat.value ? 'template-cat-btn-active' : ''}`}
+              className="whitespace-nowrap"
             >
               {cat.label}
-            </button>
+            </Button>
           ))}
         </div>
       </motion.div>
@@ -129,7 +135,7 @@ export default function TemplatesPage() {
                     alt={template.name}
                     loading="lazy"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).style.opacity = '0'; // Reveal the fallback underneath
+                      (e.target as HTMLImageElement).style.opacity = '0';
                     }}
                   />
                 )}
@@ -142,7 +148,7 @@ export default function TemplatesPage() {
 
               <div className="template-card-content">
                 <div className="template-card-badge-row">
-                  <div className="badge badge-blue">{template.category}</div>
+                  <Badge variant="info">{template.category}</Badge>
                 </div>
                 <h3 className="serif template-card-title">{template.name}</h3>
                 <p className="template-card-desc">
@@ -170,10 +176,14 @@ export default function TemplatesPage() {
       </div>
 
       {filtered.length === 0 && (
-        <motion.div variants={item} style={{ padding: '120px 0', textAlign: 'center' }}>
-          <Layers size={48} strokeWidth={1} style={{ color: 'var(--text-3)', opacity: 0.3, marginBottom: 24 }} />
-          <h3 className="serif" style={{ fontSize: '1.75rem', marginBottom: 8 }}>No frameworks found</h3>
-          <p style={{ color: 'var(--text-3)' }}>Try adjusting your search criteria or browse all library items.</p>
+        <motion.div variants={item}>
+          <EmptyState
+            icon={Layers}
+            title="No frameworks found"
+            description="Try adjusting your search criteria or browse all library items."
+            actionLabel="View All Templates"
+            onAction={() => { setSearch(''); setCategory('all'); }}
+          />
         </motion.div>
       )}
     </motion.div>
