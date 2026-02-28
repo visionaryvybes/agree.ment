@@ -205,16 +205,20 @@ export default function LandingPage() {
                     </p>
 
                     <div className="landing-hero-cta">
-                        <Button size="xl" asChild>
-                            <Link href="/dashboard" className="no-underline">
-                                Initialize Workspace
-                            </Link>
-                        </Button>
-                        <Button variant="outline" size="xl" asChild>
-                            <Link href="/templates" className="no-underline">
-                                Browse Library <ArrowRight size={16} />
-                            </Link>
-                        </Button>
+                        <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+                            <Button size="xl" asChild>
+                                <Link href="/dashboard" className="no-underline">
+                                    Initialize Workspace
+                                </Link>
+                            </Button>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+                            <Button variant="outline" size="xl" asChild>
+                                <Link href="/templates" className="no-underline">
+                                    Browse Library <ArrowRight size={16} />
+                                </Link>
+                            </Button>
+                        </motion.div>
                     </div>
 
                     {/* Floating Aesthetic Bits */}
@@ -536,11 +540,13 @@ export default function LandingPage() {
                         37% of personal loans never get paid back. AgreeMint fixes that — with
                         AI-generated contracts, payment tracking, and smart escalation. Free to start.
                     </p>
-                    <Button size="xl" asChild>
-                        <Link href="/dashboard" className="no-underline">
-                            Create Your First Agreement →
-                        </Link>
-                    </Button>
+                    <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
+                        <Button size="xl" asChild>
+                            <Link href="/dashboard" className="no-underline">
+                                Create Your First Agreement →
+                            </Link>
+                        </Button>
+                    </motion.div>
                 </div>
             </section>
 

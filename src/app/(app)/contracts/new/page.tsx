@@ -451,9 +451,9 @@ export default function NewContractPage() {
                       onChange={e => updateClause(clause.id, 'title', e.target.value)}
                     />
                     <div style={{ display: 'flex', gap: 2 }}>
-                      <button onClick={() => moveClause(i, 'up')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-3)' }} disabled={i === 0}><ChevronUp size={11} /></button>
-                      <button onClick={() => moveClause(i, 'down')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-3)' }} disabled={i === clauses.length - 1}><ChevronDown size={11} /></button>
-                      <button onClick={() => removeClause(clause.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--red)' }}><Trash2 size={11} /></button>
+                      <button onClick={() => moveClause(i, 'up')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-3)' }} disabled={i === 0} aria-label="Move clause up"><ChevronUp size={11} /></button>
+                      <button onClick={() => moveClause(i, 'down')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-3)' }} disabled={i === clauses.length - 1} aria-label="Move clause down"><ChevronDown size={11} /></button>
+                      <button onClick={() => removeClause(clause.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--red)' }} aria-label="Delete clause"><Trash2 size={11} /></button>
                     </div>
                   </div>
                   <textarea

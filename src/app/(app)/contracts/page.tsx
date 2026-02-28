@@ -108,7 +108,7 @@ export default function ContractsPage() {
             </Button>
           ))}
         </div>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" aria-label="Filter options">
           <SlidersHorizontal size={13} />
         </Button>
       </div>
