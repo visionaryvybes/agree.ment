@@ -112,14 +112,14 @@ export default function ContractDetailPage() {
         <Button variant="outline">
           <Download className="w-4 h-4" /> Download PDF
         </Button>
-        <Button variant="premium">
+        <Button>
           <Send className="w-4 h-4" /> Share
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* ─── Main Content ──────────────────────────────── */}
-        <div className="lg:col-span-3 space-y-8">
+        <div className="lg:col-span-2 space-y-8">
           {/* Parties */}
           <div className="card p-6">
             <div className="flex items-center gap-2 mb-4"><Users className="w-5 h-5 text-blue-600" /><h2 className="text-lg font-semibold">Parties</h2></div>
@@ -174,7 +174,7 @@ export default function ContractDetailPage() {
                   <span className="font-semibold">{progressPct.toFixed(0)}%</span>
                 </div>
                 <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-700" style={{ width: `${progressPct}%` }} />
+                  <div className="h-full bg-blue-600 rounded-full transition-all duration-700" style={{ width: `${progressPct}%` }} />
                 </div>
                 <div className="flex justify-between text-xs text-slate-500 mt-1">
                   <span>Paid: ${totalPaid.toLocaleString()}</span>
@@ -182,9 +182,9 @@ export default function ContractDetailPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {contract.paymentSchedule.map(payment => (
-                  <div key={payment.id} className={`p-3 rounded-xl border ${payment.status === 'paid' ? 'bg-emerald-50 border-emerald-100' : payment.status === 'overdue' ? 'bg-red-50 border-red-100' : 'bg-slate-50 border-slate-100'}`}>
+                  <div key={payment.id} className={`p-4 rounded-xl border ${payment.status === 'paid' ? 'bg-emerald-50 border-emerald-100' : payment.status === 'overdue' ? 'bg-red-50 border-red-100' : 'bg-slate-50 border-slate-100'}`}>
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-sm font-medium">${payment.amount}</p>
@@ -239,10 +239,10 @@ export default function ContractDetailPage() {
                     <DialogTrigger asChild>
                       <button
                         disabled={alreadyTriggered}
-                        className={`w-full text-left p-4 rounded-xl border transition-all 
+                        className={`w-full text-left p-4 rounded-xl border transition-colors 
                           ${alreadyTriggered
                             ? 'opacity-40 cursor-not-allowed bg-slate-50 border-slate-100'
-                            : `${val.class} cursor-pointer hover:-translate-y-1 shadow-sm hover:shadow-md`
+                            : `${val.class} cursor-pointer hover:shadow-sm`
                           }`}
                       >
                         <div className="flex justify-between items-center mb-1">
