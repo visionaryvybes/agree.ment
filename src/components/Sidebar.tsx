@@ -12,6 +12,7 @@ import {
   Settings,
   ChevronRight,
 } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const nav = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
@@ -77,16 +78,20 @@ export default function Sidebar() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             {nav.map(({ label, href, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`sidebar-link ${active(href) ? "sidebar-link-active" : ""}`}
-                style={{ padding: '10px 12px', borderRadius: 8, fontSize: 14, fontWeight: 500 }}
-              >
-                <Icon size={18} strokeWidth={1.5} style={{ flexShrink: 0, opacity: active(href) ? 1 : 0.7 }} />
-                <span style={{ flex: 1 }}>{label}</span>
-                {active(href) && <ChevronRight size={14} style={{ opacity: 0.4 }} />}
-              </Link>
+              <Tooltip key={href}>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={href}
+                    className={`sidebar-link ${active(href) ? "sidebar-link-active" : ""}`}
+                    style={{ padding: '10px 12px', borderRadius: 8, fontSize: 14, fontWeight: 500 }}
+                  >
+                    <Icon size={18} strokeWidth={1.5} style={{ flexShrink: 0, opacity: active(href) ? 1 : 0.7 }} />
+                    <span style={{ flex: 1 }}>{label}</span>
+                    {active(href) && <ChevronRight size={14} style={{ opacity: 0.4 }} />}
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">{label}</TooltipContent>
+              </Tooltip>
             ))}
           </div>
         </div>
@@ -94,10 +99,15 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div style={{ borderTop: "1px solid var(--sidebar-border)", padding: "16px" }}>
-        <Link href="/settings" className="sidebar-link" style={{ padding: '10px 12px', borderRadius: 8, marginBottom: 8 }}>
-          <Settings size={18} strokeWidth={1.5} style={{ opacity: 0.7 }} />
-          <span>Settings</span>
-        </Link>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link href="/settings" className="sidebar-link" style={{ padding: '10px 12px', borderRadius: 8, marginBottom: 8 }}>
+              <Settings size={18} strokeWidth={1.5} style={{ opacity: 0.7 }} />
+              <span>Settings</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="right">Settings</TooltipContent>
+        </Tooltip>
         <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px", background: 'var(--bg-subtle)', borderRadius: 12 }}>
           <div
             style={{
@@ -113,7 +123,6 @@ export default function Sidebar() {
               fontSize: 13,
               fontWeight: 700,
               color: "var(--text-1)",
-              boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
             }}
           >
             U

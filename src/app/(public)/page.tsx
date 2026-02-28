@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { Shield, Sparkles, Globe, Wallet, CheckCircle2, ArrowRight, Zap, Scale, Gavel, Handshake, Users2, Search, FileText, Lock, LayoutGrid } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const container = {
     hidden: { opacity: 0 },
@@ -201,12 +202,16 @@ export default function LandingPage() {
                     </p>
 
                     <div className="landing-hero-cta">
-                        <Link href="/dashboard" className="btn-landing-primary no-underline">
-                            Initialize Workspace
-                        </Link>
-                        <Link href="/templates" className="btn-landing-secondary no-underline">
-                            Browse Library <ArrowRight size={16} />
-                        </Link>
+                        <Button size="xl" asChild>
+                            <Link href="/dashboard" className="no-underline">
+                                Initialize Workspace
+                            </Link>
+                        </Button>
+                        <Button variant="outline" size="xl" asChild>
+                            <Link href="/templates" className="no-underline">
+                                Browse Library <ArrowRight size={16} />
+                            </Link>
+                        </Button>
                     </div>
 
                     {/* Floating Aesthetic Bits */}

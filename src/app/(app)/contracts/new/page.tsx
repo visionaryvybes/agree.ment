@@ -11,6 +11,11 @@ import {
   Plus, Trash2, ChevronUp, ChevronDown, Save, Send,
   Loader2, AlertCircle, CheckCircle2,
 } from 'lucide-react';
+import { Stepper } from '@/components/ui/stepper';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { toast } from '@/hooks/use-toast';
 
 type Method = 'template' | 'ai' | 'whatsapp' | null;
 
@@ -148,36 +153,45 @@ export default function NewContractPage() {
   return (
     <div style={{ padding: '28px 40px', maxWidth: 1100, margin: '0 auto' }}>
 
-      {/* Header */}
+      {/* Breadcrumb */}
+      <Breadcrumb className="mb-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/contracts">Contracts</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>New Agreement</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      {/* Header + Stepper */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-        <button
-          className="btn btn-ghost"
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => step > 1 ? setStep((step - 1) as 1 | 2 | 3) : router.back()}
-          style={{ padding: '6px 8px' }}
+          aria-label="Go back"
         >
           <ArrowLeft size={16} />
-        </button>
+        </Button>
         <div>
           <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--text-1)' }}>Create Agreement</div>
-          <div style={{ fontSize: 12, color: 'var(--text-3)' }}>Step {step} of 3</div>
         </div>
-        {/* Step tracker */}
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-          {[
-            { n: 1, label: 'Method' },
-            { n: 2, label: 'Details' },
-            { n: 3, label: 'Review' },
-          ].map(({ n, label }) => (
-            <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div
-                className={`step-dot ${step > n ? 'step-dot-done' : step === n ? 'step-dot-active' : ''}`}
-              >
-                {step > n ? <CheckCircle2 size={12} /> : n}
-              </div>
-              <span style={{ fontSize: 12, color: step === n ? 'var(--text-1)' : 'var(--text-3)', fontWeight: step === n ? 500 : 400 }}>{label}</span>
-              {n < 3 && <div style={{ width: 24, height: 1, background: 'var(--border)', marginLeft: 2 }} />}
-            </div>
-          ))}
+        <div style={{ marginLeft: 'auto', flex: 1, maxWidth: 420 }}>
+          <Stepper
+            steps={[
+              { label: 'Method' },
+              { label: 'Details' },
+              { label: 'Review' },
+            ]}
+            currentStep={step - 1}
+          />
         </div>
       </div>
 
@@ -214,7 +228,7 @@ export default function NewContractPage() {
               >
                 {badge && (
                   <div style={{ position: 'absolute', top: 12, right: 12 }}>
-                    <span className="badge badge-blue" style={{ fontSize: 10 }}>{badge}</span>
+                    <Badge variant="info" className="text-[10px]">{badge}</Badge>
                   </div>
                 )}
                 <div style={{ width: 38, height: 38, background: method === id ? 'var(--blue)' : 'var(--surface-2)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
@@ -246,7 +260,7 @@ export default function NewContractPage() {
                     <div style={{ fontSize: 22, marginBottom: 10 }}>{t.icon}</div>
                     <div style={{ fontWeight: 500, fontSize: 13, marginBottom: 4 }}>{t.name}</div>
                     <div style={{ fontSize: 11, color: 'var(--text-3)', lineHeight: 1.4 }}>{t.description.slice(0, 70)}…</div>
-                    {t.popular && <span className="badge badge-green" style={{ marginTop: 8, fontSize: 10 }}>Popular</span>}
+                    {t.popular && <Badge variant="success" className="mt-2 text-[10px]">Popular</Badge>}
                   </button>
                 ))}
               </div>
@@ -336,9 +350,9 @@ export default function NewContractPage() {
                 </div>
               )}
 
-              <button
-                className="btn btn-primary"
-                style={{ marginTop: 16, width: '100%', justifyContent: 'center', padding: '10px 0' }}
+              <Button
+                variant="premium"
+                className="w-full mt-4"
                 disabled={loading || (method === 'ai' ? !aiPrompt.trim() : method === 'whatsapp' ? !conversation.trim() : false)}
                 onClick={method === 'ai' ? generateAI : method === 'whatsapp' ? parseConversation : () => setStep(3)}
               >
@@ -346,7 +360,7 @@ export default function NewContractPage() {
                   method === 'ai' ? <><Sparkles size={14} /> Generate Contract</> :
                     method === 'whatsapp' ? <><Sparkles size={14} /> Extract & Generate</> :
                       'Preview Contract →'}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -397,9 +411,9 @@ export default function NewContractPage() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <div style={{ fontWeight: 600, fontSize: 13 }}>Clauses ({clauses.length})</div>
-              <button className="btn btn-ghost" onClick={addClause} style={{ padding: '4px 8px', fontSize: 12 }}>
+              <Button variant="ghost" size="sm" onClick={addClause}>
                 <Plus size={12} /> Add
-              </button>
+              </Button>
             </div>
 
             {aiMeta?.summary && (
@@ -411,9 +425,9 @@ export default function NewContractPage() {
 
             {parsedInfo?.confidence && (
               <div style={{ marginBottom: 10 }}>
-                <span className={`badge ${parsedInfo.confidence === 'high' ? 'badge-green' : parsedInfo.confidence === 'medium' ? 'badge-amber' : 'badge-red'}`}>
+                <Badge variant={parsedInfo.confidence === 'high' ? 'success' : parsedInfo.confidence === 'medium' ? 'warning' : 'danger'}>
                   {parsedInfo.confidence} confidence parse
-                </span>
+                </Badge>
               </div>
             )}
 
@@ -524,12 +538,12 @@ export default function NewContractPage() {
 
             {/* Action buttons */}
             <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-              <button className="btn btn-secondary" onClick={() => save('draft')} style={{ flex: 1, justifyContent: 'center' }}>
+              <Button variant="outline" className="flex-1 justify-center" onClick={() => { save('draft'); toast({ title: 'Draft saved', description: 'Your agreement has been saved as a draft.' }); }}>
                 <Save size={14} /> Save Draft
-              </button>
-              <button className="btn btn-primary" onClick={() => save('pending_signature')} style={{ flex: 1, justifyContent: 'center' }}>
+              </Button>
+              <Button variant="premium" className="flex-1 justify-center" onClick={() => { save('pending_signature'); toast({ title: 'Agreement sent', description: 'Your agreement has been sent for signature.', variant: 'success' }); }}>
                 <Send size={14} /> Send for Signature
-              </button>
+              </Button>
             </div>
           </div>
         </div>
