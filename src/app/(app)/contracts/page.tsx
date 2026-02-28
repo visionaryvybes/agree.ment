@@ -5,14 +5,36 @@ import { useContracts } from '@/store/contracts';
 import { ContractStatus } from '@/lib/types';
 import Link from 'next/link';
 import { Search, Plus, ArrowUpRight, SlidersHorizontal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { EmptyState } from '@/components/empty-state';
 
-const STATUS: Record<ContractStatus, { label: string; dot: string; badge: string }> = {
-  active:            { label: 'Active',          dot: 'dot-green', badge: 'badge-green' },
-  pending_signature: { label: 'Pending Sig.',    dot: 'dot-amber', badge: 'badge-amber' },
-  draft:             { label: 'Draft',           dot: 'dot-gray',  badge: 'badge-gray'  },
-  completed:         { label: 'Completed',       dot: 'dot-blue',  badge: 'badge-blue'  },
-  disputed:          { label: 'Disputed',        dot: 'dot-red',   badge: 'badge-red'   },
-  expired:           { label: 'Expired',         dot: 'dot-gray',  badge: 'badge-gray'  },
+const STATUS_VARIANT: Record<ContractStatus, 'success' | 'warning' | 'secondary' | 'info' | 'danger'> = {
+  active: 'success',
+  pending_signature: 'warning',
+  draft: 'secondary',
+  completed: 'info',
+  disputed: 'danger',
+  expired: 'secondary',
+};
+
+const STATUS_LABEL: Record<ContractStatus, string> = {
+  active: 'Active',
+  pending_signature: 'Pending',
+  draft: 'Draft',
+  completed: 'Completed',
+  disputed: 'Disputed',
+  expired: 'Expired',
+};
+
+const STATUS_DOT: Record<ContractStatus, string> = {
+  active: 'dot-green',
+  pending_signature: 'dot-amber',
+  draft: 'dot-gray',
+  completed: 'dot-blue',
+  disputed: 'dot-red',
+  expired: 'dot-gray',
 };
 
 const FILTERS: Array<{ value: ContractStatus | 'all'; label: string }> = [
@@ -56,18 +78,19 @@ export default function ContractsPage() {
             {totalOwed > 0 && ` · $${totalOwed.toLocaleString()} outstanding`}
           </div>
         </div>
-        <Link href="/contracts/new" className="btn btn-primary no-underline">
-          <Plus size={14} /> New Agreement
-        </Link>
+        <Button variant="premium" asChild>
+          <Link href="/contracts/new" className="no-underline">
+            <Plus size={14} /> New Agreement
+          </Link>
+        </Button>
       </div>
 
       {/* Toolbar */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 20, alignItems: 'center' }}>
         <div style={{ position: 'relative', flex: 1, maxWidth: 360 }}>
-          <Search size={13} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)' }} />
-          <input
-            className="field"
-            style={{ paddingLeft: 32 }}
+          <Search size={13} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)', zIndex: 1 }} />
+          <Input
+            className="pl-8 border-slate-200"
             placeholder="Search by title, party, or location…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -75,46 +98,30 @@ export default function ContractsPage() {
         </div>
         <div style={{ display: 'flex', gap: 4, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: 3 }}>
           {FILTERS.map(f => (
-            <button
+            <Button
               key={f.value}
+              variant={filter === f.value ? 'default' : 'ghost'}
+              size="sm"
               onClick={() => setFilter(f.value)}
-              style={{
-                padding: '4px 12px',
-                borderRadius: 6,
-                border: 'none',
-                fontSize: 12,
-                fontWeight: filter === f.value ? 600 : 400,
-                cursor: 'pointer',
-                background: filter === f.value ? 'var(--text-1)' : 'transparent',
-                color: filter === f.value ? '#fff' : 'var(--text-2)',
-                transition: 'all 0.1s',
-              }}
             >
               {f.label}
-            </button>
+            </Button>
           ))}
         </div>
-        <button className="btn btn-secondary" style={{ padding: '7px 12px' }}>
+        <Button variant="outline" size="icon">
           <SlidersHorizontal size={13} />
-        </button>
+        </Button>
       </div>
 
       {/* Table */}
       {filtered.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '64px 0', color: 'var(--text-3)' }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>📄</div>
-          <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 6, color: 'var(--text-2)' }}>
-            {search ? 'No agreements match your search' : 'No agreements yet'}
-          </div>
-          <div style={{ fontSize: 13, marginBottom: 20 }}>
-            {search ? 'Try a different search term' : 'Create your first agreement to get started'}
-          </div>
-          {!search && (
-            <Link href="/contracts/new" className="btn btn-primary no-underline">
-              <Plus size={14} /> Create Agreement
-            </Link>
-          )}
-        </div>
+        <EmptyState
+          icon={Search}
+          title={search ? 'No agreements match your search' : 'No agreements yet'}
+          description={search ? 'Try a different search term' : 'Create your first agreement to get started'}
+          actionLabel={search ? undefined : 'Create Agreement'}
+          actionHref={search ? undefined : '/contracts/new'}
+        />
       ) : (
         <div className="card" style={{ overflow: 'hidden' }}>
           <table className="data-table">
@@ -132,13 +139,12 @@ export default function ContractsPage() {
             </thead>
             <tbody>
               {filtered.map(c => {
-                const st = STATUS[c.status];
                 const paid = c.paymentSchedule.filter(p => p.status === 'paid').length;
                 const total = c.paymentSchedule.length;
                 return (
                   <tr key={c.id} onClick={() => window.location.href = `/contracts/${c.id}`}>
                     <td>
-                      <span className={`dot ${st.dot}`} title={st.label} />
+                      <span className={`dot ${STATUS_DOT[c.status]}`} title={STATUS_LABEL[c.status]} />
                     </td>
                     <td>
                       <div style={{ fontWeight: 500, fontSize: 13 }}>{c.title}</div>

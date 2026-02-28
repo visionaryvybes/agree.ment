@@ -5,6 +5,8 @@ import { Send, Sparkles, Globe, FileText, Scale, AlertTriangle, Mic, ChevronDown
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { countries } from '@/data/countries';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface Message {
   id: string;
@@ -102,15 +104,15 @@ export default function AIPage() {
 
         {/* Jurisdiction selector */}
         <div style={{ position: 'relative' }}>
-          <button
-            className="btn btn-secondary"
+          <Button
+            variant="outline"
             onClick={() => setShowJurisdictions(v => !v)}
-            style={{ fontSize: 12, gap: 6 }}
+            size="sm"
           >
             <Globe size={13} />
             {jurisdiction || 'Set jurisdiction'}
             <ChevronDown size={11} />
-          </button>
+          </Button>
           {showJurisdictions && (
             <div
               style={{
@@ -128,22 +130,25 @@ export default function AIPage() {
                 padding: 4,
               }}
             >
-              <button
-                className="btn btn-ghost"
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start"
                 onClick={() => { setJurisdiction(''); setShowJurisdictions(false); }}
-                style={{ width: '100%', justifyContent: 'flex-start', fontSize: 12 }}
               >
                 All jurisdictions
-              </button>
+              </Button>
               {countries.map(c => (
-                <button
+                <Button
                   key={c.code}
-                  className="btn btn-ghost"
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start"
                   onClick={() => { setJurisdiction(c.name); setShowJurisdictions(false); }}
-                  style={{ width: '100%', justifyContent: 'flex-start', fontSize: 12, fontWeight: jurisdiction === c.name ? 600 : 400 }}
+                  style={{ fontWeight: jurisdiction === c.name ? 600 : 400, fontSize: 12 }}
                 >
                   {c.flag} {c.name}
-                </button>
+                </Button>
               ))}
             </div>
           )}
@@ -273,14 +278,15 @@ export default function AIPage() {
                 el.style.height = Math.min(el.scrollHeight, 120) + 'px';
               }}
             />
-            <button
-              className="btn btn-primary"
+            <Button
+              variant="premium"
               onClick={() => send()}
               disabled={!input.trim() || loading}
-              style={{ flexShrink: 0, borderRadius: 8, padding: '8px 12px' }}
+              size="icon"
+              style={{ flexShrink: 0 }}
             >
               <Send size={14} />
-            </button>
+            </Button>
           </div>
           <p style={{ fontSize: 11, color: 'var(--text-3)', textAlign: 'center', marginTop: 8 }}>
             Legal information only — not legal advice. Consult a qualified attorney for your specific matter.

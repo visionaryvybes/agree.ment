@@ -140,51 +140,7 @@ body::after {
   color: var(--text-1);
 }
 
-/* ─── Badges ─────────────────────────────────────────── */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.badge-primary {
-  background: var(--bg-subtle);
-  color: var(--text-2);
-  border: 1px solid var(--border);
-}
-
-.badge-blue,
-.badge-info {
-  background: var(--blue-subtle);
-  color: var(--blue);
-  border: 1px solid rgba(20, 71, 230, 0.1);
-}
-
-.badge-success {
-  background: rgba(16, 185, 129, 0.1);
-  color: rgb(16, 185, 129);
-  border: 1px solid rgba(16, 185, 129, 0.1);
-}
-
-.badge-warning {
-  background: rgba(245, 158, 11, 0.1);
-  color: rgb(245, 158, 11);
-  border: 1px solid rgba(245, 158, 11, 0.1);
-}
-
-.badge-danger,
-.badge-error {
-  background: rgba(239, 68, 68, 0.1);
-  color: rgb(239, 68, 68);
-  border: 1px solid rgba(239, 68, 68, 0.1);
-}
+/* Badges — now handled by @/components/ui/badge */
 
 /* ─── Escalation Engine ─────────────────────────────────────────── */
 .esc-amber {
@@ -275,65 +231,7 @@ body::after {
   border-radius: var(--radius);
 }
 
-/* ─── Premium Buttons ────────────────────────────────────────────────────── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-  text-decoration: none;
-  font-family: inherit;
-}
-
-.btn-primary {
-  background: var(--text-1);
-  color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.btn-primary:hover {
-  background: #333330;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.btn-secondary {
-  background: #fff;
-  border: 1px solid var(--border-strong);
-  color: var(--text-1);
-}
-
-.btn-secondary:hover {
-  background: var(--bg-subtle);
-  border-color: var(--text-1);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text-2);
-  border: none;
-}
-
-.btn-ghost:hover {
-  background: var(--surface-2);
-  color: var(--text-1);
-}
-
-.btn-danger {
-  background: var(--red);
-  color: #fff;
-}
-
-.btn-danger:hover {
-  background: #b91c1c;
-}
+/* Buttons — now handled by @/components/ui/button */
 
 /* ─── Inputs ─────────────────────────────────────────────────────── */
 .field {
@@ -415,41 +313,7 @@ select.field {
   background: var(--blue);
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 100px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-.badge-green {
-  background: var(--green-subtle);
-  color: var(--green);
-}
-
-.badge-red {
-  background: var(--red-subtle);
-  color: var(--red);
-}
-
-.badge-amber {
-  background: var(--amber-subtle);
-  color: var(--amber);
-}
-
-.badge-blue {
-  background: var(--blue-subtle);
-  color: var(--blue-text);
-}
-
-.badge-gray {
-  background: var(--surface-2);
-  color: var(--text-2);
-}
+/* Badges duplicate block — removed, now handled by shadcn/ui Badge */
 
 /* ─── Table ──────────────────────────────────────────────────────── */
 .data-table {
@@ -925,50 +789,7 @@ a.no-underline {
   justify-content: center;
 }
 
-/* ─── CTA Buttons ────────────────────────────────────────────────── */
-.btn-landing-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 36px;
-  background: var(--text-1);
-  color: #FFFFFF;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  text-decoration: none;
-  box-shadow: var(--shadow-md);
-}
-
-.btn-landing-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  background: #333330;
-}
-
-.btn-landing-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 36px;
-  background: #fff;
-  color: var(--text-1);
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 12px;
-  border: 1px solid var(--border-strong);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  text-decoration: none;
-}
-
-.btn-landing-secondary:hover {
-  background: var(--bg-subtle);
-  transform: translateY(-2px);
-}
+/* Landing CTA buttons — removed, now handled by shadcn/ui Button */
 
 /* ─── Stats ──────────────────────────────────────────────────────── */
 .landing-stats {
@@ -1814,10 +1635,7 @@ a.no-underline {
     padding: 0 24px;
   }
 
-  .btn-landing-primary,
-  .btn-landing-secondary {
-    justify-content: center;
-  }
+
 
   .landing-nav-inner {
     padding: 0 20px;

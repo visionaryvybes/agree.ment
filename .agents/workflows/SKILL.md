@@ -1,6 +1,6 @@
 ---
 description: Premium UI Development - Component Vocabulary, Vibe Coding Best Practices, and Self-Improving Memory
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-02-28
 ---
 
@@ -156,11 +156,21 @@ Always use the correct name. Never invent new names when standard ones exist.
 - Hover: `translateY(-6px)` + shadow lift for cards
 - Floating: `animate={{ y: [0, -20, 0] }}` for hero elements
 
+### Anti-Patterns (Screams "Vibe Coded")
+- **NEVER use glassmorphism** (`backdrop-blur`, `bg-white/80`, `bg-white/60 backdrop-blur-xl`) — it's the #1 tell of AI-generated UI. Use solid `bg-white` with clean borders instead.
+- **NEVER use gradient buttons** (`bg-gradient-to-r from-blue-600 to-indigo-600`) for primary CTAs — use solid `bg-blue-600` or `bg-slate-900`.
+- **NEVER use translate-y hover effects** on buttons — they feel gimmicky. Use color transitions only.
+- **NEVER use `shadow-lg shadow-blue-500/25`** colored shadows — they're a dead giveaway.
+- Use `rounded-lg` not `rounded-xl` or `rounded-2xl` — overuse of large radii is another tell.
+
 ### Layout Anti-Patterns (Bugs to Never Repeat)
 - Always add `min-width: 0` to flex children that can overflow
 - Never use `overflow: hidden` on a parent without `max-width: 100%`
 - Image fallbacks: render fallback icon UNDERNEATH, fade out broken image
 - Sidebar grids: use `lg:grid-cols-4` with `lg:col-span-3` for main content
+
+### Reference: component.gallery (https://component.gallery/components/)
+60+ standardized component names. Always check this before inventing a new UI pattern.
 
 ---
 
@@ -188,8 +198,16 @@ Always use the correct name. Never invent new names when standard ones exist.
 
 **Wins:**
 - 3D Card Stack hero with framer-motion is universally understood as premium
-- Glassmorphic icon containers with hover glow effects scale well
 - Explicit CSS escalation classes (`.esc-amber`, `.esc-red` etc.) are purge-proof
+- Clean solid backgrounds with border and subtle shadow look more professional than glassmorphism
+
+### Session 2 (2026-02-28): Anti-Glassmorphism Purge
+**Lesson Learned:**
+- Glassmorphism (backdrop-blur, semi-transparent backgrounds) is the single biggest visual tell that a UI was AI-generated. Real production apps use solid backgrounds.
+- Gradient buttons and colored shadows are the second biggest tell.
+- The user's feedback "Glassmorphic screams vibe coded" was 100% correct.
+- component.gallery has 60+ standardized component names — always use them instead of inventing new ones.
+- The vibe coding article's key insight: "The best vibe coders aren't the ones who know the most. They're the ones who know what NOT to build."
 
 ---
 

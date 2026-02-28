@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { Shield, Sparkles, Globe, Wallet, CheckCircle2, ArrowRight, Zap, Scale, Gavel, Handshake, Users2, Search, FileText, Lock, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const container = {
     hidden: { opacity: 0 },
@@ -152,9 +153,11 @@ export default function LandingPage() {
                         <Link href="/templates">Templates</Link>
                         <a href="#coverage">Coverage</a>
                     </div>
-                    <Link href="/dashboard" className="btn btn-primary no-underline">
-                        Open App →
-                    </Link>
+                    <Button size="sm" asChild>
+                        <Link href="/dashboard" className="no-underline">
+                            Open App →
+                        </Link>
+                    </Button>
                 </div>
             </nav>
 
@@ -290,7 +293,7 @@ export default function LandingPage() {
                             style={{ transformOrigin: "bottom right" }}
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <div className="badge badge-success" style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'rgb(16, 185, 129)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '10px', fontWeight: 'bold' }}>ACTIVE</div>
+                                <Badge variant="success">ACTIVE</Badge>
                                 <Shield size={18} className="text-blue-600" />
                             </div>
 
@@ -533,9 +536,11 @@ export default function LandingPage() {
                         37% of personal loans never get paid back. AgreeMint fixes that — with
                         AI-generated contracts, payment tracking, and smart escalation. Free to start.
                     </p>
-                    <Link href="/dashboard" className="btn-landing-primary no-underline" style={{ fontSize: 16, padding: '16px 40px' }}>
-                        Create Your First Agreement →
-                    </Link>
+                    <Button size="xl" asChild>
+                        <Link href="/dashboard" className="no-underline">
+                            Create Your First Agreement →
+                        </Link>
+                    </Button>
                 </div>
             </section>
 

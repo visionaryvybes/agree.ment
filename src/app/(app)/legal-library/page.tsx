@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { countries, Country } from '@/data/countries';
 import { Search, Globe, ChevronDown, Sparkles, Loader2, BookOpen } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/empty-state';
 
 export default function LegalLibraryPage() {
   const [search, setSearch] = useState('');
@@ -120,7 +122,7 @@ export default function LegalLibraryPage() {
                 ) : (
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-                      <span className="badge badge-blue"><Sparkles size={10} style={{ marginRight: 4 }}/> AI Summary</span>
+                      <Badge variant="info"><Sparkles size={10} style={{ marginRight: 4 }} /> AI Summary</Badge>
                     </div>
                     <div className="prose-legal" style={{ whiteSpace: 'pre-wrap' }}>
                       {aiData[country.code]}
@@ -132,10 +134,13 @@ export default function LegalLibraryPage() {
           </div>
         ))}
         {filtered.length === 0 && (
-          <div style={{ padding: 64, textAlign: 'center', color: 'var(--text-3)' }}>
-            <BookOpen size={32} style={{ margin: '0 auto 12px', opacity: 0.3 }} />
-            <div style={{ fontSize: 14 }}>No countries found.</div>
-          </div>
+          <EmptyState
+            icon={BookOpen}
+            title="No countries found"
+            description="Try adjusting your search or region filter."
+            actionLabel="View All"
+            onAction={() => { setSearch(''); setSelectedRegion('all'); }}
+          />
         )}
       </div>
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
