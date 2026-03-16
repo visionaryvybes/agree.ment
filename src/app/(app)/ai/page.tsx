@@ -22,83 +22,70 @@ import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-}
+import { useChat } from 'ai/react';
 
-const PROMPTS = [
-  { icon: Scales, text: 'What are my rights if someone defaults on a personal loan?', tag: 'Rights' },
-  { icon: FileText, text: 'Draft a formal demand letter for an unpaid debt of $3,000.', tag: 'Document' },
-  { icon: Warning, text: 'How do I file a small claims court case?', tag: 'Legal Action' },
-  { icon: Globe, text: 'What interest rate can I legally charge on a personal loan?', tag: 'Regulation' },
-  { icon: FileText, text: 'Explain what makes a informal agreement legally binding.', tag: 'Education' },
-  { icon: Scales, text: 'What is the difference between mediation and arbitration?', tag: 'ADR' },
+const getPrompts = (loc: string) => [
+  { icon: Scales, text: `What are my rights if someone defaults on a personal loan${loc ? ` in ${loc}` : ''}?`, tag: 'Rights' },
+  { icon: FileText, text: `Draft a formal demand letter for an unpaid debt of $3,000 under ${loc || 'applicable'} law.`, tag: 'Document' },
+  { icon: Warning, text: `How do I file a small claims court case${loc ? ` in ${loc}` : ''}?`, tag: 'Legal Action' },
+  { icon: Globe, text: `What interest rate can I legally charge on a personal loan${loc ? ` in ${loc}` : ''}?`, tag: 'Regulation' },
+  { icon: FileText, text: `Explain what makes an informal agreement legally binding${loc ? ` in ${loc}` : ''}.`, tag: 'Education' },
+  { icon: Scales, text: `What is the difference between mediation and arbitration${loc ? ` in ${loc}` : ''}?`, tag: 'ADR' },
 ];
 
 export default function AIPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const [jurisdiction, setJurisdiction] = useState('');
   const [showJurisdictions, setShowJurisdictions] = useState(false);
+  
+  const { messages, input, setInput, handleInputChange, handleSubmit, append, isLoading } = useChat({
+    api: '/api/ai/chat',
+    body: { jurisdiction }
+  });
+
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(input ? input + ' ' + transcript : transcript);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, [input, setInput]);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      try {
+        recognitionRef.current?.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error("Speech recognition error", e);
+      }
+    }
+  };
+
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, loading]);
-
-  const handleSend = async (text?: string) => {
-    const content = text ?? input.trim();
-    if (!content || loading) return;
-
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content,
-      timestamp: new Date(),
-    };
-    const nextMessages = [...messages, userMsg];
-    setMessages(nextMessages);
-    setInput('');
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: nextMessages.map(m => ({ role: m.role, content: m.content })),
-          jurisdiction,
-        }),
-      });
-      const data = await res.json();
-      if (data.content) {
-        setMessages(prev => [...prev, {
-          id: Date.now().toString(),
-          role: 'assistant',
-          content: data.content,
-          timestamp: new Date(),
-        }]);
-      }
-    } catch {
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: 'Unable to reach the AI service. Please check your connection and try again.',
-        timestamp: new Date(),
-      }]);
-    } finally {
-      setLoading(false);
-      inputRef.current?.focus();
-    }
-  };
+  }, [messages, isLoading]);
 
   const handleKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>); }
   };
 
   return (
@@ -186,10 +173,10 @@ export default function AIPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {PROMPTS.map((p, i) => (
+                  {getPrompts(jurisdiction).map((p, i) => (
                     <button
                       key={i}
-                      onClick={() => handleSend(p.text)}
+                      onClick={() => append({ role: 'user', content: p.text })}
                       className="brutalist-card p-8 text-left group hover:bg-[var(--text-1)] transition-all"
                     >
                       <div className="flex items-center gap-4 mb-6">
@@ -204,7 +191,7 @@ export default function AIPage() {
                 </div>
               </motion.div>
             ) : (
-              messages.map((m) => (
+              messages.map((m: any) => (
                 <motion.div
                   key={m.id}
                   initial={{ opacity: 0, x: m.role === 'user' ? 20 : -20 }}
@@ -231,13 +218,13 @@ export default function AIPage() {
                       {m.role === 'assistant' ? 'Intelligence Node' : 'Administrator'}
                     </span>
                     <span className="text-[10px] font-black text-[var(--text-3)] opacity-40">
-                      {m.timestamp.toLocaleTimeString()}
+                      {m.createdAt ? m.createdAt.toLocaleTimeString() : new Date().toLocaleTimeString()}
                     </span>
                   </div>
                 </motion.div>
               ))
             )}
-            {loading && (
+            {isLoading && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                 <div className="brutalist-card bg-white p-8 border-4 flex items-center gap-6 shadow-[8px_8px_0_0_#1447E6]">
                   <div className="w-6 h-6 border-4 border-[var(--text-1)] border-t-transparent animate-spin" />
@@ -254,21 +241,25 @@ export default function AIPage() {
       <footer className="p-10 border-t-4 border-[var(--text-1)] bg-white z-20">
         <div className="max-w-4xl mx-auto">
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-8"
           >
             <div className="flex gap-6">
-              <button type="button" className="brutalist-button-outline brutalist-button w-16 h-16 p-0 border-4">
+              <button 
+                type="button" 
+                onClick={toggleListening}
+                className={cn(
+                  "brutalist-button w-16 h-16 p-0 border-4 transition-all",
+                  isListening ? "bg-red-500 text-white animate-pulse border-red-700" : "brutalist-button-outline text-[var(--text-1)]"
+                )}
+              >
                 <Microphone weight="bold" size={24} />
               </button>
               <div className="flex-1 relative brutalist-card border-4">
                 <textarea
                   ref={inputRef}
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={handleInputChange}
                   onKeyDown={handleKey}
                   placeholder="Describe legal intent (e.g., 'Freelance contract for UAE with 20% downpayment')..."
                   className="w-full bg-transparent p-6 text-base font-bold min-h-[64px] h-[64px] max-h-[300px] outline-none resize-none placeholder:text-[var(--text-3)] custom-scrollbar"
@@ -276,7 +267,7 @@ export default function AIPage() {
               </div>
               <button
                 type="submit"
-                disabled={!input.trim() || loading}
+                disabled={!input.trim() || isLoading}
                 className="brutalist-button w-32 h-16 bg-[var(--blue)] disabled:opacity-20 disabled:grayscale transition-all border-4"
               >
                 <PaperPlaneRight weight="bold" size={28} />
@@ -289,9 +280,13 @@ export default function AIPage() {
                   <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-1)]">Network: {jurisdiction || "ROOT"}</span>
                 </div>
               </div>
-              <div className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-3)] opacity-40">
+              <div className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-3)] opacity-40 hidden md:block">
                 Trace ID: {Math.random().toString(16).substring(2, 10).toUpperCase()} // Encrypted
               </div>
+            </div>
+            <div className="text-center text-[9px] font-black uppercase tracking-widest text-[var(--text-3)] opacity-60 mt-[-10px]">
+              <Warning weight="bold" className="inline mr-1" size={12} />
+              AgreeMint AI provides protocol architecture, not verified legal counsel. Final verification rests with the nodes.
             </div>
           </form>
         </div>

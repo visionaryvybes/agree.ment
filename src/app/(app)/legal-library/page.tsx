@@ -171,11 +171,6 @@ export default function LegalLibraryPage() {
                             </h4>
                             <div className="space-y-6">
                               <div>
-                                <div className="text-3xl font-serif text-white leading-none mb-1">98.4%</div>
-                                <div className="text-[8px] font-black uppercase tracking-widest text-white/40">Reliability Index</div>
-                              </div>
-                              <div className="h-px bg-white/10" />
-                              <div>
                                 <div className="text-3xl font-serif text-white leading-none mb-1">~2.4s</div>
                                 <div className="text-[8px] font-black uppercase tracking-widest text-white/40">Latency to Enforcement</div>
                               </div>

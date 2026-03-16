@@ -3,33 +3,34 @@
 /* ─── AgreeMint Rebirth: Aggressive Neo-Brutalist (2025) ────────────────────────── */
 
 @theme {
-  --color-brand-paper: #FBFAF9;
-  --color-brand-onyx: #1A1A18;
-  --color-brand-accent: #1447E6;
-  --font-serif: "Instrument Serif", Georgia, serif;
+  --color-brand-paper: #F5F5F7;
+  --color-brand-onyx: #1A1A2E;
+  --color-brand-accent: #6C63FF;
+  --font-serif: "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
 
 :root {
   /* Core Palette */
-  --bg: #FBFAF9;
-  --text-1: #1A1A18;
-  --text-2: #52524E;
-  --text-3: #8C8C85;
-  --blue: #1447E6;
+  --bg: #F5F5F7;
+  --text-1: #1A1A2E;
+  --text-2: #4A4A68;
+  --text-3: #8B8B9B;
+  --blue: #6C63FF;
+  --secondary: #00D4AA;
 
   /* Brutalist Tokens */
   --border-width: 2px;
-  --border-color: #1A1A18;
-  --shadow-hard: 4px 4px 0 0 #1A1A18;
-  --shadow-hard-hover: 6px 6px 0 0 #1A1A18;
+  --border-color: #1A1A2E;
+  --shadow-hard: 4px 4px 0 0 #1A1A2E;
+  --shadow-hard-hover: 6px 6px 0 0 #1A1A2E;
 
   --radius: 0px;
   --radius-sm: 0px;
   --radius-md: 0px;
 
   /* Global Enforcement Style */
-  --font-serif: "Instrument Serif", serif;
+  --font-serif: "Inter", sans-serif;
   --font-sans: "Inter", sans-serif;
 }
 
@@ -116,7 +117,7 @@ body::after {
   font-size: clamp(3rem, 8vw, 6rem);
   line-height: 0.85;
   letter-spacing: -0.05em;
-  font-weight: 400;
+  font-weight: 800;
   text-transform: uppercase;
   color: var(--text-1);
 }
@@ -126,7 +127,7 @@ body::after {
   font-size: clamp(1.5rem, 4vw, 3rem);
   line-height: 0.9;
   letter-spacing: -0.02em;
-  font-weight: 400;
+  font-weight: 800;
   text-transform: uppercase;
   color: var(--text-1);
 }

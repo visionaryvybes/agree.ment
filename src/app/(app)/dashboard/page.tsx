@@ -34,7 +34,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { EmptyState } from '@/components/empty-state';
+import { EmptyState } from '@/components/EmptyState';
 import { cn } from '@/lib/utils';
 
 const container = {
@@ -165,7 +165,6 @@ export default function Dashboard() {
                   <EmptyState
                     title="Ledger Empty"
                     description="No active protocols detected."
-                    icon={<Files size={48} weight="bold" className="mx-auto mb-6 opacity-20" />}
                   />
                 </div>
               ) : (

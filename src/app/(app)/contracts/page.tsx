@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { useContracts } from '@/store/contracts';
 import { ContractStatus } from '@/lib/types';
+import { EmptyState } from '@/components/EmptyState';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   MagnifyingGlass,
   Plus,
@@ -58,6 +60,7 @@ const FILTERS: Array<{ value: ContractStatus | 'all'; label: string }> = [
 ];
 
 export default function ContractsPage() {
+  const router = useRouter();
   const { contracts } = useContracts();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<ContractStatus | 'all'>('all');
@@ -151,11 +154,13 @@ export default function ContractsPage() {
 
         <div className="overflow-x-auto custom-scrollbar">
           {filtered.length === 0 ? (
-            <div className="p-32 text-center">
-              <Warning size={64} weight="bold" className="mx-auto mb-8 opacity-20" />
-              <h3 className="heading-section text-2xl uppercase font-black mb-4">Registry Null</h3>
-              <p className="text-[var(--text-3)] font-black uppercase tracking-[0.2em]">No fragments match the current query parameters.</p>
-            </div>
+            <EmptyState 
+              title="Registry Null" 
+              description="No fragments match the current query parameters." 
+              actionLabel="New Agreement" 
+              actionHref="/contracts/new"
+              className="m-8"
+            />
           ) : (
             <table className="w-full border-collapse">
               <thead>
@@ -176,7 +181,7 @@ export default function ContractsPage() {
                   return (
                     <tr
                       key={c.id}
-                      onClick={() => window.location.href = `/contracts/${c.id}`}
+                      onClick={() => router.push(`/contracts/${c.id}`)}
                       className="group cursor-pointer hover:bg-[var(--bg)] transition-colors"
                     >
                       <td className="px-10 py-10">

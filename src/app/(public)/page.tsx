@@ -145,20 +145,20 @@ export default function LandingPage() {
                     <motion.div
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
-                        className="mb-12 inline-block bg-[var(--text-1)] text-white px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.4em]"
+                        className="mb-12 inline-block bg-[var(--blue)] text-white px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.4em]"
                     >
-                        Legal Engineering Protocol v4.2
+                        Turn any conversation into a contract
                     </motion.div>
 
                     <h1 className="heading-display mb-16 max-w-5xl">
-                        Architect Private <br /> Agreements <span className="italic text-[var(--blue)]">with Finality.</span>
+                        Personal Agreements, <span className="italic text-[var(--secondary)]">Legally Grounded.</span>
                     </h1>
 
                     <div className="flex flex-col md:flex-row gap-16 items-start">
-                        <div className="max-w-xl">
+                        <div className="max-w-2xl">
                             <p className="text-2xl font-bold leading-tight text-[var(--text-2)] mb-12 tracking-tight">
-                                Stop documenting handshakes. Start architecting intent.
-                                AgreeMint is a deterministic legal framework for 195 jurisdictions.
+                                Describe your deal in plain language or paste a WhatsApp chat. 
+                                AgreeMint generates a jurisdiction-aware, legally structured agreement in seconds.
                             </p>
 
                             <div className="flex flex-wrap gap-4">
@@ -171,19 +171,6 @@ export default function LandingPage() {
                             </div>
                         </div>
 
-                        <div className="flex-1 grid grid-cols-2 gap-4 w-full">
-                            {[
-                                { label: 'Settlement Speed', val: '<60s' },
-                                { label: 'Node Distribution', val: '195 Regions' },
-                                { label: 'Active Enforcements', val: '12.4k' },
-                                { label: 'Protocol Stability', val: '99.9%' }
-                            ].map((s, i) => (
-                                <div key={i} className="brutalist-card p-6 border-2">
-                                    <div className="text-3xl font-serif mb-2">{s.val}</div>
-                                    <div className="text-[9px] font-black uppercase tracking-widest text-[var(--text-3)]">{s.label}</div>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
             </section>

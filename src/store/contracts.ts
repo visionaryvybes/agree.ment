@@ -24,12 +24,26 @@ interface ContractsState {
 
   // Stats
   getStats: () => DashboardStats;
+  // Async Loader
+  fetchContracts: () => Promise<void>;
 }
 
 export const useContracts = create<ContractsState>((set, get) => ({
   contracts: sampleContracts,
   templates: contractTemplates,
   selectedContract: null,
+
+  fetchContracts: async () => {
+    try {
+      const res = await fetch('/api/contracts');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.contracts) set({ contracts: data.contracts });
+      }
+    } catch (e) {
+      console.error('Failed to sync contracts from Redis', e);
+    }
+  },
 
   addContract: (contractData) => {
     const id = uuid();
@@ -41,6 +55,14 @@ export const useContracts = create<ContractsState>((set, get) => ({
       updatedAt: now,
     };
     set((state) => ({ contracts: [contract, ...state.contracts] }));
+    
+    // Background sync to Redis
+    fetch('/api/contracts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(contract)
+    }).catch(console.error);
+
     return id;
   },
 
@@ -50,12 +72,24 @@ export const useContracts = create<ContractsState>((set, get) => ({
         c.id === id ? { ...c, ...updates, updatedAt: new Date() } : c
       ),
     }));
+
+    // Background sync to Redis
+    fetch(`/api/contracts/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    }).catch(console.error);
   },
 
   deleteContract: (id) => {
     set((state) => ({
       contracts: state.contracts.filter((c) => c.id !== id),
     }));
+
+    // Background delete from Redis
+    fetch(`/api/contracts/${id}`, {
+      method: 'DELETE'
+    }).catch(console.error);
   },
 
   selectContract: (id) => {
@@ -92,6 +126,16 @@ export const useContracts = create<ContractsState>((set, get) => ({
           : c
       ),
     }));
+
+    // Trigger full contract update loop to sync subset
+    const contract = get().getContract(contractId);
+    if (contract) {
+      fetch(`/api/contracts/${contractId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentSchedule: contract.paymentSchedule, updatedAt: contract.updatedAt })
+      }).catch(console.error);
+    }
   },
 
   triggerEscalation: (contractId, level, message) => {
@@ -109,6 +153,16 @@ export const useContracts = create<ContractsState>((set, get) => ({
           : c
       ),
     }));
+
+    // Trigger full contract update loop to sync subset
+    const contract = get().getContract(contractId);
+    if (contract) {
+      fetch(`/api/contracts/${contractId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ escalation: contract.escalation, updatedAt: contract.updatedAt })
+      }).catch(console.error);
+    }
   },
 
   getStats: () => {

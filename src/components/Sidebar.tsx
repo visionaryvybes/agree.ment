@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import {
   PlusCircle,
   Files,
@@ -30,6 +31,7 @@ const nav = [
 
 export default function Sidebar() {
   const path = usePathname();
+  const { user } = useUser();
   const active = (href: string) => path === href || (href !== "/dashboard" && path.startsWith(href));
 
   return (
@@ -95,12 +97,16 @@ export default function Sidebar() {
         </Link>
 
         <div className="flex items-center gap-4 p-4 bg-white border-2 border-[var(--text-1)] shadow-[3px_3px_0_0_black]">
-          <div className="w-10 h-10 bg-[var(--blue)] border-2 border-[var(--text-1)] flex items-center justify-center flex-shrink-0 text-xs font-black text-white">
-            ADM
+          <div className="w-10 h-10 bg-[var(--blue)] border-2 border-[var(--text-1)] flex items-center justify-center flex-shrink-0 text-xs font-black text-white overflow-hidden uppercase">
+            {user?.imageUrl ? (
+              <img src={user.imageUrl} alt={user.fullName || "User"} className="w-full h-full object-cover" />
+            ) : (
+              user?.firstName?.charAt(0) || "ADM"
+            )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-black text-[var(--text-1)] truncate leading-none uppercase tracking-tighter">Root Admin</p>
-            <p className="text-[9px] font-black text-[var(--text-3)] mt-1 uppercase tracking-widest">Level 1 Enforcement</p>
+            <p className="text-[11px] font-black text-[var(--text-1)] truncate leading-none uppercase tracking-tighter">{user?.fullName || "Root Admin"}</p>
+            <p className="text-[9px] font-black text-[var(--text-3)] mt-1 truncate uppercase tracking-widest">{user?.primaryEmailAddress?.emailAddress || "Level 1 Enforcement"}</p>
           </div>
         </div>
       </div>

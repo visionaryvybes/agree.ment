@@ -51,13 +51,17 @@ export default function NewContractPage() {
   const [error, setError] = useState('');
   const [aiMeta, setAiMeta] = useState<{ summary?: string; legalWarnings?: string[]; recommendedSteps?: string[] } | null>(null);
   const [parsedInfo, setParsedInfo] = useState<{ confidence?: string; missingInfo?: string[] } | null>(null);
+  const [loadingStep, setLoadingStep] = useState(0);
 
   const set = (id: string, val: string) => setFormData(p => ({ ...p, [id]: val }));
 
   /* ─── AI generate ─────────────────────────────────────────────── */
   const generateAI = async () => {
     if (!aiPrompt.trim()) return;
-    setLoading(true); setError('');
+    setLoading(true); setError(''); setLoadingStep(1);
+    const interval = setInterval(() => {
+      setLoadingStep(s => s < 3 ? s + 1 : 3);
+    }, 2500);
     try {
       const res = await fetch('/api/ai/generate', {
         method: 'POST',
@@ -80,6 +84,7 @@ export default function NewContractPage() {
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Generation failed. Please try again.');
     } finally {
+      clearInterval(interval);
       setLoading(false);
     }
   };
@@ -87,7 +92,10 @@ export default function NewContractPage() {
   /* ─── Parse conversation ──────────────────────────────────────── */
   const parseConversation = async () => {
     if (!conversation.trim()) return;
-    setLoading(true); setError('');
+    setLoading(true); setError(''); setLoadingStep(1);
+    const interval = setInterval(() => {
+      setLoadingStep(s => s < 3 ? s + 1 : 3);
+    }, 2500);
     try {
       const res = await fetch('/api/ai/parse', {
         method: 'POST',
@@ -115,6 +123,7 @@ export default function NewContractPage() {
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Parse failed. Please try again.');
     } finally {
+      clearInterval(interval);
       setLoading(false);
     }
   };
@@ -348,10 +357,28 @@ export default function NewContractPage() {
               <button
                 disabled={loading || (method === 'ai' ? !aiPrompt.trim() : method === 'whatsapp' ? !conversation.trim() : false)}
                 onClick={method === 'ai' ? generateAI : method === 'whatsapp' ? parseConversation : () => setStep(3)}
-                className="brutalist-button w-full py-6 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[6px_6px_0_0_black]"
+                className="brutalist-button w-full py-6 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[6px_6px_0_0_black] flex flex-col items-center justify-center transition-all h-24"
               >
-                {loading ? <CircleNotch size={24} className="animate-spin mr-3" /> : <Sparkle size={24} weight="bold" className="mr-3" />}
-                {method === 'ai' ? 'Synthesize Protocol Architecture' : method === 'whatsapp' ? 'Extract Jurisdictional Logic' : 'Finalize Architecture Vector →'}
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center gap-2">
+                        <div className="flex items-center gap-3">
+                            <CircleNotch size={20} className="animate-spin" />
+                            <span className="font-black uppercase tracking-widest text-[9px]">
+                                {loadingStep === 1 ? '1/3 Analyzing Jurisdictional Intent...' : 
+                                 loadingStep === 2 ? '2/3 Structuring Legal Framework...' :
+                                 '3/3 Finalizing Protocol Architecture...'}
+                            </span>
+                        </div>
+                        <div className="w-48 h-1 bg-white/20 overflow-hidden">
+                            <div className="h-full bg-white transition-all duration-1000" style={{ width: `${(loadingStep / 3) * 100}%` }} />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-center w-full">
+                        <Sparkle size={24} weight="bold" className="mr-3" />
+                        {method === 'ai' ? 'Synthesize Protocol Architecture' : method === 'whatsapp' ? 'Extract Jurisdictional Logic' : 'Finalize Architecture Vector →'}
+                    </div>
+                )}
               </button>
             </div>
           </div>

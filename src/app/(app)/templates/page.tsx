@@ -26,8 +26,9 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { EmptyState } from '@/components/empty-state';
+import { EmptyState } from '@/components/EmptyState';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 const categories: { value: ContractCategory | 'all'; label: string }[] = [
@@ -141,10 +142,11 @@ export default function TemplatesPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
         {filtered.map(template => (
           <motion.div key={template.id} variants={item}>
-            <Link
-              href={`/contracts/new?template=${template.id}`}
-              className="group block h-full bg-white border border-[var(--border-strong)] rounded-[2.5rem] p-10 hover:shadow-2xl hover:shadow-black/5 hover:-translate-y-2 transition-all duration-500 no-underline"
-            >
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  className="w-full text-left group block h-full bg-white border border-[var(--border-strong)] rounded-[2.5rem] p-10 hover:shadow-2xl hover:shadow-black/5 hover:-translate-y-2 transition-all duration-500 focus:outline-none"
+                >
               <div className="mb-10 relative">
                 <div className="w-16 h-16 rounded-2xl bg-[var(--bg-subtle)] flex items-center justify-center group-hover:bg-[var(--blue-subtle)] transition-colors duration-500">
                   {(() => {
@@ -174,16 +176,56 @@ export default function TemplatesPage() {
                 </p>
               </div>
 
-              <div className="pt-8 border-t border-[var(--border-strong)] flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]">
-                  <FileText size={16} weight="duotone" />
-                  {template.clauses.length} Clauses
+                <div className="pt-8 border-t border-[var(--border-strong)] flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]">
+                    <FileText size={16} weight="duotone" />
+                    {template.clauses.length} Clauses
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-1)] group-hover:translate-x-2 transition-transform">
+                    PREVIEW <ArrowRight size={14} weight="bold" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-1)] group-hover:translate-x-2 transition-transform">
-                  INITIALIZE <ArrowRight size={14} weight="bold" />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl p-10 bg-white border-4 border-[var(--text-1)] shadow-[8px_8px_0_0_black]">
+              <DialogHeader className="mb-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-[var(--text-1)] text-white flex items-center justify-center shadow-[2px_2px_0_0_#1447E6]">
+                    {(() => {
+                      const Icon = CATEGORY_ICONS[template.category] || BookOpen;
+                      return <Icon size={24} weight="bold" />;
+                    })()}
+                  </div>
+                  <DialogTitle className="heading-section text-3xl uppercase font-black">{template.name}</DialogTitle>
                 </div>
+                <p className="text-sm font-bold text-[var(--text-2)] opacity-80 uppercase tracking-widest leading-relaxed">{template.description}</p>
+              </DialogHeader>
+
+              <div className="bg-[var(--bg)] p-6 border-2 border-[var(--text-1)] mb-8 font-mono text-sm leading-relaxed text-[var(--text-2)] relative">
+                <div className="absolute top-0 right-0 px-3 py-1 bg-[var(--text-1)] text-white text-[8px] font-black uppercase tracking-[0.2em]">
+                  PREVIEW
+                </div>
+                "{template.preview}"
               </div>
-            </Link>
+
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                  {template.fields.slice(0, 4).map(f => (
+                      <div key={f.id} className="border-l-2 border-[var(--blue)] pl-4">
+                          <div className="text-[9px] font-black uppercase tracking-widest text-[var(--text-3)] mb-1">{f.label}</div>
+                          <div className="text-xs font-bold truncate capitalize">{f.type}</div>
+                      </div>
+                  ))}
+              </div>
+
+              <DialogFooter className="sm:justify-start">
+                <Link href={`/contracts/new?template=${template.id}`} className="w-full no-underline">
+                  <button className="brutalist-button w-full py-5 text-xs bg-[var(--blue)] text-white shadow-[4px_4px_0_0_black]">
+                    Initialize Architecture &rarr;
+                  </button>
+                </Link>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           </motion.div>
         ))}
       </div>
