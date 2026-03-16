@@ -112,25 +112,25 @@ export default function LandingPage() {
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-100 border-b-2 border-[var(--text-1)]",
                 scrolled ? "bg-white py-3" : "bg-transparent py-6"
             )}>
-                <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-4 no-underline group">
+                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
+                    <Link href="/" className="flex items-center gap-3 no-underline group shrink-0">
                         <div className="w-10 h-10 bg-[var(--text-1)] flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_black]">
                             <Scales weight="fill" size={24} className="text-white" />
                         </div>
                         <span className="heading-section text-2xl tracking-tighter text-[var(--text-1)] uppercase font-black">AgreeMint</span>
                     </Link>
 
-                    <div className="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-3)]">
-                        <a href="#protocol" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all">Protocol</a>
-                        <Link href="/dashboard" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all">Interface</Link>
-                        <Link href="/templates" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all">Frameworks</Link>
-                        <a href="#jurisdictions" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all">Global State</a>
+                    <div className="hidden lg:flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-3)]">
+                        <a href="#protocol" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Features</a>
+                        <Link href="/dashboard" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Dashboard</Link>
+                        <Link href="/templates" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Templates</Link>
+                        <a href="#jurisdictions" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Coverage</a>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <Link href="/dashboard" className="hidden sm:block text-[10px] font-black uppercase tracking-widest text-[var(--text-1)] hover:underline underline-offset-4">Sign In</Link>
-                        <button className="brutalist-button px-8 py-3 text-[10px]">
-                            Launch App
+                    <div className="flex items-center gap-3 shrink-0">
+                        <Link href="/dashboard" className="hidden sm:block text-[10px] font-black uppercase tracking-widest text-[var(--text-1)] hover:underline underline-offset-4 whitespace-nowrap">Sign In</Link>
+                        <button className="brutalist-button text-[10px]" style={{padding: '0.6rem 1.25rem'}}>
+                            Open App →
                         </button>
                     </div>
                 </div>
@@ -162,11 +162,11 @@ export default function LandingPage() {
                             </p>
 
                             <div className="flex flex-wrap gap-4">
-                                <button className="brutalist-button h-16 px-12 text-xs">
-                                    Initialize New Agreement
+                                <button className="brutalist-button px-10 py-4 text-xs">
+                                    Initialize Workspace
                                 </button>
-                                <button className="brutalist-button-outline brutalist-button h-16 px-12 text-xs">
-                                    Browse Frameworks
+                                <button className="brutalist-button-outline brutalist-button px-10 py-4 text-xs">
+                                    Browse Library →
                                 </button>
                             </div>
                         </div>
@@ -270,7 +270,7 @@ export default function LandingPage() {
                             <p className="text-xl text-white/60 font-medium">Agreement models for 195 separate jurisdictions, synchronized daily with legislative shifts.</p>
                         </div>
                         <div className="flex gap-4">
-                            <button className="brutalist-button bg-white text-[var(--text-1)] px-8 py-3">View Registry</button>
+                            <button className="brutalist-button bg-white text-[var(--text-1)] px-8 py-4 text-xs">View Registry</button>
                         </div>
                     </div>
 
@@ -292,8 +292,8 @@ export default function LandingPage() {
                     <p className="text-2xl font-bold text-[var(--text-2)] mb-16 max-w-2xl mx-auto leading-tight">
                         37% of informal agreements collapse. <br /> Fix the failure rate with deterministic architecture.
                     </p>
-                    <button className="brutalist-button h-24 px-20 text-sm">
-                        Initialize First Agreement Layer &rarr;
+                    <button className="brutalist-button px-16 py-6 text-sm">
+                        Create Your First Agreement →
                     </button>
                 </div>
             </section>

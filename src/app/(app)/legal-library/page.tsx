@@ -142,7 +142,7 @@ export default function LegalLibraryPage() {
                             <p className="text-sm font-bold text-[var(--text-1)] leading-relaxed mb-6">
                               Standardized contractual logic implementation for the {country.name} region, covering commercial transactions and digital enforcement.
                             </p>
-                            <button className="w-full brutalist-button h-12 text-[9px] bg-[var(--text-1)]">
+                            <button className="w-full brutalist-button py-3 text-[9px] bg-[var(--text-1)]">
                               Download Protocol
                             </button>
                           </div>

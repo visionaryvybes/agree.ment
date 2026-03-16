@@ -183,10 +183,10 @@ export default function NewContractPage() {
 
         <button
           onClick={() => step > 1 ? setStep((step - 1) as 1 | 2 | 3) : router.back()}
-          className="brutalist-button h-16 px-10 text-[10px] bg-white text-[var(--text-1)] no-underline flex items-center gap-3 border-4 shadow-[4px_4px_0_0_black]"
+          className="brutalist-button px-10 py-4 text-[10px] bg-white text-[var(--text-1)] no-underline flex items-center gap-3 border-4 shadow-[4px_4px_0_0_black]"
         >
           <ArrowLeft size={20} weight="bold" />
-          Abort/Revert
+          Back
         </button>
       </div>
 
@@ -348,7 +348,7 @@ export default function NewContractPage() {
               <button
                 disabled={loading || (method === 'ai' ? !aiPrompt.trim() : method === 'whatsapp' ? !conversation.trim() : false)}
                 onClick={method === 'ai' ? generateAI : method === 'whatsapp' ? parseConversation : () => setStep(3)}
-                className="brutalist-button w-full h-20 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[6px_6px_0_0_black]"
+                className="brutalist-button w-full py-6 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[6px_6px_0_0_black]"
               >
                 {loading ? <CircleNotch size={24} className="animate-spin mr-3" /> : <Sparkle size={24} weight="bold" className="mr-3" />}
                 {method === 'ai' ? 'Synthesize Protocol Architecture' : method === 'whatsapp' ? 'Extract Jurisdictional Logic' : 'Finalize Architecture Vector →'}
@@ -528,18 +528,18 @@ export default function NewContractPage() {
             {/* Global Actions */}
             <div className="flex gap-10">
               <button
-                className="brutalist-button flex-1 h-20 bg-white text-[var(--text-1)] text-[12px] border-4 shadow-[6px_6px_0_0_black]"
-                onClick={() => { save('draft'); toast({ title: 'Logic Captured', description: 'Fragment stored in workspace.' }); }}
+                className="brutalist-button flex-1 py-6 bg-white text-[var(--text-1)] text-[12px] border-4 shadow-[6px_6px_0_0_black]"
+                onClick={() => { save('draft'); toast({ title: 'Draft saved', description: 'Fragment stored in workspace.' }); }}
               >
                 <FloppyDisk size={24} weight="bold" className="mr-3" />
-                Capture Drift
+                Save Draft
               </button>
               <button
-                className="brutalist-button flex-1 h-20 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[8px_8px_0_0_black]"
-                onClick={() => { save('pending_signature'); toast({ title: 'Protocol Genesis', description: 'Enforcement vector initialized.' }); }}
+                className="brutalist-button flex-1 py-6 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[8px_8px_0_0_black]"
+                onClick={() => { save('pending_signature'); toast({ title: 'Agreement Created', description: 'Sent for signature.' }); }}
               >
                 <PaperPlaneTilt size={24} weight="bold" className="mr-3" />
-                Genesis Dispatch
+                Send for Signature
               </button>
             </div>
           </div>

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { contractTemplates } from '@/data/templates';
 import { ContractCategory } from '@/lib/types';

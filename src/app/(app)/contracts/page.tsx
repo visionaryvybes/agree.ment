@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { useContracts } from '@/store/contracts';
 import { ContractStatus } from '@/lib/types';
@@ -99,10 +101,10 @@ export default function ContractsPage() {
 
         <Link
           href="/contracts/new"
-          className="brutalist-button h-16 px-10 text-[10px] bg-[var(--text-1)] no-underline flex items-center gap-3 border-4 shadow-[4px_4px_0_0_black] hover:shadow-[6px_6px_0_0_black] transition-all"
+          className="brutalist-button px-10 py-4 text-[10px] bg-[var(--text-1)] no-underline flex items-center gap-3 border-4 shadow-[4px_4px_0_0_black] hover:shadow-[6px_6px_0_0_black] transition-all"
         >
           <Plus size={20} weight="bold" />
-          Initialize Protocol
+          New Agreement
         </Link>
       </div>
 

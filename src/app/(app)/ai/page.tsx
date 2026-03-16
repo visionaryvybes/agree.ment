@@ -119,7 +119,7 @@ export default function AIPage() {
         <div className="relative">
           <button
             onClick={() => setShowJurisdictions(v => !v)}
-            className="brutalist-button-outline brutalist-button h-12 px-6 gap-3 text-[9px]"
+            className="brutalist-button-outline brutalist-button py-3 px-6 gap-3 text-[9px]"
           >
             <Globe size={16} weight="bold" />
             {jurisdiction || 'Select Framework'}

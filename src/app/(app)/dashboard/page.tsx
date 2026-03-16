@@ -1,3 +1,5 @@
+'use client';
+
 import { useContracts } from '@/store/contracts';
 import Link from 'next/link';
 import {
@@ -115,12 +117,12 @@ export default function Dashboard() {
         </div>
 
         <motion.div variants={item} className="flex items-center gap-6">
-          <button className="brutalist-button-outline brutalist-button h-16 px-8 text-[10px]">
-            Execute Audit
+          <button className="brutalist-button-outline brutalist-button px-8 py-4 text-[10px]">
+            View Insights
           </button>
           <Link href="/contracts/new" className="no-underline">
-            <button className="brutalist-button h-16 px-10 text-[10px]">
-              Initialize Protocol
+            <button className="brutalist-button px-10 py-4 text-[10px]">
+              New Agreement
             </button>
           </Link>
         </motion.div>
@@ -299,7 +301,7 @@ export default function Dashboard() {
               </div>
 
               <Link href="/legal-library" className="mt-16 block no-underline group">
-                <button className="w-full bg-white text-[var(--text-1)] brutalist-button h-14 text-[9px]">
+                <button className="w-full bg-white text-[var(--text-1)] brutalist-button py-4 text-[9px]">
                   Access Registry Ledger
                 </button>
               </Link>
