@@ -2,98 +2,17 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-    Plus,
-    Files,
-    Stack,
-    BookOpen,
     Sparkle,
-    Gear,
-    House,
-    MagnifyingGlass,
-    ArrowRight,
-    Lightning,
     Chats,
     Globe as PhosphorGlobe,
-    Wallet as PhosphorWallet,
-    ShieldCheck,
-    Check,
-    Handshake,
-    Lock,
-    CaretRight,
-    Scales
+    Files,
+    Scales,
+    Stack,
+    ArrowRight
 } from "@phosphor-icons/react";
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-
-const FEATURES = [
-    {
-        icon: <Sparkle size={32} weight="duotone" className="text-[var(--blue)]" />,
-        title: 'AI Contract Generation',
-        desc: 'Describe your deal in plain language. AI generates a jurisdiction-aware, legally structured agreement in seconds.',
-    },
-    {
-        icon: <Chats size={32} weight="duotone" className="text-[var(--blue)]" />,
-        title: 'WhatsApp Import',
-        desc: 'Paste your WhatsApp, SMS, or email conversation. AI extracts terms and turns informal agreements into formal contracts.',
-    },
-    {
-        icon: <Lightning size={32} weight="duotone" className="text-[var(--blue)]" />,
-        title: 'Smart Escalation',
-        desc: 'Automated progression from friendly reminder to formal notice to demand letter to legal action guidance.',
-    },
-    {
-        icon: <PhosphorGlobe size={32} weight="duotone" className="text-[var(--blue)]" />,
-        title: 'Legal Library — 195 Countries',
-        desc: 'Contract law, lending rules, constitution references, and dispute resolution frameworks for every jurisdiction.',
-    },
-    {
-        icon: <Stack size={32} weight="duotone" className="text-[var(--blue)]" />,
-        title: '20+ Contract Templates',
-        desc: 'Loans, sales, rentals, freelance, NDAs, roommate agreements, family arrangements — all pre-built and customizable.',
-    },
-    {
-        icon: <PhosphorWallet size={32} weight="duotone" className="text-[var(--blue)]" />,
-        title: 'Payment Tracking',
-        desc: 'Log payments with timestamps and receipts. Both parties see real-time status. Built-in evidence for disputes.',
-    },
-];
-
-const STEPS = [
-    {
-        num: '01',
-        title: 'Describe or paste',
-        desc: 'Tell the AI about your deal in plain language, paste a WhatsApp conversation, or pick a template.',
-    },
-    {
-        num: '02',
-        title: 'Review & customize',
-        desc: 'AI generates jurisdiction-aware clauses. Edit any clause, add or remove terms, set payment schedules.',
-    },
-    {
-        num: '03',
-        title: 'Sign & enforce',
-        desc: 'Both parties sign digitally. Payment tracking starts automatically. Smart escalation kicks in if needed.',
-    },
-];
-
-const STATS = [
-    { value: '195', label: 'Countries covered' },
-    { value: '37%', label: 'Of personal loans go unpaid' },
-    { value: '20+', label: 'Ready-to-use templates' },
-    { value: '<60s', label: 'To generate a contract' },
-];
-
-const COUNTRIES_MARQUEE = [
-    '🇰🇪 Kenya', '🇳🇬 Nigeria', '🇿🇦 South Africa', '🇺🇸 United States', '🇬🇧 United Kingdom',
-    '🇮🇳 India', '🇦🇪 UAE', '🇧🇷 Brazil', '🇩🇪 Germany', '🇫🇷 France',
-    '🇯🇵 Japan', '🇦🇺 Australia', '🇨🇦 Canada', '🇲🇽 Mexico', '🇪🇬 Egypt',
-    '🇸🇬 Singapore', '🇵🇭 Philippines', '🇸🇦 Saudi Arabia', '🇮🇩 Indonesia', '🇹🇷 Turkey',
-    '🇬🇭 Ghana', '🇹🇿 Tanzania', '🇺🇬 Uganda', '🇷🇼 Rwanda', '🇪🇹 Ethiopia',
-    '🇹🇭 Thailand', '🇻🇳 Vietnam', '🇰🇷 South Korea', '🇳🇱 Netherlands', '🇨🇭 Switzerland',
-];
 
 export default function LandingPage() {
     const [scrolled, setScrolled] = useState(false);
@@ -105,221 +24,187 @@ export default function LandingPage() {
     }, []);
 
     return (
-        <div className="bg-[var(--bg)] min-h-screen selection:bg-[var(--text-1)] selection:text-white overflow-x-hidden">
-
+        <div className="bg-[var(--bg)] min-h-screen selection:bg-[var(--blue)] selection:text-white overflow-x-hidden">
             {/* ─── Brutalist Nav ─────────────────────────────── */}
             <nav className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-100 border-b-2 border-[var(--text-1)]",
-                scrolled ? "bg-white py-3" : "bg-transparent py-6"
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-100 border-b-4 border-[var(--text-1)]",
+                scrolled ? "bg-white py-3 shadow-[0_8px_0_0_black]" : "bg-[var(--bg)] py-6"
             )}>
-                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
+                <div className="max-w-5xl mx-auto px-6 flex items-center justify-between gap-4">
                     <Link href="/" className="flex items-center gap-3 no-underline group shrink-0">
-                        <div className="w-10 h-10 bg-[var(--text-1)] flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_black]">
-                            <Scales weight="fill" size={24} className="text-white" />
+                        <div className="w-10 h-10 bg-[var(--blue)] flex items-center justify-center shrink-0 border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_black]">
+                            <Scales weight="bold" size={24} className="text-white" />
                         </div>
-                        <span className="heading-section text-2xl tracking-tighter text-[var(--text-1)] uppercase font-black">AgreeMint</span>
+                        <span className="text-2xl tracking-tighter text-[var(--text-1)] uppercase font-black">Agree<span className="text-[var(--blue)]">Mint</span></span>
                     </Link>
 
-                    <div className="hidden lg:flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-3)]">
-                        <a href="#protocol" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Features</a>
-                        <Link href="/dashboard" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Dashboard</Link>
-                        <Link href="/templates" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Templates</Link>
-                        <a href="#jurisdictions" className="hover:text-[var(--text-1)] hover:underline underline-offset-8 transition-all whitespace-nowrap">Coverage</a>
+                    <div className="hidden md:flex items-center gap-8 text-[11px] font-black uppercase tracking-widest text-[var(--text-1)]">
+                        <a href="#how-it-works" className="hover:text-[var(--blue)] transition-colors">How It Works</a>
+                        <a href="#features" className="hover:text-[var(--blue)] transition-colors">Features</a>
+                        <a href="#pricing" className="hover:text-[var(--blue)] transition-colors">Pricing</a>
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
-                        <Link href="/dashboard" className="hidden sm:block text-[10px] font-black uppercase tracking-widest text-[var(--text-1)] hover:underline underline-offset-4 whitespace-nowrap">Sign In</Link>
-                        <button className="brutalist-button text-[10px]" style={{padding: '0.6rem 1.25rem'}}>
-                            Open App →
-                        </button>
+                    <div className="flex items-center gap-4 shrink-0">
+                        <Link href="/dashboard" className="hidden sm:block text-xs font-black uppercase tracking-widest text-[var(--text-1)] hover:text-[var(--blue)]">Sign In</Link>
+                        <Link href="/dashboard">
+                            <button className="brutalist-button py-2 px-6 text-[11px] bg-[var(--blue)] text-white border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)]">
+                                Generate My Contract →
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </nav>
 
-            {/* ─── Hero: The Infrastructure of Intent ──────────── */}
-            <section className="pt-60 pb-40 px-8 relative">
-                <div className="absolute top-0 left-0 w-full h-full opacity-[0.05] pointer-events-none"
-                    style={{ backgroundImage: 'linear-gradient(var(--text-1) 1px, transparent 1px), linear-gradient(90deg, var(--text-1) 1px, transparent 1px)', backgroundSize: '80px 80px' }} />
-
-                <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        className="mb-12 inline-block bg-[var(--blue)] text-white px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.4em]"
-                    >
-                        Turn any conversation into a contract
-                    </motion.div>
-
-                    <h1 className="heading-display mb-16 max-w-5xl">
-                        Personal Agreements, <span className="italic text-[var(--secondary)]">Legally Grounded.</span>
+            {/* ─── HERO ─────────────────────────────── */}
+            <section className="pt-48 pb-32 px-6">
+                <div className="max-w-5xl mx-auto text-center">
+                    <h1 className="heading-display mb-8 mx-auto" style={{ maxWidth: "800px" }}>
+                        Turn any conversation into a contract.
                     </h1>
+                    <p className="text-xl font-bold text-[var(--text-2)] mb-12 max-w-2xl mx-auto leading-relaxed">
+                        Describe your agreement in plain language. Gemini 3.1 Pro structures it into a professional, jurisdiction-aware contract in seconds.
+                    </p>
 
-                    <div className="flex flex-col md:flex-row gap-16 items-start">
-                        <div className="max-w-2xl">
-                            <p className="text-2xl font-bold leading-tight text-[var(--text-2)] mb-12 tracking-tight">
-                                Describe your deal in plain language or paste a WhatsApp chat. 
-                                AgreeMint generates a jurisdiction-aware, legally structured agreement in seconds.
-                            </p>
-
-                            <div className="flex flex-wrap gap-4">
-                                <button className="brutalist-button px-10 py-4 text-xs">
-                                    Initialize Workspace
-                                </button>
-                                <button className="brutalist-button-outline brutalist-button px-10 py-4 text-xs">
-                                    Browse Library →
-                                </button>
-                            </div>
-                        </div>
-
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                        <Link href="/dashboard">
+                            <button className="brutalist-button bg-[var(--blue)] text-white border-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)] px-10 py-5 text-sm">
+                                Generate My Contract →
+                            </button>
+                        </Link>
+                        <button className="brutalist-button-outline bg-white border-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)] px-10 py-5 text-sm">
+                            Watch Demo
+                        </button>
                     </div>
                 </div>
             </section>
 
-            {/* ─── Technical Core ─────────────────────────────── */}
-            <section id="protocol" className="py-40 bg-white border-y-[3px] border-[var(--text-1)] relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-8">
-                    <div className="grid lg:grid-cols-2 gap-24 items-center">
-                        <div>
-                            <span className="eyebrow">Deterministic Logic</span>
-                            <h2 className="heading-section mb-8">AI-Synthesized <br />Legal Architecture.</h2>
-                            <p className="text-lg text-[var(--text-2)] font-bold leading-relaxed mb-12">
-                                Our protocol converts natural language intent into structured legal data.
-                                Verified against jurisdictional statutes across 195 countries in real-time.
-                            </p>
+            {/* ─── HOW IT WORKS ─────────────────────────────── */}
+            <section id="how-it-works" className="py-32 bg-white border-y-4 border-[var(--text-1)] px-6 relative">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--secondary)] opacity-10 rounded-full blur-3xl pointer-events-none" />
+                <div className="max-w-5xl mx-auto">
+                    <div className="text-center mb-20">
+                        <span className="eyebrow inline-block bg-[var(--secondary)]/20 text-[var(--secondary)] px-3 py-1 mb-4">The Process</span>
+                        <h2 className="heading-section">Three steps. Zero jargon.</h2>
+                    </div>
 
-                            <div className="space-y-6">
-                                {[
-                                    'Multi-Jurisdictional Conflict Resolution',
-                                    'Deterministic Smart-Escalation Loops',
-                                    'Immutable Audit Trails for Dispute Evidence'
-                                ].map((item, i) => (
-                                    <div key={i} className="flex items-center gap-4">
-                                        <div className="w-6 h-6 border-2 border-[var(--text-1)] flex items-center justify-center">
-                                            <Check weight="bold" size={14} />
-                                        </div>
-                                        <span className="text-xs font-black uppercase tracking-widest text-[var(--text-1)]">{item}</span>
-                                    </div>
-                                ))}
+                    <div className="grid md:grid-cols-3 gap-8 relative">
+                        {/* Connecting Line */}
+                        <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-1 bg-dashed border-t-2 border-dashed border-[var(--text-3)] z-0" />
+
+                        <div className="brutalist-card p-10 relative z-10 bg-[var(--bg)] border-2">
+                            <div className="w-16 h-16 bg-white border-4 border-[var(--text-1)] rounded-full flex items-center justify-center text-2xl font-black mb-8 shadow-[4px_4px_0_0_var(--blue)]">
+                                1
                             </div>
+                            <h3 className="text-lg font-black uppercase tracking-tight mb-4">Describe your agreement</h3>
+                            <p className="text-sm font-bold text-[var(--text-2)]">Explain the deal in your own words, or just paste a WhatsApp chat.</p>
                         </div>
 
-                        <div className="relative">
-                            <div className="brutalist-card aspect-square bg-[var(--bg)] p-12 overflow-hidden relative">
-                                <div className="absolute inset-0 opacity-[0.08]"
-                                    style={{ backgroundImage: 'radial-gradient(circle, var(--text-1) 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
-
-                                <div className="relative z-10 font-mono text-[10px] leading-relaxed text-[var(--text-2)] space-y-2">
-                                    <div className="text-[var(--blue)] font-bold">// Protocol Initialization</div>
-                                    <div className="text-[var(--text-1)]">CONST agreement = AgreeMint.architect({`{`}</div>
-                                    <div className="pl-4">jurisdiction: "United Kingdom",</div>
-                                    <div className="pl-4">clauses: ["Repayment", "Interest_Cap", "Dispute_ADR"],</div>
-                                    <div className="pl-4">enforcement: "Smart_Escalation_v4"</div>
-                                    <div>{`}`});</div>
-                                    <br />
-                                    <div className="text-emerald-600 font-bold">{" >> STATE: VALIDATED_LEGAL_FRAMEWORK"}</div>
-                                    <div className="text-[var(--text-3)]">{" >> HASH: 0x1A4F...B2E9"}</div>
-                                </div>
-
-                                <div className="absolute bottom-8 right-8 w-32 h-32 bg-[var(--text-1)] text-white p-6 rotate-12 shadow-2xl flex flex-col justify-between">
-                                    <Sparkle size={24} weight="fill" />
-                                    <span className="text-[8px] font-black uppercase tracking-widest leading-none">AI Verified State</span>
-                                </div>
+                        <div className="brutalist-card p-10 relative z-10 bg-[var(--bg)] border-2">
+                            <div className="w-16 h-16 bg-white border-4 border-[var(--text-1)] rounded-full flex items-center justify-center text-2xl font-black mb-8 shadow-[4px_4px_0_0_var(--blue)]">
+                                2
                             </div>
+                            <h3 className="text-lg font-black uppercase tracking-tight mb-4">AI generates your contract</h3>
+                            <p className="text-sm font-bold text-[var(--text-2)]">Gemini 3.1 Pro extracts the terms and formats it cleanly.</p>
+                        </div>
+
+                        <div className="brutalist-card p-10 relative z-10 bg-[var(--bg)] border-2">
+                            <div className="w-16 h-16 bg-white border-4 border-[var(--text-1)] rounded-full flex items-center justify-center text-2xl font-black mb-8 shadow-[4px_4px_0_0_var(--blue)]">
+                                3
+                            </div>
+                            <h3 className="text-lg font-black uppercase tracking-tight mb-4">Download as PDF</h3>
+                            <p className="text-sm font-bold text-[var(--text-2)]">Review, make adjustments, and export your professional agreement.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* ─── Grid: Core Capabilities ─────────────────────── */}
-            <section className="bg-[var(--bg)]">
-                <div className="grid-brutalist grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t-0">
-                    {FEATURES.map((f, i) => (
-                        <div key={i} className="group hover:bg-white transition-all cursor-crosshair">
-                            <div className="mb-12">
-                                <div className="w-14 h-14 border-2 border-[var(--text-1)] flex items-center justify-center mb-1 group-hover:bg-[var(--text-1)] group-hover:text-white transition-all">
-                                    {f.icon}
-                                </div>
-                            </div>
-                            <h3 className="text-xl font-black uppercase tracking-tight mb-4">{f.title}</h3>
-                            <p className="text-sm font-bold text-[var(--text-2)] leading-relaxed">{f.desc}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* ─── Coverage: The Global State ───────────────────── */}
-            <section id="jurisdictions" className="py-40 bg-[var(--text-1)] text-white border-y-[3px] border-[var(--text-1)]">
-                <div className="max-w-7xl mx-auto px-8">
-                    <div className="flex flex-col lg:flex-row justify-between items-end gap-16 mb-24">
-                        <div className="max-w-2xl">
-                            <span className="eyebrow text-white/40">Global State</span>
-                            <h2 className="heading-section text-white mb-8">Unified Framework for a Fragmented World.</h2>
-                            <p className="text-xl text-white/60 font-medium">Agreement models for 195 separate jurisdictions, synchronized daily with legislative shifts.</p>
-                        </div>
-                        <div className="flex gap-4">
-                            <button className="brutalist-button bg-white text-[var(--text-1)] px-8 py-4 text-xs">View Registry</button>
-                        </div>
+            {/* ─── FEATURES ─────────────────────────────── */}
+            <section id="features" className="py-32 bg-[var(--bg)] px-6">
+                <div className="max-w-5xl mx-auto">
+                    <div className="mb-20">
+                        <span className="eyebrow inline-block bg-[var(--blue)]/10 text-[var(--blue)] px-3 py-1 mb-4">Capabilities</span>
+                        <h2 className="heading-section max-w-2xl">Everything you need.<br/>Nothing you don't.</h2>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                        {COUNTRIES_MARQUEE.slice(0, 12).map((c, i) => (
-                            <div key={i} className="border border-white/20 p-6 hover:bg-white/5 transition-all text-center">
-                                <div className="text-2xl mb-2">{c.split(' ')[0]}</div>
-                                <div className="text-[9px] font-black uppercase tracking-widest opacity-60">{c.split(' ')[1]}</div>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[
+                            { icon: <Sparkle size={32} weight="duotone" className="text-[var(--blue)]" />, t: "AI Contract Generator" },
+                            { icon: <Chats size={32} weight="duotone" className="text-[var(--secondary)]" />, t: "WhatsApp-to-Contract" },
+                            { icon: <Scales size={32} weight="duotone" className="text-[var(--blue)]" />, t: "AI Legal Advisor" },
+                            { icon: <PhosphorGlobe size={32} weight="duotone" className="text-[var(--secondary)]" />, t: "195 Jurisdictions" },
+                            { icon: <Files size={32} weight="duotone" className="text-[var(--blue)]" />, t: "PDF Export" },
+                            { icon: <Stack size={32} weight="duotone" className="text-[var(--secondary)]" />, t: "Templates Library" }
+                        ].map((feat, i) => (
+                            <div key={i} className="brutalist-card p-8 bg-white border-2 flex flex-col gap-6">
+                                <div className="w-14 h-14 bg-[var(--bg)] border-2 border-[var(--text-1)] flex items-center justify-center rounded-none shadow-[2px_2px_0_0_black]">
+                                    {feat.icon}
+                                </div>
+                                <h3 className="text-base font-black uppercase tracking-widest">{feat.t}</h3>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* ─── Final Protocol Initialization ────────────────── */}
-            <section className="py-60 bg-[var(--bg)] text-center px-8">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="heading-display mb-12">Total <br /> Enforcement <span className="italic text-[var(--blue)]">Control.</span></h2>
-                    <p className="text-2xl font-bold text-[var(--text-2)] mb-16 max-w-2xl mx-auto leading-tight">
-                        37% of informal agreements collapse. <br /> Fix the failure rate with deterministic architecture.
+            {/* ─── PRICING ─────────────────────────────── */}
+            <section id="pricing" className="py-32 bg-[var(--text-1)] text-white px-6 border-t-4 border-[var(--text-1)]">
+                <div className="max-w-5xl mx-auto text-center">
+                    <h2 className="heading-display text-white mb-6">Free to start. Seriously.</h2>
+                    <p className="text-xl text-[var(--text-3)] font-bold mb-16">
+                        Free plan: unlimited contracts, 10 AI calls/hr. No credit card required.
                     </p>
-                    <button className="brutalist-button px-16 py-6 text-sm">
-                        Create Your First Agreement →
-                    </button>
+                    
+                    <div className="max-w-md mx-auto brutalist-card bg-white text-[var(--text-1)] p-12 shadow-[12px_12px_0_0_var(--blue)]">
+                        <div className="text-5xl font-black mb-2">$0 <span className="text-xl text-[var(--text-3)]">/mo</span></div>
+                        <p className="text-sm font-bold uppercase tracking-widest text-[var(--blue)] mb-8">Early Adopter Plan</p>
+                        
+                        <div className="space-y-4 mb-10 text-left">
+                            {['Unlimited PDF Exports', '10 AI Queries per hour', '195 Jurisdictions Available', 'Live AI Legal Assistant'].map((item, idx) => (
+                                <div key={idx} className="flex flex-row items-center gap-4">
+                                    <div className="w-5 h-5 bg-[var(--secondary)] rounded-full flex items-center justify-center shrink-0 border border-black text-black font-black text-[10px]">✓</div>
+                                    <span className="font-bold text-sm">{item}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <Link href="/dashboard">
+                            <button className="brutalist-button w-full bg-[var(--text-1)] text-white shadow-[4px_4px_0_0_var(--secondary)] border-2 border-[var(--text-1)] font-black text-sm py-4">
+                                Start for Free
+                            </button>
+                        </Link>
+                    </div>
                 </div>
             </section>
 
-            {/* ─── Footer ─────────────────────────────────────── */}
-            <footer className="py-24 border-t-[3px] border-[var(--text-1)] bg-white px-8">
-                <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-24">
-                    <div>
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="w-10 h-10 bg-[var(--text-1)] flex items-center justify-center shrink-0">
-                                <Scales weight="fill" size={24} className="text-white" />
-                            </div>
-                            <span className="heading-section text-2xl tracking-tighter text-[var(--text-1)] uppercase font-black">AgreeMint</span>
+            {/* ─── FINAL CTA ─────────────────────────────── */}
+            <section className="py-40 bg-[var(--blue)] px-6 border-y-4 border-[var(--text-1)]">
+                <div className="max-w-5xl mx-auto text-center">
+                    <h2 className="heading-display mb-12 text-white">Your first contract is 30 seconds away.</h2>
+                    <Link href="/dashboard">
+                        <button className="brutalist-button bg-white text-[var(--text-1)] border-4 border-[var(--text-1)] shadow-[6px_6px_0_0_var(--text-1)] px-12 py-6 text-base tracking-widest hover:translate-x-1 hover:translate-y-1">
+                            Get Started Free →
+                        </button>
+                    </Link>
+                </div>
+            </section>
+
+            {/* ─── FOOTER ─────────────────────────────── */}
+            <footer className="py-16 bg-[var(--bg)] px-6">
+                <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-[var(--text-1)] flex items-center justify-center shrink-0">
+                            <Scales weight="fill" size={16} className="text-white" />
                         </div>
-                        <p className="text-sm font-bold text-[var(--text-2)] leading-relaxed">The global protocol for private agreement architecture. Built for deterministic finality.</p>
+                        <span className="text-xl tracking-tighter text-[var(--text-1)] uppercase font-black">AgreeMint</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-12 col-span-2">
-                        <div>
-                            <p className="text-[9px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-3)]">Infrastructure</p>
-                            <div className="flex flex-col gap-4 text-[11px] font-black uppercase tracking-widest text-[var(--text-1)]">
-                                <Link href="/dashboard" className="hover:underline">Interface</Link>
-                                <Link href="/templates" className="hover:underline">Frameworks</Link>
-                                <Link href="/legal-library" className="hover:underline">Registry</Link>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="text-[9px] font-black uppercase tracking-[0.3em] mb-8 text-[var(--text-3)]">Safety</p>
-                            <div className="flex flex-col gap-4 text-[11px] font-black uppercase tracking-widest text-[var(--text-1)]">
-                                <a href="#" className="hover:underline">Privacy Policy</a>
-                                <a href="#" className="hover:underline">Terms of Protocol</a>
-                                <a href="#" className="hover:underline">Security State</a>
-                            </div>
-                        </div>
+                    
+                    <div className="flex flex-wrap justify-center gap-8 text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]">
+                        <Link href="/privacy" className="hover:text-[var(--blue)] transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" className="hover:text-[var(--blue)] transition-colors">Terms of Protocol</Link>
+                        <a href="mailto:hello@agreemint.com" className="hover:text-[var(--blue)] transition-colors">Contact</a>
                     </div>
                 </div>
             </footer>
         </div>
     );
 }
-
-// Utility function for conditional classNames
-
