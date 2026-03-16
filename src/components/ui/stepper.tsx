@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CheckCircle2 } from "lucide-react";
+import { Check } from "@phosphor-icons/react";
 
 interface StepperProps {
     steps: { label: string; description?: string }[];
@@ -21,43 +21,40 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
                             index !== steps.length - 1 && "flex-1"
                         )}
                     >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-4">
                             <div
                                 className={cn(
-                                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-300",
+                                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[10px] font-black transition-all duration-500",
                                     index < currentStep &&
-                                    "border-emerald-500 bg-emerald-500 text-white",
+                                    "border-[var(--text-1)] bg-[var(--text-1)] text-white",
                                     index === currentStep &&
-                                    "border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110",
+                                    "border-[var(--text-1)] bg-white text-[var(--text-1)] shadow-xl shadow-black/5 scale-110",
                                     index > currentStep &&
-                                    "border-slate-200 bg-white text-slate-400"
+                                    "border-[var(--border-strong)] bg-white text-[var(--text-3)]"
                                 )}
                             >
                                 {index < currentStep ? (
-                                    <CheckCircle2 className="h-5 w-5" />
+                                    <Check size={14} weight="bold" />
                                 ) : (
                                     index + 1
                                 )}
                             </div>
-                            <div className="hidden sm:block">
+                            <div className="hidden lg:block">
                                 <p
                                     className={cn(
-                                        "text-sm font-semibold transition-colors",
-                                        index <= currentStep ? "text-slate-900" : "text-slate-400"
+                                        "text-[10px] font-black uppercase tracking-widest transition-colors",
+                                        index <= currentStep ? "text-[var(--text-1)]" : "text-[var(--text-3)]"
                                     )}
                                 >
                                     {step.label}
                                 </p>
-                                {step.description && (
-                                    <p className="text-xs text-slate-400">{step.description}</p>
-                                )}
                             </div>
                         </div>
                         {index !== steps.length - 1 && (
                             <div
                                 className={cn(
-                                    "mx-4 h-0.5 flex-1 transition-colors duration-500",
-                                    index < currentStep ? "bg-emerald-500" : "bg-slate-200"
+                                    "mx-6 h-px flex-1 transition-colors duration-700",
+                                    index < currentStep ? "bg-[var(--text-1)]" : "bg-[var(--border-strong)]"
                                 )}
                             />
                         )}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronRight } from "lucide-react";
+import { CaretRight } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 
@@ -16,7 +16,7 @@ const BreadcrumbList = React.forwardRef<
     <ol
         ref={ref}
         className={cn(
-            "flex flex-wrap items-center gap-1.5 break-words text-sm text-slate-500",
+            "flex flex-wrap items-center gap-2 break-words text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-3)]",
             className
         )}
         {...props}
@@ -45,7 +45,7 @@ const BreadcrumbLink = React.forwardRef<
         <Comp
             ref={ref}
             className={cn(
-                "transition-colors hover:text-slate-900 font-medium",
+                "transition-colors hover:text-[var(--text-1)]",
                 className
             )}
             {...props}
@@ -63,7 +63,7 @@ const BreadcrumbPage = React.forwardRef<
         role="link"
         aria-disabled="true"
         aria-current="page"
-        className={cn("font-semibold text-slate-900", className)}
+        className={cn("text-[var(--text-1)]", className)}
         {...props}
     />
 ));
@@ -77,10 +77,10 @@ const BreadcrumbSeparator = ({
     <li
         role="presentation"
         aria-hidden="true"
-        className={cn("[&>svg]:size-3.5", className)}
+        className={cn("", className)}
         {...props}
     >
-        {children ?? <ChevronRight />}
+        {children ?? <CaretRight size={10} weight="bold" />}
     </li>
 );
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";

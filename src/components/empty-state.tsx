@@ -2,10 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LucideIcon } from "lucide-react";
 
 interface EmptyStateProps {
-    icon: LucideIcon;
+    icon: React.ReactNode;
     title: string;
     description: string;
     actionLabel?: string;
@@ -15,7 +14,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-    icon: Icon,
+    icon,
     title,
     description,
     actionLabel,
@@ -26,15 +25,15 @@ export function EmptyState({
     return (
         <div
             className={cn(
-                "flex flex-col items-center justify-center py-16 px-6 text-center",
+                "flex flex-col items-center justify-center py-20 px-6 text-center",
                 className
             )}
         >
-            <div className="w-20 h-20 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-6">
-                <Icon className="h-10 w-10 text-slate-300" strokeWidth={1.5} />
+            <div className="w-24 h-24 rounded-3xl bg-[var(--bg-subtle)] border border-[var(--border-strong)] flex items-center justify-center mb-8 shadow-sm">
+                {icon}
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">{title}</h3>
-            <p className="text-sm text-slate-500 max-w-md mb-6">{description}</p>
+            <h3 className="font-serif text-3xl text-[var(--text-1)] tracking-tight mb-3">{title}</h3>
+            <p className="text-base text-[var(--text-2)] max-w-sm mb-10 opacity-70 leading-relaxed font-medium tracking-tight">{description}</p>
             {actionLabel && (
                 actionHref ? (
                     <Button variant="premium" asChild>

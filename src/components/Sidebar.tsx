@@ -3,133 +3,104 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutGrid,
-  FilePlus,
-  FileText,
+  PlusCircle,
+  Files,
+  Stack,
   BookOpen,
-  Sparkles,
-  Layers,
-  Settings,
-  ChevronRight,
-} from "lucide-react";
+  Sparkle,
+  Gear,
+  House,
+  MagnifyingGlass,
+  Command,
+  SelectionBackground,
+  CaretRight
+} from "@phosphor-icons/react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const nav = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
-  { label: "New Contract", href: "/contracts/new", icon: FilePlus },
-  { label: "My Contracts", href: "/contracts", icon: FileText },
-  { label: "Templates", href: "/templates", icon: Layers },
+  { label: "Dashboard", href: "/dashboard", icon: House },
+  { label: "New Contract", href: "/contracts/new", icon: PlusCircle },
+  { label: "My Contracts", href: "/contracts", icon: Files },
+  { label: "Templates", href: "/templates", icon: Stack },
   { label: "Legal Library", href: "/legal-library", icon: BookOpen },
-  { label: "AI Advisor", href: "/ai", icon: Sparkles },
+  { label: "AI Advisor", href: "/ai", icon: Sparkle },
 ];
 
 export default function Sidebar() {
   const path = usePathname();
-  const active = (href: string) => path.startsWith(href);
+  const active = (href: string) => path === href || (href !== "/dashboard" && path.startsWith(href));
 
   return (
-    <aside
-      style={{
-        width: 260,
-        flexShrink: 0,
-        background: "var(--sidebar-bg)",
-        borderRight: "1px solid var(--sidebar-border)",
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        overflow: "hidden",
-      }}
-    >
-      {/* Brand */}
-      <div style={{ padding: "32px 24px 24px", borderBottom: "1px solid var(--sidebar-border)" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              background: "var(--text-1)",
-              borderRadius: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
-              <path d="M2 3h10M2 7h7M2 11h5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+    <aside className="w-[280px] flex-shrink-0 bg-white border-r-[3px] border-[var(--text-1)] flex flex-col h-screen overflow-hidden relative z-50">
+
+      {/* Brand Section */}
+      <div className="p-8 border-b-2 border-[var(--text-1)] bg-[var(--bg)]">
+        <Link href="/" className="flex items-center gap-4 no-underline group mb-0">
+          <div className="w-10 h-10 bg-[var(--text-1)] flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0_0_black] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-none transition-all">
+            <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
+              <path d="M2 3h10M2 7h7M2 11h5" stroke="#fff" strokeWidth="2" strokeLinecap="square" />
             </svg>
           </div>
           <div>
-            <div className="serif" style={{ color: "var(--text-1)", fontSize: 20, fontWeight: 400, letterSpacing: "-0.01em", lineHeight: 1 }}>
-              AgreeMint
-            </div>
-            <div style={{ color: "var(--text-3)", fontSize: 11, marginTop: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Digital Legal
-            </div>
+            <h1 className="heading-section text-xl tracking-tighter leading-none text-[var(--text-1)] uppercase font-black">AgreeMint</h1>
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-3)] mt-1">Core Protocol</p>
           </div>
         </Link>
       </div>
 
-      {/* Nav */}
-      <nav style={{ flex: 1, padding: "24px 16px", overflowY: "auto" }}>
-        <div style={{ marginBottom: 8 }}>
-          <div className="heading-2" style={{ padding: "4px 12px 12px" }}>
-            Workspace
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            {nav.map(({ label, href, icon: Icon }) => (
-              <Tooltip key={href}>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={href}
-                    className={`sidebar-link ${active(href) ? "sidebar-link-active" : ""}`}
-                    style={{ padding: '10px 12px', borderRadius: 8, fontSize: 14, fontWeight: 500 }}
-                  >
-                    <Icon size={18} strokeWidth={1.5} style={{ flexShrink: 0, opacity: active(href) ? 1 : 0.7 }} />
-                    <span style={{ flex: 1 }}>{label}</span>
-                    {active(href) && <ChevronRight size={14} style={{ opacity: 0.4 }} />}
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right">{label}</TooltipContent>
-              </Tooltip>
-            ))}
-          </div>
+      {/* Navigation */}
+      <nav className="flex-1 py-10 px-6 overflow-y-auto space-y-2 custom-scrollbar">
+        <p className="px-4 mb-6 text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-3)] opacity-60">
+          Architecture
+        </p>
+        <div className="flex flex-col gap-2">
+          {nav.map(({ label, href, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "group relative flex items-center gap-4 px-4 py-3 text-sm transition-all duration-100 border-2",
+                active(href)
+                  ? "bg-[var(--text-1)] text-white border-[var(--text-1)] shadow-[4px_4px_0_0_#1447E6]"
+                  : "text-[var(--text-2)] border-transparent hover:border-[var(--text-1)] hover:bg-[var(--bg-subtle)]"
+              )}
+            >
+              <Icon
+                size={22}
+                weight={active(href) ? "bold" : "regular"}
+                className={cn(
+                  "transition-colors",
+                  active(href) ? "text-white" : "text-[var(--text-3)] group-hover:text-[var(--text-1)]"
+                )}
+              />
+              <span className="flex-1 font-black uppercase tracking-tight text-[11px]">{label}</span>
+              {active(href) && (
+                <CaretRight size={14} weight="bold" />
+              )}
+            </Link>
+          ))}
         </div>
       </nav>
 
-      {/* Footer */}
-      <div style={{ borderTop: "1px solid var(--sidebar-border)", padding: "16px" }}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href="/settings" className="sidebar-link" style={{ padding: '10px 12px', borderRadius: 8, marginBottom: 8 }}>
-              <Settings size={18} strokeWidth={1.5} style={{ opacity: 0.7 }} />
-              <span>Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px", background: 'var(--bg-subtle)', borderRadius: 12 }}>
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              background: "var(--surface-solid)",
-              border: "1px solid var(--border)",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-              fontSize: 13,
-              fontWeight: 700,
-              color: "var(--text-1)",
-            }}
-          >
-            U
+      {/* Footer / Account */}
+      <div className="mt-auto p-6 border-t-2 border-[var(--text-1)] bg-[var(--bg)]">
+        <Link
+          href="/settings"
+          className="flex items-center gap-4 px-4 py-3 text-[11px] font-black uppercase tracking-widest text-[var(--text-2)] hover:text-[var(--text-1)] transition-colors mb-6"
+        >
+          <Gear size={20} weight="bold" />
+          <span>Protocol Configuration</span>
+        </Link>
+
+        <div className="flex items-center gap-4 p-4 bg-white border-2 border-[var(--text-1)] shadow-[3px_3px_0_0_black]">
+          <div className="w-10 h-10 bg-[var(--blue)] border-2 border-[var(--text-1)] flex items-center justify-center flex-shrink-0 text-xs font-black text-white">
+            ADM
           </div>
-          <div>
-            <div style={{ fontSize: 13, color: "var(--text-1)", fontWeight: 600 }}>Personal Space</div>
-            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 1, fontWeight: 500 }}>Pro Account</div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] font-black text-[var(--text-1)] truncate leading-none uppercase tracking-tighter">Root Admin</p>
+            <p className="text-[9px] font-black text-[var(--text-3)] mt-1 uppercase tracking-widest">Level 1 Enforcement</p>
           </div>
         </div>
       </div>

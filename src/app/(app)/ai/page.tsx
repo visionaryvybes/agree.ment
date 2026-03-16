@@ -1,12 +1,26 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Globe, FileText, Scale, AlertTriangle, Mic, ChevronDown } from 'lucide-react';
+import {
+  PaperPlaneRight,
+  Sparkle,
+  Globe,
+  FileText,
+  Scales,
+  Warning,
+  Microphone,
+  CaretDown,
+  CircleNotch,
+  Shield,
+  Robot
+} from "@phosphor-icons/react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { countries } from '@/data/countries';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;
@@ -16,12 +30,12 @@ interface Message {
 }
 
 const PROMPTS = [
-  { icon: Scale, text: 'What are my rights if someone defaults on a personal loan?', tag: 'Rights' },
+  { icon: Scales, text: 'What are my rights if someone defaults on a personal loan?', tag: 'Rights' },
   { icon: FileText, text: 'Draft a formal demand letter for an unpaid debt of $3,000.', tag: 'Document' },
-  { icon: AlertTriangle, text: 'How do I file a small claims court case?', tag: 'Legal Action' },
+  { icon: Warning, text: 'How do I file a small claims court case?', tag: 'Legal Action' },
   { icon: Globe, text: 'What interest rate can I legally charge on a personal loan?', tag: 'Regulation' },
   { icon: FileText, text: 'Explain what makes a informal agreement legally binding.', tag: 'Education' },
-  { icon: Scale, text: 'What is the difference between mediation and arbitration?', tag: 'ADR' },
+  { icon: Scales, text: 'What is the difference between mediation and arbitration?', tag: 'ADR' },
 ];
 
 export default function AIPage() {
@@ -30,14 +44,14 @@ export default function AIPage() {
   const [loading, setLoading] = useState(false);
   const [jurisdiction, setJurisdiction] = useState('');
   const [showJurisdictions, setShowJurisdictions] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  const send = async (text?: string) => {
+  const handleSend = async (text?: string) => {
     const content = text ?? input.trim();
     if (!content || loading) return;
 
@@ -84,215 +98,204 @@ export default function AIPage() {
   };
 
   const handleKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-
-      {/* Header */}
-      <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border)', background: 'var(--surface)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 34, height: 34, background: 'var(--blue)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Sparkles size={16} color="#fff" />
+    <div className="flex flex-col h-screen bg-[var(--bg)] selection:bg-[var(--text-1)] selection:text-white">
+      {/* ─── AI Header: Protocol Intelligence ────────────────── */}
+      <header className="px-8 py-6 border-b-4 border-[var(--text-1)] bg-white flex items-center justify-between shrink-0 z-10">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-[var(--text-1)] flex items-center justify-center shadow-[2px_2px_0_0_black]">
+            <Robot weight="fill" size={24} className="text-white" />
           </div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-1)' }}>AI Legal Advisor</div>
-            <div style={{ fontSize: 11, color: 'var(--text-3)' }}>Powered by Gemini · 195+ jurisdictions</div>
+            <div className="font-black text-[14px] text-[var(--text-1)] tracking-tighter uppercase leading-none mb-1">Protocol Advisor_v4</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-[var(--blue)]">Autonomous Intelligence Layer</div>
           </div>
         </div>
 
         {/* Jurisdiction selector */}
-        <div style={{ position: 'relative' }}>
-          <Button
-            variant="outline"
+        <div className="relative">
+          <button
             onClick={() => setShowJurisdictions(v => !v)}
-            size="sm"
+            className="brutalist-button-outline brutalist-button h-12 px-6 gap-3 text-[9px]"
           >
-            <Globe size={13} />
-            {jurisdiction || 'Set jurisdiction'}
-            <ChevronDown size={11} />
-          </Button>
-          {showJurisdictions && (
-            <div
-              style={{
-                position: 'absolute',
-                right: 0,
-                top: 'calc(100% + 6px)',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 8,
-                boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                zIndex: 50,
-                width: 200,
-                maxHeight: 280,
-                overflowY: 'auto',
-                padding: 4,
-              }}
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start"
-                onClick={() => { setJurisdiction(''); setShowJurisdictions(false); }}
+            <Globe size={16} weight="bold" />
+            {jurisdiction || 'Select Framework'}
+            <CaretDown size={14} weight="bold" className={cn("transition-transform duration-300", showJurisdictions && "rotate-180")} />
+          </button>
+
+          <AnimatePresence>
+            {showJurisdictions && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute right-0 top-[calc(100%+12px)] w-72 max-h-[400px] overflow-y-auto bg-white border-4 border-[var(--text-1)] shadow-[8px_8px_0_0_black] p-4 z-50 custom-scrollbar"
               >
-                All jurisdictions
-              </Button>
-              {countries.map(c => (
-                <Button
-                  key={c.code}
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => { setJurisdiction(c.name); setShowJurisdictions(false); }}
-                  style={{ fontWeight: jurisdiction === c.name ? 600 : 400, fontSize: 12 }}
-                >
-                  {c.flag} {c.name}
-                </Button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto' }}>
-
-          {/* Empty state */}
-          {messages.length === 0 && (
-            <div className="fade-in">
-              <div style={{ textAlign: 'center', marginBottom: 36 }}>
-                <div className="heading-display" style={{ fontSize: '1.4rem', marginBottom: 8 }}>
-                  Legal guidance, instantly.
+                <div className="px-2 py-3 mb-4 border-b-2 border-[var(--text-1)]">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]">Node Jurisdictions</span>
                 </div>
-                <p style={{ color: 'var(--text-2)', fontSize: 14, maxWidth: 420, margin: '0 auto' }}>
-                  Ask about contract rights, dispute escalation, demand letters, or jurisdiction-specific laws.
-                  {jurisdiction && <strong style={{ color: 'var(--blue)' }}> Focused on {jurisdiction}.</strong>}
-                </p>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                {PROMPTS.map((p, i) => {
-                  const Icon = p.icon;
-                  return (
+                <button
+                  onClick={() => { setJurisdiction(''); setShowJurisdictions(false); }}
+                  className="w-full text-left px-4 py-3 text-[11px] font-black uppercase hover:bg-[var(--bg)] transition-colors mb-2 border-2 border-transparent hover:border-[var(--text-1)]"
+                >
+                  Global Protocol (Root)
+                </button>
+                <div className="space-y-1">
+                  {countries.map(c => (
+                    <button
+                      key={c.code}
+                      onClick={() => { setJurisdiction(c.name); setShowJurisdictions(false); }}
+                      className={cn(
+                        "w-full text-left px-4 py-2 text-[11px] font-bold hover:bg-[var(--bg)] transition-colors flex items-center gap-3 border-2 border-transparent",
+                        jurisdiction === c.name ? "bg-[var(--bg)] border-[var(--text-1)]" : ""
+                      )}
+                    >
+                      <span className="text-base">{c.flag}</span>
+                      <span className="truncate">{c.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </header>
+
+      {/* ─── Logic Stream ─────────────────────────────────────────── */}
+      <main className="flex-1 overflow-y-auto p-8 custom-scrollbar relative">
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+          style={{ backgroundImage: 'linear-gradient(var(--text-1) 1px, transparent 1px), linear-gradient(90deg, var(--text-1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+        <div className="max-w-4xl mx-auto space-y-12 py-12 relative z-10">
+          <AnimatePresence initial={false}>
+            {messages.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-12 py-20"
+              >
+                <div className="text-center max-w-2xl mx-auto">
+                  <div className="inline-block p-8 bg-[var(--text-1)] text-white mb-12 shadow-[6px_6px_0_0_#1447E6]">
+                    <Sparkle size={64} weight="bold" />
+                  </div>
+                  <h2 className="heading-section text-4xl mb-6 uppercase font-black">Synthesizer Active.</h2>
+                  <p className="text-xl font-bold text-[var(--text-2)] leading-relaxed">Jurisdiction: <span className="text-[var(--text-1)]">{jurisdiction || "GLOBAL ROOT"}</span></p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {PROMPTS.map((p, i) => (
                     <button
                       key={i}
-                      onClick={() => send(p.text)}
-                      className="card"
-                      style={{ padding: '14px 16px', textAlign: 'left', cursor: 'pointer', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, display: 'flex', alignItems: 'flex-start', gap: 12 }}
+                      onClick={() => handleSend(p.text)}
+                      className="brutalist-card p-8 text-left group hover:bg-[var(--text-1)] transition-all"
                     >
-                      <div style={{ width: 28, height: 28, background: 'var(--blue-subtle)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                        <Icon size={13} style={{ color: 'var(--blue)' }} />
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="w-10 h-10 border-2 border-[var(--text-1)] flex items-center justify-center group-hover:bg-white transition-colors shadow-[2px_2px_0_0_black] group-hover:shadow-none translate-x-[-2px] translate-y-[-2px] group-hover:translate-x-0 group-hover:translate-y-0">
+                          <p.icon size={20} weight="bold" className="group-hover:text-[var(--text-1)]" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)] group-hover:text-white/60">{p.tag}</span>
                       </div>
-                      <div>
-                        <div style={{ fontSize: 10, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4, fontWeight: 600 }}>{p.tag}</div>
-                        <div style={{ fontSize: 13, color: 'var(--text-1)', lineHeight: 1.4 }}>{p.text}</div>
-                      </div>
+                      <p className="text-sm font-black text-[var(--text-1)] group-hover:text-white transition-colors leading-relaxed uppercase tracking-tight">{p.text}</p>
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              messages.map((m) => (
+                <motion.div
+                  key={m.id}
+                  initial={{ opacity: 0, x: m.role === 'user' ? 20 : -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className={cn(
+                    "flex flex-col",
+                    m.role === 'user' ? "items-end" : "items-start"
+                  )}
+                >
+                  <div className={cn(
+                    "max-w-[85%] p-10 border-4 shadow-[6px_6px_0_0_black]",
+                    m.role === 'user'
+                      ? "bg-[var(--text-1)] text-white border-black"
+                      : "bg-white border-black"
+                  )}>
+                    <div className="prose prose-sm font-bold leading-relaxed max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-p:mb-6">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {m.content}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center gap-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]">
+                      {m.role === 'assistant' ? 'Intelligence Node' : 'Administrator'}
+                    </span>
+                    <span className="text-[10px] font-black text-[var(--text-3)] opacity-40">
+                      {m.timestamp.toLocaleTimeString()}
+                    </span>
+                  </div>
+                </motion.div>
+              ))
+            )}
+            {loading && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                <div className="brutalist-card bg-white p-8 border-4 flex items-center gap-6 shadow-[8px_8px_0_0_#1447E6]">
+                  <div className="w-6 h-6 border-4 border-[var(--text-1)] border-t-transparent animate-spin" />
+                  <span className="text-sm font-black uppercase tracking-widest">Synthesizing Protocol...</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div ref={endRef} />
+        </div>
+      </main>
+
+      {/* ─── Input Protocol ─────────────────────────────────────── */}
+      <footer className="p-10 border-t-4 border-[var(--text-1)] bg-white z-20">
+        <div className="max-w-4xl mx-auto">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+            className="flex flex-col gap-8"
+          >
+            <div className="flex gap-6">
+              <button type="button" className="brutalist-button-outline brutalist-button w-16 h-16 p-0 border-4">
+                <Microphone weight="bold" size={24} />
+              </button>
+              <div className="flex-1 relative brutalist-card border-4">
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKey}
+                  placeholder="Describe legal intent (e.g., 'Freelance contract for UAE with 20% downpayment')..."
+                  className="w-full bg-transparent p-6 text-base font-bold min-h-[64px] h-[64px] max-h-[300px] outline-none resize-none placeholder:text-[var(--text-3)] custom-scrollbar"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={!input.trim() || loading}
+                className="brutalist-button w-32 h-16 bg-[var(--blue)] disabled:opacity-20 disabled:grayscale transition-all border-4"
+              >
+                <PaperPlaneRight weight="bold" size={28} />
+              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-10">
+                <div className="flex items-center gap-3">
+                  <Globe weight="bold" size={16} className="text-[var(--text-1)]" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-1)]">Network: {jurisdiction || "ROOT"}</span>
+                </div>
+              </div>
+              <div className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-3)] opacity-40">
+                Trace ID: {Math.random().toString(16).substring(2, 10).toUpperCase()} // Encrypted
               </div>
             </div>
-          )}
-
-          {/* Messages */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            {messages.map(msg => (
-              <div
-                key={msg.id}
-                className="slide-up"
-                style={{
-                  display: 'flex',
-                  justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                  gap: 10,
-                  alignItems: 'flex-end',
-                }}
-              >
-                {msg.role === 'assistant' && (
-                  <div style={{ width: 28, height: 28, background: 'var(--blue)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginBottom: 2 }}>
-                    <Sparkles size={13} color="#fff" />
-                  </div>
-                )}
-                <div style={{ maxWidth: '78%' }}>
-                  <div className={msg.role === 'user' ? 'bubble-user' : 'bubble-ai'}>
-                    {msg.role === 'assistant' ? (
-                      <div className="prose-legal">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-                      </div>
-                    ) : (
-                      <div style={{ fontSize: 14, lineHeight: 1.5 }}>{msg.content}</div>
-                    )}
-                  </div>
-                  <div style={{ fontSize: 10, color: 'var(--text-3)', marginTop: 4, textAlign: msg.role === 'user' ? 'right' : 'left' }}>
-                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {loading && (
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
-                <div style={{ width: 28, height: 28, background: 'var(--blue)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Sparkles size={13} color="#fff" />
-                </div>
-                <div className="bubble-ai" style={{ display: 'flex', gap: 4, alignItems: 'center', padding: '12px 16px' }}>
-                  <div className="typing-dot" />
-                  <div className="typing-dot" />
-                  <div className="typing-dot" />
-                </div>
-              </div>
-            )}
-
-            <div ref={bottomRef} />
-          </div>
+          </form>
         </div>
-      </div>
-
-      {/* Input */}
-      <div style={{ padding: '16px 24px', borderTop: '1px solid var(--border)', background: 'var(--surface)', flexShrink: 0 }}>
-        <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 12, padding: '8px 12px', transition: 'border-color 0.12s', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-            <textarea
-              ref={inputRef}
-              className="field"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleKey}
-              placeholder="Ask a legal question… e.g., 'Can I charge interest on a loan in Kenya?'"
-              rows={1}
-              style={{
-                flex: 1,
-                border: 'none',
-                background: 'transparent',
-                resize: 'none',
-                maxHeight: 120,
-                overflowY: 'auto',
-                padding: '4px 0',
-                boxShadow: 'none',
-                fontSize: 14,
-                lineHeight: 1.5,
-              }}
-              onInput={e => {
-                const el = e.currentTarget;
-                el.style.height = 'auto';
-                el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-              }}
-            />
-            <Button
-              variant="premium"
-              onClick={() => send()}
-              disabled={!input.trim() || loading}
-              size="icon"
-              style={{ flexShrink: 0 }}
-            >
-              <Send size={14} />
-            </Button>
-          </div>
-          <p style={{ fontSize: 11, color: 'var(--text-3)', textAlign: 'center', marginTop: 8 }}>
-            Legal information only — not legal advice. Consult a qualified attorney for your specific matter.
-          </p>
-        </div>
-      </div>
+      </footer>
     </div>
   );
 }

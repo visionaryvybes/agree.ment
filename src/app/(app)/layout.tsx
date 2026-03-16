@@ -8,17 +8,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
 
     return (
-        <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--bg)' }}>
+        <div className="flex h-screen overflow-hidden bg-[var(--bg)]">
             <Sidebar />
-            <main style={{ flex: 1, overflowY: 'auto', position: 'relative', background: 'var(--bg)' }}>
+            <main className="flex-1 overflow-y-auto relative bg-[var(--bg)] custom-scrollbar">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={pathname}
-                        initial={{ opacity: 0, y: 10, scale: 0.99 }}
+                        initial={{ opacity: 0, y: 10, scale: 0.995 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.99 }}
-                        transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
-                        style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}
+                        exit={{ opacity: 0, y: -10, scale: 0.995 }}
+                        transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
+                        className="min-h-full flex flex-col"
                     >
                         {children}
                     </motion.div>

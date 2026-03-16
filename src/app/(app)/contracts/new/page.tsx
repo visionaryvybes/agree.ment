@@ -7,15 +7,32 @@ import { useContracts } from '@/store/contracts';
 import { ContractTemplate, ContractClause } from '@/lib/types';
 import { v4 as uuid } from 'uuid';
 import {
-  ArrowLeft, Sparkles, FileText, MessageSquare,
-  Plus, Trash2, ChevronUp, ChevronDown, Save, Send,
-  Loader2, AlertCircle, CheckCircle2,
-} from 'lucide-react';
+  ArrowLeft,
+  Sparkle,
+  FileText,
+  ChatCenteredDots,
+  Plus,
+  Trash,
+  CaretUp,
+  CaretDown,
+  FloppyDisk,
+  PaperPlaneTilt,
+  CircleNotch,
+  WarningCircle,
+  CheckCircle,
+  Clock,
+  ArrowRight,
+  MagnifyingGlass,
+  IdentificationCard,
+  Shield
+} from "@phosphor-icons/react";
 import { Stepper } from '@/components/ui/stepper';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { toast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Method = 'template' | 'ai' | 'whatsapp' | null;
 
@@ -151,63 +168,41 @@ export default function NewContractPage() {
   const p2 = formData.party2_name || formData.borrower_name || formData.buyer_name || formData.provider_name || 'Party B';
 
   return (
-    <div style={{ padding: '28px 40px', maxWidth: 1100, margin: '0 auto' }}>
+    <div className="p-12 lg:p-16 bg-[var(--bg)] min-h-full selection:bg-[var(--text-1)] selection:text-white">
+      {/* ─── Header: Protocol Genesis ────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 pb-16 border-b-4 border-[var(--text-1)] mb-16">
+        <div className="max-w-3xl">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--blue)] mb-6">
+            Protocol Genesis &middot; Phase {step}/3
+          </p>
+          <h1 className="heading-display mb-6"> Protocol Architect.</h1>
+          <p className="text-2xl text-[var(--text-2)] font-bold tracking-tight">
+            Synthesize a binding legal framework for <span className="text-[var(--text-1)]">Immediate Enforcement</span>.
+          </p>
+        </div>
 
-      {/* Breadcrumb */}
-      <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/contracts">Contracts</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>New Agreement</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      {/* Header + Stepper */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={() => step > 1 ? setStep((step - 1) as 1 | 2 | 3) : router.back()}
-          aria-label="Go back"
+          className="brutalist-button h-16 px-10 text-[10px] bg-white text-[var(--text-1)] no-underline flex items-center gap-3 border-4 shadow-[4px_4px_0_0_black]"
         >
-          <ArrowLeft size={16} />
-        </Button>
-        <div>
-          <div style={{ fontWeight: 600, fontSize: 16, color: 'var(--text-1)' }}>Create Agreement</div>
-        </div>
-        <div style={{ marginLeft: 'auto', flex: 1, maxWidth: 420 }}>
-          <Stepper
-            steps={[
-              { label: 'Method' },
-              { label: 'Details' },
-              { label: 'Review' },
-            ]}
-            currentStep={step - 1}
-          />
-        </div>
+          <ArrowLeft size={20} weight="bold" />
+          Abort/Revert
+        </button>
       </div>
 
-      {/* ─── Step 1 ─────────────────────────────────────────────── */}
+      {/* ─── Step 1: Logic Selection ─────────────────────────────────── */}
       {step === 1 && (
-        <div className="fade-in">
-          <div style={{ marginBottom: 24 }}>
-            <div className="heading-1" style={{ marginBottom: 6 }}>How do you want to create your agreement?</div>
-            <p style={{ fontSize: 13, color: 'var(--text-2)' }}>AI handles the legal structure — you just provide the context.</p>
+        <div className="space-y-16 animate-slide-up">
+          <div className="max-w-2xl">
+            <h2 className="heading-section text-4xl uppercase font-black mb-6">Select Initialization Vector</h2>
+            <p className="text-xl text-[var(--text-2)] font-bold tracking-tight opacity-70">Describe the intent or select a verified structural fragment.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
+          <div className="grid md:grid-cols-3 gap-10">
             {[
-              { id: 'ai', Icon: Sparkles, label: 'Describe with AI', sub: 'Tell us the deal in plain language. AI generates the full contract, jurisdiction-aware.', badge: 'Recommended' },
-              { id: 'whatsapp', Icon: MessageSquare, label: 'Import Conversation', sub: 'Paste WhatsApp, SMS, or any chat. AI extracts terms and formalizes them.', badge: null },
-              { id: 'template', Icon: FileText, label: 'Use a Template', sub: 'Choose from 20+ pre-built templates for loans, sales, freelance, rentals, and more.', badge: null },
+              { id: 'ai', Icon: Sparkle, label: 'Describe (AI)', sub: 'Natural language synthesis. Full logic generation.', badge: 'Verified' },
+              { id: 'whatsapp', Icon: ChatCenteredDots, label: 'Import Artifact', sub: 'Extract terms from unstructured transcripts.', badge: null },
+              { id: 'template', Icon: FileText, label: 'Registry Library', sub: '20+ jurisdiction-aware structural fragments.', badge: null },
             ].map(({ id, Icon, label, sub, badge }) => (
               <button
                 key={id}
@@ -215,52 +210,47 @@ export default function NewContractPage() {
                   setMethod(id as Method);
                   if (id !== 'template') setStep(2);
                 }}
-                style={{
-                  background: method === id ? 'var(--blue-subtle)' : 'var(--surface)',
-                  border: `1.5px solid ${method === id ? 'var(--blue)' : 'var(--border)'}`,
-                  borderRadius: 12,
-                  padding: '20px 20px',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.12s',
-                  position: 'relative',
-                }}
+                className={cn(
+                  "group relative p-12 brutalist-card border-4 text-left transition-all",
+                  method === id ? "bg-[var(--text-1)] text-white shadow-[8px_8px_0_0_#1447E6]" : "bg-white"
+                )}
               >
                 {badge && (
-                  <div style={{ position: 'absolute', top: 12, right: 12 }}>
-                    <Badge variant="info" className="text-[10px]">{badge}</Badge>
+                  <div className="absolute top-8 right-8">
+                    <span className="bg-[var(--blue)] text-white text-[9px] font-black uppercase tracking-widest px-3 py-1">
+                      {badge}
+                    </span>
                   </div>
                 )}
-                <div style={{ width: 38, height: 38, background: method === id ? 'var(--blue)' : 'var(--surface-2)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                  <Icon size={18} style={{ color: method === id ? '#fff' : 'var(--blue)' }} />
+                <div className={cn(
+                  "w-20 h-20 border-4 border-current flex items-center justify-center mb-10 transition-colors",
+                  method === id ? "bg-white text-[var(--text-1)]" : "bg-[var(--bg)]"
+                )}>
+                  <Icon size={40} weight="bold" />
                 </div>
-                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-1)', marginBottom: 6 }}>{label}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.5 }}>{sub}</div>
+                <h3 className="heading-section text-2xl uppercase font-black mb-4">{label}</h3>
+                <p className="text-sm font-bold leading-relaxed opacity-60 mb-10">{sub}</p>
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest leading-none">
+                  Load Protocol <ArrowRight size={16} weight="bold" />
+                </div>
               </button>
             ))}
           </div>
 
           {method === 'template' && (
-            <div className="slide-up">
-              <div style={{ marginBottom: 14, fontWeight: 600, fontSize: 13 }}>Choose a template</div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+            <div className="pt-16 border-t-4 border-[var(--text-1)] space-y-12 animate-slide-up">
+              <h3 className="text-[12px] font-black uppercase tracking-[0.4em] text-[var(--text-3)]">Registry Fragments</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {contractTemplates.map(t => (
                   <button
                     key={t.id}
                     onClick={() => selectTemplate(t)}
-                    style={{
-                      background: 'var(--surface)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 10,
-                      padding: '16px',
-                      textAlign: 'left',
-                      cursor: 'pointer',
-                    }}
+                    className="group brutalist-card p-8 text-left border-4 hover:bg-[var(--text-1)] hover:text-white transition-all"
                   >
-                    <div style={{ fontSize: 22, marginBottom: 10 }}>{t.icon}</div>
-                    <div style={{ fontWeight: 500, fontSize: 13, marginBottom: 4 }}>{t.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-3)', lineHeight: 1.4 }}>{t.description.slice(0, 70)}…</div>
-                    {t.popular && <Badge variant="success" className="mt-2 text-[10px]">Popular</Badge>}
+                    <div className="text-4xl mb-8 group-hover:scale-110 transition-transform inline-block drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">{t.icon}</div>
+                    <h4 className="font-black text-[var(--text-1)] text-lg mb-2 uppercase tracking-tighter group-hover:text-white">{t.name}</h4>
+                    <p className="text-[10px] text-[var(--text-3)] font-black uppercase tracking-widest mb-6 opacity-60 leading-relaxed group-hover:text-white/60">{t.description.slice(0, 45)}...</p>
+                    {t.popular && <span className="bg-emerald-400 text-black text-[8px] font-black uppercase tracking-widest px-2 py-1 border-2 border-black">Verified</span>}
                   </button>
                 ))}
               </div>
@@ -269,74 +259,79 @@ export default function NewContractPage() {
         </div>
       )}
 
-      {/* ─── Step 2 ─────────────────────────────────────────────── */}
+      {/* ─── Step 2: Input Protocol ─────────────────────────────────── */}
       {step === 2 && (
-        <div className="fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 24 }}>
-          <div>
-            {/* Common party fields */}
-            <div style={{ marginBottom: 20 }}>
-              <div className="heading-1" style={{ marginBottom: 16 }}>
-                {method === 'ai' ? 'Describe your agreement' :
-                  method === 'whatsapp' ? 'Paste your conversation' :
-                    `${selectedTemplate?.icon} ${selectedTemplate?.name}`}
-              </div>
+        <div className="grid lg:grid-cols-3 gap-16 animate-slide-up">
+          <div className="lg:col-span-2 space-y-16">
+            <h2 className="heading-section text-4xl uppercase font-black max-w-2xl">
+              {method === 'ai' ? 'Declare Intent.' :
+                method === 'whatsapp' ? 'Artifact Extraction.' :
+                  `Protocol: ${selectedTemplate?.name}`}
+            </h2>
 
-              {(method === 'ai' || method === 'whatsapp') && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 20 }}>
-                  {['party1_name', 'party2_name', 'jurisdiction'].map((fid, i) => (
-                    <div key={fid}>
-                      <label className="field-label">{i === 0 ? 'Your name' : i === 1 ? "Other party's name" : 'Jurisdiction (city, country)'}</label>
-                      <input className="field" placeholder={i === 0 ? 'e.g., Sarah Jenkins' : i === 1 ? 'e.g., James Miller' : 'e.g., London, UK'} value={formData[fid] || ''} onChange={e => set(fid, e.target.value)} />
-                    </div>
-                  ))}
+            {(method === 'ai' || method === 'whatsapp') && (
+              <div className="grid md:grid-cols-3 gap-8 brutalist-card bg-white p-10 border-4">
+                {[
+                  { id: 'party1_name', label: 'Primary Node', icon: <IdentificationCard size={16} weight="bold" /> },
+                  { id: 'party2_name', label: 'Counterparty', icon: <IdentificationCard size={16} weight="bold" /> },
+                  { id: 'jurisdiction', label: 'Network/Jurisdiction', icon: <MagnifyingGlass size={16} weight="bold" /> }
+                ].map((f) => (
+                  <div key={f.id} className="space-y-4">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)] flex items-center gap-2">
+                      {f.icon} {f.label}
+                    </label>
+                    <input
+                      className="w-full h-14 bg-[var(--bg)] border-4 border-[var(--text-1)] px-6 text-sm font-black uppercase tracking-tight focus:outline-none focus:bg-white"
+                      placeholder="ENTRY REQUIRED"
+                      value={formData[f.id] || ''}
+                      onChange={e => set(f.id, e.target.value)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="brutalist-card bg-white p-12 border-4 space-y-10">
+              {method === 'ai' && (
+                <div className="space-y-6">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]">Intent Declaration (Plain Language)</label>
+                  <textarea
+                    className="w-full bg-[var(--bg)] border-4 border-[var(--text-1)] p-8 text-lg font-bold focus:outline-none focus:bg-white min-h-[350px] custom-scrollbar"
+                    placeholder="E.g., I'm lending $4,000 to James. Monthly payments of $500 starting next month. No interest. If he misses 2 payments, the full balance is due."
+                    value={aiPrompt}
+                    onChange={e => setAiPrompt(e.target.value)}
+                  />
                 </div>
               )}
 
-              {method === 'ai' && (
-                <>
-                  <label className="field-label">Describe the deal in plain language</label>
-                  <textarea
-                    className="field"
-                    rows={7}
-                    placeholder={"E.g., I'm lending my cousin James $4,000 for his business. He'll pay me back $500 per month for 8 months starting March 2026, with no interest. We're both in London, UK. If he misses 2 payments the full amount is due immediately."}
-                    value={aiPrompt}
-                    onChange={e => setAiPrompt(e.target.value)}
-                    style={{ marginBottom: 16 }}
-                  />
-                </>
-              )}
-
               {method === 'whatsapp' && (
-                <>
-                  <label className="field-label">Paste your conversation (WhatsApp, SMS, email, etc.)</label>
+                <div className="space-y-6">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]">Artifact Import (Transcript/Notes)</label>
                   <textarea
-                    className="field"
-                    rows={10}
-                    placeholder={"Paste conversation here...\n\nExample:\nJohn: Hey can I borrow $2000?\nYou: Sure when can you pay back?\nJohn: I'll pay $400/month for 5 months\nYou: Deal, starting February?\nJohn: Yes, February 1st works perfect"}
+                    className="w-full bg-[var(--bg)] border-4 border-[var(--text-1)] p-8 text-sm font-black focus:outline-none focus:bg-white min-h-[450px] custom-scrollbar"
+                    placeholder="Paste conversation transcript here..."
                     value={conversation}
                     onChange={e => setConversation(e.target.value)}
-                    style={{ fontFamily: 'monospace', fontSize: 12, marginBottom: 16 }}
                   />
-                </>
+                </div>
               )}
 
               {method === 'template' && selectedTemplate && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  {selectedTemplate.fields.map(field => (
-                    <div key={field.id}>
-                      <label className="field-label">
-                        {field.label}
-                        {field.required && <span style={{ color: 'var(--red)', marginLeft: 3 }}>*</span>}
+                <div className="space-y-10">
+                  {selectedTemplate?.fields.map(field => (
+                    <div key={field.id} className="space-y-4">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)] flex items-center gap-2">
+                        {field.label} {field.required && <span className="text-red-600 font-black">*</span>}
                       </label>
                       {field.type === 'textarea' ? (
-                        <textarea className="field" rows={3} placeholder={field.placeholder} value={formData[field.id] || ''} onChange={e => set(field.id, e.target.value)} />
+                        <textarea className="w-full bg-[var(--bg)] border-4 border-[var(--text-1)] p-6 text-sm font-black focus:outline-none focus:bg-white" rows={4} placeholder={field.placeholder} value={formData[field.id] || ''} onChange={e => set(field.id, e.target.value)} />
                       ) : field.type === 'select' ? (
-                        <select className="field" value={formData[field.id] || ''} onChange={e => set(field.id, e.target.value)}>
-                          <option value="">Select…</option>
+                        <select className="w-full h-14 bg-[var(--bg)] border-4 border-[var(--text-1)] px-6 text-sm font-black uppercase appearance-none cursor-pointer" value={formData[field.id] || ''} onChange={e => set(field.id, e.target.value)}>
+                          <option value="">Select Logic Option...</option>
                           {field.options?.map(o => <option key={o} value={o}>{o}</option>)}
                         </select>
                       ) : (
-                        <input type={field.type === 'currency' ? 'number' : field.type} className="field" placeholder={field.placeholder} value={formData[field.id] || ''} onChange={e => set(field.id, e.target.value)} />
+                        <input type={field.type === 'currency' ? 'number' : field.type} className="w-full h-14 bg-[var(--bg)] border-4 border-[var(--text-1)] px-6 text-sm font-black focus:outline-none focus:bg-white" placeholder={field.placeholder} value={formData[field.id] || ''} onChange={e => set(field.id, e.target.value)} />
                       )}
                     </div>
                   ))}
@@ -344,211 +339,212 @@ export default function NewContractPage() {
               )}
 
               {error && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--red-subtle)', border: '1px solid #fecaca', borderRadius: 8, padding: '10px 14px', marginTop: 12 }}>
-                  <AlertCircle size={14} style={{ color: 'var(--red)', flexShrink: 0 }} />
-                  <span style={{ fontSize: 13, color: 'var(--red)' }}>{error}</span>
+                <div className="flex items-center gap-4 bg-red-100 border-4 border-red-600 p-6 text-red-600">
+                  <WarningCircle size={24} weight="bold" />
+                  <span className="text-sm font-black uppercase">{error}</span>
                 </div>
               )}
 
-              <Button
-                variant="premium"
-                className="w-full mt-4"
+              <button
                 disabled={loading || (method === 'ai' ? !aiPrompt.trim() : method === 'whatsapp' ? !conversation.trim() : false)}
                 onClick={method === 'ai' ? generateAI : method === 'whatsapp' ? parseConversation : () => setStep(3)}
+                className="brutalist-button w-full h-20 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[6px_6px_0_0_black]"
               >
-                {loading ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing…</> :
-                  method === 'ai' ? <><Sparkles size={14} /> Generate Contract</> :
-                    method === 'whatsapp' ? <><Sparkles size={14} /> Extract & Generate</> :
-                      'Preview Contract →'}
-              </Button>
+                {loading ? <CircleNotch size={24} className="animate-spin mr-3" /> : <Sparkle size={24} weight="bold" className="mr-3" />}
+                {method === 'ai' ? 'Synthesize Protocol Architecture' : method === 'whatsapp' ? 'Extract Jurisdictional Logic' : 'Finalize Architecture Vector →'}
+              </button>
             </div>
           </div>
 
-          {/* Side info */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div className="card-flat" style={{ padding: 16 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>How it works</div>
-              {(method === 'ai' ? [
-                'Gemini AI reads your description',
-                'Generates jurisdiction-aware clauses',
-                'You review, edit, and customize',
-                'Both parties sign digitally',
-              ] : method === 'whatsapp' ? [
-                'AI reads your conversation',
-                'Extracts all agreed terms',
-                'Fills in legal gaps automatically',
-                'You confirm and both parties sign',
-              ] : [
-                'Fill in the required fields',
-                'Preview the full contract',
-                'Customize any clause you need',
-                'Send for signatures',
-              ]).map((step, i) => (
-                <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
-                  <div style={{ width: 20, height: 20, background: 'var(--blue-subtle)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 10, fontWeight: 700, color: 'var(--blue)' }}>{i + 1}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.4, paddingTop: 2 }}>{step}</div>
-                </div>
-              ))}
+          {/* Side Feedback */}
+          <div className="space-y-12">
+            <div className="brutalist-card bg-white border-4 p-10 space-y-10">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-3)]">Pipeline Logic</h3>
+              <div className="space-y-8">
+                {(method === 'ai' ? [
+                  'Natural Language Analysis',
+                  'Jurisdiction Logic Mapping',
+                  'Clause Synthesis',
+                  'Final Enforcement Check',
+                ] : method === 'whatsapp' ? [
+                  'Artifact Deconstruction',
+                  'Party Recognition',
+                  'Term Verification',
+                  'Structural Compilation',
+                ] : [
+                  'Structural Parameter Check',
+                  'Logic Verification',
+                  'Refinement Phase',
+                  'Formal Deployment',
+                ]).map((s, i) => (
+                  <div key={i} className="flex gap-6 group">
+                    <div className="w-8 h-8 border-4 border-[var(--text-1)] flex items-center justify-center text-[10px] font-black transition-colors group-hover:bg-[var(--text-1)] group-hover:text-white">
+                      {i + 1}
+                    </div>
+                    <span className="text-xs font-black uppercase tracking-tight group-hover:text-[var(--text-1)]">{s}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="card-flat" style={{ padding: 16, background: 'var(--blue-subtle)', border: '1px solid rgba(20,71,230,0.15)' }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Legal tip</div>
-              <div style={{ fontSize: 12, color: 'var(--text-1)', lineHeight: 1.5 }}>
-                {method === 'whatsapp'
-                  ? 'Chat-based agreements can be legally binding in many jurisdictions when offer, acceptance, and consideration are clearly present.'
-                  : 'Contracts don\'t need to be on official paper. A signed agreement on AgreeMint carries the same legal weight as a traditional contract in most jurisdictions.'}
+            <div className="bg-[var(--text-1)] text-white border-4 p-10 relative overflow-hidden shadow-[8px_8px_0_0_#1447E6]">
+              <div className="absolute top-0 right-0 p-6 opacity-10">
+                <Shield size={80} weight="bold" />
               </div>
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-6">Security Trace</p>
+              <p className="text-sm font-bold leading-relaxed m-0 opacity-80 uppercase tracking-tight">
+                {method === 'whatsapp'
+                  ? 'Artifacts are digitally verified against international arbitration standards for binding recognition.'
+                  : 'System-generated logic is optimized for immediate jurisdictional enforcement.'}
+              </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* ─── Step 3 ─────────────────────────────────────────────── */}
+      {/* ─── Step 3: Refinement Phase ─────────────────────────────────── */}
       {step === 3 && (
-        <div className="fade-in" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 24 }}>
+        <div className="grid lg:grid-cols-3 gap-16 animate-slide-up">
 
-          {/* Clause editor */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <div style={{ fontWeight: 600, fontSize: 13 }}>Clauses ({clauses.length})</div>
-              <Button variant="ghost" size="sm" onClick={addClause}>
-                <Plus size={12} /> Add
-              </Button>
+          {/* Logic Control Panel */}
+          <div className="space-y-12">
+            <div className="flex items-center justify-between pb-6 border-b-4 border-[var(--text-1)]">
+              <h3 className="text-[12px] font-black uppercase tracking-[0.4em] text-[var(--text-3)]">Protocol Nodes ({clauses.length})</h3>
+              <button onClick={addClause} className="w-10 h-10 border-4 border-[var(--text-1)] flex items-center justify-center hover:bg-[var(--text-1)] hover:text-white transition-all">
+                <Plus size={18} weight="bold" />
+              </button>
             </div>
 
-            {aiMeta?.summary && (
-              <div style={{ background: 'var(--blue-subtle)', border: '1px solid rgba(20,71,230,0.15)', borderRadius: 8, padding: '10px 12px', marginBottom: 12 }}>
-                <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>AI Summary</div>
-                <div style={{ fontSize: 12, color: 'var(--text-1)', lineHeight: 1.4 }}>{aiMeta.summary}</div>
-              </div>
-            )}
+            <div className="space-y-6">
+              {aiMeta?.summary && (
+                <div className="bg-[var(--blue)] text-white border-4 border-black p-8 shadow-[4px_4px_0_0_black]">
+                  <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/60 mb-3">Architectural Summary</div>
+                  <p className="text-sm font-bold leading-relaxed m-0 uppercase tracking-tight">{aiMeta.summary}</p>
+                </div>
+              )}
 
-            {parsedInfo?.confidence && (
-              <div style={{ marginBottom: 10 }}>
-                <Badge variant={parsedInfo.confidence === 'high' ? 'success' : parsedInfo.confidence === 'medium' ? 'warning' : 'danger'}>
-                  {parsedInfo.confidence} confidence parse
-                </Badge>
-              </div>
-            )}
-
-            {parsedInfo?.missingInfo && parsedInfo.missingInfo.length > 0 && (
-              <div style={{ background: 'var(--amber-subtle)', border: '1px solid #fde68a', borderRadius: 8, padding: '10px 12px', marginBottom: 12 }}>
-                <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--amber)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Clarify these terms</div>
-                {parsedInfo.missingInfo.map((m, i) => (
-                  <div key={i} style={{ fontSize: 11, color: 'var(--text-2)', marginBottom: 3 }}>· {m}</div>
-                ))}
-              </div>
-            )}
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {clauses.map((clause, i) => (
-                <div key={clause.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-3)', width: 16, flexShrink: 0 }}>{i + 1}.</div>
+                <div key={clause.id} className="brutalist-card bg-white p-8 border-4 space-y-6 hover:translate-x-1 transition-all">
+                  <div className="flex items-center gap-6">
+                    <span className="text-[10px] font-black text-[var(--text-3)] opacity-40">FRAGMENT_0{i + 1}</span>
                     <input
-                      style={{ flex: 1, fontSize: 12, fontWeight: 500, color: 'var(--text-1)', background: 'transparent', border: 'none', outline: 'none' }}
+                      className="flex-1 text-sm font-black uppercase bg-transparent border-none outline-none text-[var(--text-1)]"
                       value={clause.title}
                       onChange={e => updateClause(clause.id, 'title', e.target.value)}
                     />
-                    <div style={{ display: 'flex', gap: 2 }}>
-                      <button onClick={() => moveClause(i, 'up')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-3)' }} disabled={i === 0} aria-label="Move clause up"><ChevronUp size={11} /></button>
-                      <button onClick={() => moveClause(i, 'down')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-3)' }} disabled={i === clauses.length - 1} aria-label="Move clause down"><ChevronDown size={11} /></button>
-                      <button onClick={() => removeClause(clause.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--red)' }} aria-label="Delete clause"><Trash2 size={11} /></button>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => removeClause(clause.id)} className="text-red-600 hover:scale-110 transition-transform"><Trash size={18} weight="bold" /></button>
                     </div>
                   </div>
                   <textarea
-                    style={{ width: '100%', fontSize: 11, color: 'var(--text-2)', background: 'transparent', border: 'none', outline: 'none', resize: 'none', lineHeight: 1.4 }}
+                    className="w-full text-xs font-bold text-[var(--text-2)] bg-[var(--bg)] p-4 border-2 border-[var(--text-1)] outline-none resize-none leading-relaxed min-h-[100px]"
                     value={clause.content}
                     onChange={e => updateClause(clause.id, 'content', e.target.value)}
-                    rows={3}
                   />
                 </div>
               ))}
             </div>
 
             {aiMeta?.legalWarnings && aiMeta.legalWarnings.length > 0 && (
-              <div style={{ marginTop: 12, background: 'var(--red-subtle)', border: '1px solid #fecaca', borderRadius: 8, padding: '10px 12px' }}>
-                <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--red)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Legal notices</div>
-                {aiMeta.legalWarnings.map((w, i) => (
-                  <div key={i} style={{ fontSize: 11, color: 'var(--text-2)', marginBottom: 3 }}>· {w}</div>
-                ))}
+              <div className="bg-red-400 text-black border-4 border-black p-8 shadow-[4px_4px_0_0_black]">
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-6 border-b-2 border-black pb-2">Risk Detection Log</div>
+                <div className="space-y-4">
+                  {aiMeta.legalWarnings.map((w) => (
+                    <div key={w} className="flex gap-4 text-[11px] font-black uppercase leading-tight">
+                      <WarningCircle size={16} weight="bold" className="flex-shrink-0" />
+                      <span>{w}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
-          {/* Document preview */}
-          <div>
-            <div className="card-flat" style={{ padding: '36px 44px', fontFamily: 'Georgia, serif' }}>
-              {/* Title editable */}
-              <div style={{ borderBottom: '2px solid var(--text-1)', paddingBottom: 12, marginBottom: 24 }}>
-                <input
-                  style={{ fontFamily: 'Georgia, serif', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-1)', background: 'transparent', border: 'none', outline: 'none', width: '100%', letterSpacing: '-0.01em' }}
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                />
-                <div style={{ fontSize: 12, color: 'var(--text-2)', marginTop: 6, fontFamily: 'Inter, sans-serif' }}>
-                  {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </div>
-              </div>
+          {/* Legal Instrument Preview */}
+          <div className="lg:col-span-2 space-y-12">
+            <div className="brutalist-card bg-white border-4 p-20 relative min-h-[1100px] shadow-[12px_12px_0_0_black]">
+              <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'linear-gradient(var(--text-1) 1px, transparent 1px), linear-gradient(90deg, var(--text-1) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
-              {/* Parties */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, background: 'var(--bg)', borderRadius: 8, padding: '14px 16px', marginBottom: 24, fontFamily: 'Inter, sans-serif' }}>
-                {[{ role: 'Party A (Creator)', name: p1 }, { role: 'Party B (Counterparty)', name: p2 }].map(p => (
-                  <div key={p.role}>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>{p.role}</div>
-                    <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-1)' }}>{p.name}</div>
+              <div className="relative z-10 space-y-20">
+                <div className="border-b-8 border-[var(--text-1)] pb-12 flex justify-between items-end">
+                  <div className="space-y-6 flex-1 pr-12">
+                    <div className="text-[12px] font-black uppercase tracking-[0.5em] text-[var(--blue)]">Binding Protocol</div>
+                    <input
+                      className="heading-display text-6xl text-[var(--text-1)] bg-transparent border-none outline-none w-full uppercase"
+                      value={title}
+                      onChange={e => setTitle(e.target.value)}
+                    />
                   </div>
-                ))}
-              </div>
+                  <div className="text-right whitespace-nowrap">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)] mb-2">Timestamp</div>
+                    <div className="font-black text-lg text-[var(--text-1)] uppercase">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).replace(/,/g, '')}</div>
+                  </div>
+                </div>
 
-              {/* Clauses */}
-              <div style={{ marginBottom: 28 }}>
-                {clauses.map((clause, i) => (
-                  <div key={clause.id} style={{ marginBottom: 18 }}>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-1)', marginBottom: 6 }}>
-                      {i + 1}. {clause.title}
+                <div className="grid grid-cols-2 gap-16 border-b-4 border-[var(--text-1)] pb-20">
+                  {[{ role: 'Architect (Origin)', name: p1 }, { role: 'Counterparty (Target)', name: p2 }].map((p, i) => (
+                    <div key={i} className="space-y-4">
+                      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-3)]">{p.role}</div>
+                      <div className="font-serif text-4xl text-[var(--text-1)] leading-none">{p.name}</div>
                     </div>
-                    <div style={{ fontSize: '0.875rem', color: '#3A3530', lineHeight: 1.75 }}>{clause.content}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Governing law */}
-              {formData.jurisdiction && (
-                <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16, marginBottom: 24, fontFamily: 'Inter, sans-serif' }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Governing Law</div>
-                  <div style={{ fontSize: 13, color: 'var(--text-2)' }}>This agreement is governed by the laws of {formData.jurisdiction}.</div>
+                  ))}
                 </div>
-              )}
 
-              {/* Signatures */}
-              <div style={{ borderTop: '2px solid var(--text-1)', paddingTop: 24 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 20, fontFamily: 'Inter, sans-serif' }}>Signatures</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
+                <div className="space-y-20">
+                  {clauses.map((clause, i) => (
+                    <div key={clause.id} className="space-y-8">
+                      <h4 className="heading-section text-3xl text-[var(--text-1)] flex items-baseline gap-6 uppercase">
+                        <span className="text-sm font-black text-[var(--blue)]">0{i + 1}</span>
+                        {clause.title}
+                      </h4>
+                      <p className="text-[17px] font-bold text-[var(--text-1)] leading-relaxed border-l-8 border-[var(--text-1)] pl-12">
+                        {clause.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {formData.jurisdiction && (
+                  <div className="pt-20 border-t-4 border-[var(--text-1)]">
+                    <div className="text-[12px] font-black uppercase tracking-[0.4em] text-[var(--text-3)] mb-6">Jurisdiction Shell</div>
+                    <p className="text-lg font-black uppercase text-[var(--text-1)] leading-tight tracking-tight">Governed by: {formData.jurisdiction} // Optimized for Instant Enforcement.</p>
+                  </div>
+                )}
+
+                <div className="pt-32 grid grid-cols-2 gap-24">
                   {[p1, p2].map((name, i) => (
-                    <div key={i}>
-                      <div style={{ height: 48, borderBottom: '1px solid var(--border-strong)', marginBottom: 8 }} />
-                      <div style={{ fontSize: 12, color: 'var(--text-2)', fontFamily: 'Inter, sans-serif' }}>{name}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-3)', fontFamily: 'Inter, sans-serif' }}>Date: ___________</div>
+                    <div key={i} className="space-y-8">
+                      <div className="h-2 bg-[var(--text-1)] w-full" />
+                      <div className="flex justify-between items-center text-[var(--text-1)]">
+                        <span className="text-[12px] font-black uppercase tracking-widest">{name}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">ID_PROTO_{Math.random().toString(16).substring(2, 6).toUpperCase()}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Action buttons */}
-            <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-              <Button variant="outline" className="flex-1 justify-center" onClick={() => { save('draft'); toast({ title: 'Draft saved', description: 'Your agreement has been saved as a draft.' }); }}>
-                <Save size={14} /> Save Draft
-              </Button>
-              <Button variant="premium" className="flex-1 justify-center" onClick={() => { save('pending_signature'); toast({ title: 'Agreement sent', description: 'Your agreement has been sent for signature.', variant: 'success' }); }}>
-                <Send size={14} /> Send for Signature
-              </Button>
+            {/* Global Actions */}
+            <div className="flex gap-10">
+              <button
+                className="brutalist-button flex-1 h-20 bg-white text-[var(--text-1)] text-[12px] border-4 shadow-[6px_6px_0_0_black]"
+                onClick={() => { save('draft'); toast({ title: 'Logic Captured', description: 'Fragment stored in workspace.' }); }}
+              >
+                <FloppyDisk size={24} weight="bold" className="mr-3" />
+                Capture Drift
+              </button>
+              <button
+                className="brutalist-button flex-1 h-20 bg-[var(--blue)] text-white text-[12px] border-4 shadow-[8px_8px_0_0_black]"
+                onClick={() => { save('pending_signature'); toast({ title: 'Protocol Genesis', description: 'Enforcement vector initialized.' }); }}
+              >
+                <PaperPlaneTilt size={24} weight="bold" className="mr-3" />
+                Genesis Dispatch
+              </button>
             </div>
           </div>
         </div>
       )}
-
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
