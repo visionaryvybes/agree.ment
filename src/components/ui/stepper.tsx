@@ -26,11 +26,11 @@ export function Stepper({ steps, currentStep, className }: StepperProps) {
                                 className={cn(
                                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[10px] font-black transition-all duration-500",
                                     index < currentStep &&
-                                    "border-[var(--text-1)] bg-[var(--text-1)] text-white",
+                                    "border-[var(--glass-border)] bg-[var(--text-1)] text-[var(--bg)]",
                                     index === currentStep &&
-                                    "border-[var(--text-1)] bg-white text-[var(--text-1)] shadow-xl shadow-black/5 scale-110",
+                                    "border-[var(--glass-border)] bg-transparent text-[var(--text-1)] shadow-xl shadow-black/5 scale-110",
                                     index > currentStep &&
-                                    "border-[var(--border-strong)] bg-white text-[var(--text-3)]"
+                                    "border-[var(--border-strong)] bg-transparent text-[var(--text-3)]"
                                 )}
                             >
                                 {index < currentStep ? (

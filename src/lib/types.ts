@@ -90,6 +90,7 @@ export interface ContractTemplate {
   category: ContractCategory;
   description: string;
   image?: string;
+  variants?: { label: string; image: string }[];
   icon: string;
   clauses: ContractClause[];
   fields: TemplateField[];
@@ -134,4 +135,5 @@ export interface DashboardStats {
   totalOwed: number;
   totalReceivable: number;
   overduePayments: number;
+  totalValue: number;
 }

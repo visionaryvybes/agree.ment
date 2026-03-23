@@ -183,6 +183,7 @@ export const useContracts = create<ContractsState>((set, get) => ({
         .filter((p) => p.status === 'paid')
         .reduce((sum, p) => sum + (p.paidAmount || p.amount), 0),
       overduePayments: overdue.length,
+      totalValue: contracts.reduce((sum, c) => sum + (c.totalAmount || 0), 0),
     };
   },
 }));

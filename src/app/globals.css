@@ -3,27 +3,29 @@
 /* ─── AgreeMint Rebirth: Aggressive Neo-Brutalist (2025) ────────────────────────── */
 
 @theme {
-  --color-brand-paper: #F5F5F7;
-  --color-brand-onyx: #1A1A2E;
-  --color-brand-accent: #6C63FF;
+  --color-brand-paper: #EAE7E0;
+  --color-brand-onyx: #1C1B1A;
+  --color-brand-accent: #5B52ED;
+  --color-white: #FAF8F5; /* Replaces blinding #FFFFFF with a warm pearl */
   --font-serif: "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
 
 :root {
-  /* Core Palette */
-  --bg: #F5F5F7;
-  --text-1: #1A1A2E;
-  --text-2: #4A4A68;
-  --text-3: #8B8B9B;
-  --blue: #6C63FF;
-  --secondary: #00D4AA;
+  /* Cyber-Brutalist Palette */
+  --bg: #0A0A0B;          /* Deepest obsidian background */
+  --text-1: #F5F5F5;      /* Blinding off-white for sharp contrast */
+  --text-2: #CCCCCC;      /* Muted tactical gray */
+  --text-3: #999999;      /* Interface shadows/lines */
+  --blue: #6366F1;        /* Cyber indigo */
+  --secondary: #10B981;   /* Neon emerald */
+  --color-white: #171717; /* Replaces blinding white with dark surface component */
 
   /* Brutalist Tokens */
   --border-width: 2px;
-  --border-color: #1A1A2E;
-  --shadow-hard: 4px 4px 0 0 #1A1A2E;
-  --shadow-hard-hover: 6px 6px 0 0 #1A1A2E;
+  --border-color: #F5F5F5;
+  --shadow-hard: 4px 4px 0 0 var(--border-color);
+  --shadow-hard-hover: 6px 6px 0 0 var(--border-color);
 
   --radius: 0px;
   --radius-sm: 0px;
@@ -32,6 +34,17 @@
   /* Global Enforcement Style */
   --font-serif: "Inter", sans-serif;
   --font-sans: "Inter", sans-serif;
+}
+
+@media print {
+  :root {
+    --bg: #FFFFFF;
+    --text-1: #000000;
+    --text-2: #333333;
+    --text-3: #666666;
+    --border-color: #000000;
+    --color-white: #FFFFFF;
+  }
 }
 
 /* ─── Reset & Base ───────────────────────────────────────────────── */
@@ -57,7 +70,7 @@ body::after {
 /* ─── Brutalist Components ────────────────────────────────────────── */
 
 .brutalist-card {
-  background: #FFFFFF;
+  background: var(--color-white);
   border: 4px solid var(--text-1);
   box-shadow: 4px 4px 0 0 var(--text-1);
   transition: all 0.1s ease;
@@ -69,14 +82,14 @@ body::after {
 }
 
 .brutalist-card-flat {
-  background: #FFFFFF;
+  background: var(--color-white);
   border: 4px solid var(--text-1);
   box-shadow: 8px 8px 0 0 var(--text-1);
 }
 
 .brutalist-button {
   background: var(--text-1);
-  color: #FFFFFF;
+  color: var(--color-white);
   border: var(--border-width) solid var(--border-color);
   box-shadow: 2px 2px 0 0 var(--border-color);
   font-weight: 800;

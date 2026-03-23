@@ -9,11 +9,11 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950",
+                    "bg-slate-900 text-[var(--bg)] hover:bg-slate-800 active:bg-slate-950",
                 destructive:
-                    "bg-red-600 text-white hover:bg-red-700 active:bg-red-800",
+                    "bg-red-600 text-[var(--bg)] hover:bg-red-700 active:bg-red-800",
                 outline:
-                    "border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300",
+                    "border border-slate-200 bg-transparent hover:bg-slate-50 hover:border-slate-300",
                 secondary:
                     "bg-slate-100 text-slate-900 hover:bg-slate-200",
                 ghost:
@@ -21,9 +21,9 @@ const buttonVariants = cva(
                 link:
                     "text-blue-600 underline-offset-4 hover:underline",
                 premium:
-                    "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
+                    "bg-blue-600 text-[var(--bg)] hover:bg-blue-700 active:bg-blue-800",
                 warning:
-                    "bg-amber-500 text-white hover:bg-amber-600 active:bg-amber-700",
+                    "bg-amber-500 text-[var(--bg)] hover:bg-amber-600 active:bg-amber-700",
             },
             size: {
                 default: "h-10 px-5 py-2",

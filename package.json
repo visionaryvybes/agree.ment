@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "./node_modules/.bin/next dev",
+    "build": "./node_modules/.bin/next build",
+    "start": "./node_modules/.bin/next start",
+    "lint": "./node_modules/.bin/next lint"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.43",
+    "@ai-sdk/react": "^3.0.136",
     "@clerk/nextjs": "^7.0.4",
+    "@eslint/eslintrc": "^3.3.5",
     "@google/generative-ai": "^0.24.1",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -28,11 +30,11 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.34.3",
     "lucide-react": "^0.575.0",
-    "next": "16.1.6",
-    "pdf-lib": "^1.17.1",
+    "next": "^15.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
+    "recharts": "^3.8.0",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.5.0",
     "uuid": "^13.0.0",
@@ -46,7 +48,7 @@
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "15.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

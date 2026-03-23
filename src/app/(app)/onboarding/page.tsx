@@ -28,7 +28,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-[var(--bg)] flex flex-col justify-center py-20 px-8">
       <div className="max-w-2xl mx-auto w-full">
         <div className="mb-12 text-center">
-          <div className="inline-block p-4 bg-[var(--text-1)] text-white mb-8 shadow-[4px_4px_0_0_#1447E6]">
+          <div className="inline-block p-4 bg-[var(--text-1)] text-[var(--bg)] mb-8 shadow-[4px_4px_0_0_#1447E6]">
             <Sparkle size={32} weight="bold" />
           </div>
           <h1 className="heading-display mb-4">Protocol Initialization.</h1>
@@ -37,11 +37,11 @@ export default function OnboardingPage() {
 
         <Stepper steps={steps} currentStep={step} className="mb-16" />
 
-        <div className="brutalist-card bg-white p-12 border-4 min-h-[400px] flex flex-col justify-between shadow-[8px_8px_0_0_black]">
+        <div className="glass-card bg-transparent p-12 border min-h-[400px] flex flex-col justify-between shadow-2xl">
           {step === 0 && (
             <div className="space-y-8 animate-slide-up">
               <h2 className="heading-section text-2xl uppercase font-black">Verify Identity Node</h2>
-              <div className="flex items-center gap-6 p-6 border-2 border-[var(--text-1)] bg-[var(--bg)]">
+              <div className="flex items-center gap-6 p-6 border-2 border-[var(--glass-border)] bg-[var(--bg)]">
                 <UserCircle size={48} weight="duotone" className="text-[var(--blue)]" />
                 <div>
                   <div className="font-black text-lg uppercase tracking-tight">{user?.fullName || 'Administrator'}</div>
@@ -54,7 +54,7 @@ export default function OnboardingPage() {
                   <Input 
                     value={formData.company} 
                     onChange={e => setFormData({ ...formData, company: e.target.value })} 
-                    className="border-2 border-[var(--text-1)] h-12 font-bold focus-visible:ring-0" 
+                    className="border-2 border-[var(--glass-border)] h-12 font-bold focus-visible:ring-0" 
                     placeholder="E.g., Acme Corp" 
                   />
                 </div>
@@ -63,7 +63,7 @@ export default function OnboardingPage() {
                   <select 
                     value={formData.role} 
                     onChange={e => setFormData({ ...formData, role: e.target.value })} 
-                    className="w-full border-2 border-[var(--text-1)] h-12 font-bold px-4 focus:outline-none appearance-none bg-white"
+                    className="w-full border-2 border-[var(--glass-border)] h-12 font-bold px-4 focus:outline-none appearance-none bg-transparent"
                   >
                     <option value="">Select Role...</option>
                     <option value="freelancer">Freelancer / Creator</option>
@@ -85,7 +85,7 @@ export default function OnboardingPage() {
                 <select 
                   value={formData.jurisdiction} 
                   onChange={e => setFormData({ ...formData, jurisdiction: e.target.value })} 
-                  className="w-full border-2 border-[var(--text-1)] h-14 font-black uppercase tracking-tight px-4 focus:outline-none appearance-none bg-[var(--bg)] text-lg"
+                  className="w-full border-2 border-[var(--glass-border)] h-14 font-black uppercase tracking-tight px-4 focus:outline-none appearance-none bg-[var(--bg)] text-lg"
                 >
                   <option value="Global (Root)">Global Protocol (Root)</option>
                   <option value="United States">United States</option>
@@ -101,7 +101,7 @@ export default function OnboardingPage() {
 
           {step === 2 && (
             <div className="space-y-8 animate-slide-up text-center py-8">
-              <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-emerald-600 shadow-[4px_4px_0_0_#059669]">
+              <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 border border-emerald-600 shadow-[4px_4px_0_0_#059669]">
                 <ShieldCheck size={48} weight="bold" />
               </div>
               <h2 className="heading-section text-3xl uppercase font-black">Node Verified</h2>
@@ -120,7 +120,7 @@ export default function OnboardingPage() {
             </button>
             <button 
               onClick={next} 
-              className="brutalist-button py-4 px-8 text-xs bg-[var(--blue)] text-white border-2"
+              className="btn-primary py-4 px-8 text-xs bg-[var(--blue)] text-[var(--bg)] border-2"
             >
               {step === 2 ? 'Enter Dashboard →' : 'Confirm & Proceed'}
             </button>

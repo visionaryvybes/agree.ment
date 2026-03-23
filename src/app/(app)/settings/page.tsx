@@ -9,7 +9,7 @@ export default function SettingsPage() {
         <h1 className="heading-display text-4xl mb-10 uppercase font-black text-[var(--text-1)]">
           Account Settings
         </h1>
-        <div className="brutalist-card bg-white border-4 p-8 shadow-[8px_8px_0_0_black]">
+        <div className="brutalist-card bg-[var(--color-white)] border-2 border-[var(--text-1)] shadow-[8px_8px_0_0_var(--text-1)] p-8">
           <UserProfile routing="hash" />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { MODEL, streamText } from '@/lib/ai';
+import { MODEL, streamText, google } from '@/lib/ai';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -13,6 +13,9 @@ Provide general legal information about contracts and agreements.
 Focus on contract clauses, terms, and document structure.
 ALWAYS end your responses with: "⚠️ This is general information, not legal advice. Consult a qualified lawyer for your specific situation."`,
       messages,
+      tools: {
+        googleSearch: google.tools.googleSearch({}),
+      },
     });
 
     return result.toTextStreamResponse();

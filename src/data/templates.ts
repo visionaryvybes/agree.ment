@@ -8,7 +8,7 @@ export const contractTemplates: ContractTemplate[] = [
     category: 'loan',
     description: 'Lend money to friends or family with clear repayment terms, interest rates, and default provisions.',
     image: '/templates/tpl_loan_v2_1772228267875.png',
-    icon: '💰',
+    icon: '📜',
     popular: true,
     preview: 'This Loan Agreement is entered into between [Lender] and [Borrower] on [Date]. The Lender agrees to loan the amount of [Amount] to the Borrower...',
     fields: [
@@ -202,7 +202,7 @@ export const contractTemplates: ContractTemplate[] = [
     category: 'employment',
     description: 'Formalize hiring with clear roles, compensation, benefits, and termination clauses.',
     image: '/templates/tpl_employment_v2.png',
-    icon: '👔',
+    icon: '💼',
     popular: true,
     preview: 'This Employment Contract is made between [Employer] and [Employee]...',
     fields: [
@@ -238,13 +238,13 @@ export const contractTemplates: ContractTemplate[] = [
   },
   {
     id: 'tpl-custom',
-    name: 'Custom AI-Generated Agreement',
+    name: 'Custom Professional Agreement',
     category: 'custom',
-    description: 'Describe your situation in plain language and let AI craft a custom, legally-informed agreement for you.',
+    description: 'Describe your situation in plain language and let the system craft a custom, legally-informed agreement for you.',
     image: '/templates/tpl_custom_v2_1772228357121.png',
-    icon: '🤖',
+    icon: '📑',
     popular: true,
-    preview: 'Tell AI what you need: "I want to lend my brother $3000 and he will pay me back $500 per month starting April..."',
+    preview: 'Tell us what you need: "I want to lend my brother $3000 and he will pay me back $500 per month starting April..."',
     fields: [
       { id: 'situation', label: 'Describe Your Situation', type: 'textarea', placeholder: 'E.g., "I\'m selling my car to a neighbor for $8,000. He wants to pay in 4 monthly installments..."', required: true },
       { id: 'party1_name', label: 'Your Name', type: 'text', placeholder: 'Your full name', required: true },

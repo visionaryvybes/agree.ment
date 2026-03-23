@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
-import { auth } from '@clerk/nextjs/server';
+import { auth } from '@/lib/safe-auth';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const { userId } = await auth();
     if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
     const keys = await redis.keys(`contract:${userId}:*`);
     if (keys.length === 0) return NextResponse.json({ contracts: [] });
 
-    // Handle Upstash mget limitation by chunking if necessary, but for <100 contracts it's fine
     const contracts = await redis.mget(...keys);
     return NextResponse.json({ contracts: contracts.filter(Boolean) });
   } catch (err) {
