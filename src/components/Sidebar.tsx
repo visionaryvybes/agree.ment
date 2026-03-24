@@ -6,14 +6,11 @@ import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import {
   Gear,
-  CaretRight,
-  CaretLeft,
   X,
   ShieldCheck,
   Layout,
   FolderSimple,
-  FileText,
-  List
+  FileText
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";

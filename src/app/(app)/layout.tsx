@@ -1,28 +1,14 @@
 'use client';
 
 import { useUser, UserButton } from '@clerk/nextjs';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { 
-  Warning, 
-  ChartBar, 
-  ArrowRight, 
-  Clock, 
-  CheckCircle, 
   ShieldCheck, 
-  Sparkle, 
-  CaretRight,
-  CaretLeft,
   Plus,
-  Files,
   Stack,
-  Books,
-  Scales,
-  House,
-  MagnifyingGlass,
   PlusCircle,
   Browsers,
-  FileText,
-  Gear
+  FileText
 } from "@phosphor-icons/react";
 import Sidebar from "@/components/Sidebar";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -59,15 +45,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="w-10 h-10 border-2 border-emerald/20 border-t-emerald rounded-full animate-spin shadow-[0_0_15px_rgba(0,255,209,0.2)]" />
     </div>
   );
-
-  const navigation = [
-    { name: 'Dashboard', icon: Browsers, href: '/dashboard' },
-    { name: 'Contracts', icon: FileText, href: '/contracts' },
-    { name: 'Templates', icon: Stack, href: '/templates' },
-    { name: 'Repository', icon: Books, href: '/legal-library' },
-    { name: 'System Guidance', icon: ShieldCheck, href: '/verified-guidance' },
-    { name: 'Settings', icon: Gear, href: '/settings' },
-  ];
 
   return (
     <div className="min-h-screen bg-[#010101] text-white selection:bg-emerald selection:text-[#010101] flex font-sans overflow-x-hidden">
