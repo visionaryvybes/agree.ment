@@ -9,17 +9,16 @@ import {
   FileText, 
   CurrencyDollar,
   User,
-  Users,
   CaretRight,
-  DownloadSimple,
   Warning,
-  PlusCircle,
-  Eye,
-  CheckCircle,
-  Link as LinkIcon,
   MagicWand,
   Sparkle,
-  Image as ImageIcon
+  Image as ImageIcon,
+  PenNib,
+  Users as UsersIcon,
+  Gavel,
+  FilePdf,
+  CurrencyCircleDollar
 } from "@phosphor-icons/react";
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -27,15 +26,36 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Magnetic from '@/components/ui/magnetic';
 import DigitalSeal from '@/components/ui/digital-seal';
+import dynamic from 'next/dynamic';
+import SignaturePad from '@/components/SignaturePad';
+import PaymentTracker from '@/components/PaymentTracker';
+import MultiPartySigning from '@/components/MultiPartySigning';
+import DisputeResolution from '@/components/DisputeResolution';
+import PdfExport from '@/components/PdfExport';
+import NanoBananaEnhancer from '@/components/NanoBananaEnhancer';
+
+const Seal3D = dynamic(() => import('@/components/ui/seal-3d'), { ssr: false });
+
+type TabId = 'overview' | 'sign' | 'payments' | 'parties' | 'dispute' | 'export' | 'enhance';
+
+const TABS: { id: TabId; label: string; icon: any }[] = [
+  { id: 'overview', label: 'Overview', icon: FileText },
+  { id: 'sign', label: 'Sign', icon: PenNib },
+  { id: 'payments', label: 'Payments', icon: CurrencyCircleDollar },
+  { id: 'parties', label: 'Parties', icon: UsersIcon },
+  { id: 'dispute', label: 'Dispute', icon: Gavel },
+  { id: 'export', label: 'PDF', icon: FilePdf },
+  { id: 'enhance', label: 'Enhance', icon: Sparkle },
+];
 
 export default function ContractDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const { getContract } = useContracts();
+  const { updateContract } = useProtocolActions();
   const contract: any = getContract(id as string);
   const [mounted, setMounted] = useState(false);
-  const [isEnhancing, setIsEnhancing] = useState(false);
-  const [enhancedImage, setEnhancedImage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabId>('overview');
 
   useEffect(() => {
     setMounted(true);
@@ -50,262 +70,275 @@ export default function ContractDetailPage() {
     </div>
   );
 
-  const handleEnhance = async () => {
-    setIsEnhancing(true);
-    // Simulation of Nano Banana Pro 2 reading context and generating visual
-    setTimeout(() => {
-        setIsEnhancing(false);
-        setEnhancedImage('/enhanced_identity_demo.png'); // Placeholder or we generate one
-    }, 3000);
-  };
-
   const getStatusConfig = (status: string) => {
     switch (status) {
-      case 'active': return { label: 'ACTIVE DEAL', color: 'text-emerald', bg: 'bg-emerald/5', border: 'border-emerald/30', icon: ShieldCheck };
-      case 'pending_signature': return { label: 'PENDING SIGNATURE', color: 'text-text-3', bg: 'bg-white/5', border: 'border-white/10', icon: Clock };
-      case 'disputed': return { label: 'PROBLEM FOUND', color: 'text-red-500', bg: 'bg-red-500/5', border: 'border-red-500/20', icon: Warning };
-      default: return { label: 'UNKNOWN', color: 'text-text-3', bg: 'bg-white/5', border: 'border-white/10', icon: Clock };
+      case 'active': return { label: 'ACTIVE DEAL', color: 'text-emerald', icon: ShieldCheck };
+      case 'pending_signature': return { label: 'PENDING SIGNATURE', color: 'text-text-3', icon: Clock };
+      case 'disputed': return { label: 'PROBLEM FOUND', color: 'text-red-500', icon: Warning };
+      default: return { label: 'UNKNOWN', color: 'text-text-3', icon: Clock };
     }
   };
 
   const status = getStatusConfig(contract.status);
 
+  const handleSign = (signatureData: string) => {
+    const updatedParties = [...(contract.parties || [])];
+    if (updatedParties[0]) {
+      updatedParties[0] = { ...updatedParties[0], signedAt: new Date(), signatureData };
+    }
+    updateContract(contract.id, { parties: updatedParties, status: 'active' });
+    setActiveTab('overview');
+  };
+
+  const handleMarkPaid = (paymentId: string) => {
+    const updatedPayments = contract.paymentSchedule.map((p: any) =>
+      p.id === paymentId ? { ...p, status: 'paid', paidDate: new Date(), paidAmount: p.amount } : p
+    );
+    updateContract(contract.id, { paymentSchedule: updatedPayments });
+  };
+
+  const handleInvite = (email: string, name: string) => {
+    const newParty = { id: Date.now().toString(), name, email, role: 'counterparty' as const };
+    updateContract(contract.id, { parties: [...(contract.parties || []), newParty] });
+  };
+
+  const handleEscalate = (level: any, message: string) => {
+    const newStep = { level, triggeredAt: new Date(), message, resolved: false };
+    updateContract(contract.id, { escalation: [...(contract.escalation || []), newStep], status: 'disputed' });
+  };
+
   return (
-    <div className="space-y-12 pb-32 max-w-7xl mx-auto px-4 relative">
+    <div className="space-y-8 pb-32 max-w-7xl mx-auto px-4 relative">
       <div className="vibrant-glow top-0 right-1/4 w-[600px] h-[600px] bg-emerald/10 animate-glow-pulse" />
       <div className="vibrant-glow bottom-0 left-1/4 w-[500px] h-[500px] bg-blue/10" />
 
-      {/* ── HEADER ────────────────────────────────────────────────── */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-10 border-b border-white/10 relative z-10">
-        <div className="flex items-center gap-8">
-           <Link href="/dashboard" className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-text-3 hover:bg-emerald hover:text-[#010101] shadow-xl transition-all duration-700 hover:rotate-6">
-              <ArrowLeft size={28} weight="bold" />
+      {/* HEADER */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b border-white/10 relative z-10">
+        <div className="flex items-center gap-6">
+           <Link href="/dashboard" prefetch={true} className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-text-3 hover:bg-emerald hover:text-[#010101] shadow-xl transition-all duration-500">
+              <ArrowLeft size={24} weight="bold" />
            </Link>
            <div>
-              <div className={cn("badge-vibrant mb-4 inline-flex items-center gap-3", 
+              <div className={cn("badge-vibrant mb-3 inline-flex items-center gap-2", 
                 contract.status === 'active' ? 'badge-active' : 
                 contract.status === 'pending_signature' ? 'badge-pending' : 
                 'badge-disputed'
               )}>
-                 <status.icon size={16} weight="bold" />
+                 <status.icon size={14} weight="bold" />
                  {status.label}
               </div>
-              <h1 className="heading-display text-5xl md:text-8xl text-white tracking-tighter italic uppercase">{contract.title}</h1>
+              <h1 className="heading-display text-4xl md:text-6xl text-white tracking-tighter italic uppercase">{contract.title}</h1>
            </div>
-        </div>
-        
-        <div className="flex flex-wrap items-center gap-6">
-           <Magnetic>
-              <button 
-                onClick={handleEnhance}
-                disabled={isEnhancing}
-                className={cn(
-                  "btn-vibrant px-10 relative overflow-hidden group",
-                  enhancedImage ? "bg-white/10 text-white" : "btn-vibrant-emerald"
-                )}
-              >
-                 <MagicWand size={22} weight="bold" className={cn(isEnhancing && "animate-spin")} />
-                 <span>{isEnhancing ? "SCANNING..." : enhancedImage ? "VISUALS ACTIVE" : "MAGIC ENHANCE"}</span>
-                 
-                 {/* Premium Glow effect */}
-                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent group-hover:via-white transition-all shadow-[0_0_20px_rgba(255,255,255,0.5)]" />
-              </button>
-           </Magnetic>
-           <Magnetic>
-              <button className="btn-vibrant bg-[#1A1A1E] text-white border border-white/10 hover:bg-white hover:text-[#010101] px-10">
-                 <DownloadSimple size={22} weight="bold" />
-                 <span>EXPORT PDF</span>
-              </button>
-           </Magnetic>
         </div>
       </header>
 
-      {/* ── ENHANCED IDENTITY SECTION ─────────────────────────────── */}
-      <AnimatePresence>
-         {(isEnhancing || enhancedImage) && (
-            <motion.div 
-               initial={{ opacity: 0, height: 0, y: -20 }}
-               animate={{ opacity: 1, height: 'auto', y: 0 }}
-               exit={{ opacity: 0, height: 0, y: -20 }}
-               className="relative overflow-hidden rounded-[60px] border border-emerald/20 bg-emerald/5 backdrop-blur-3xl"
+      {/* TAB NAV */}
+      <div className="flex flex-wrap gap-2 relative z-10">
+        {TABS.map(tab => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "px-5 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 transition-all",
+                activeTab === tab.id
+                  ? "bg-emerald text-[#010101] border-emerald shadow-[0_0_20px_rgba(0,255,209,0.2)]"
+                  : "bg-white/[0.03] text-text-3 border-white/10 hover:text-white hover:border-white/20"
+              )}
             >
-               <div className="p-12 border-b border-emerald/10 flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                     <div className="w-12 h-12 bg-emerald rounded-2xl flex items-center justify-center text-[#010101] shadow-[0_0_30px_#00FFD1]">
-                        <ImageIcon size={24} weight="bold" />
-                     </div>
-                     <div>
-                        <h4 className="text-[12px] font-black text-white uppercase tracking-[0.4em]">Visual Identification</h4>
-                        <p className="text-[10px] font-black text-emerald uppercase tracking-[0.2em] mt-1">Generated by Nano Banana Pro 2</p>
-                     </div>
-                  </div>
-                  {isEnhancing && <Sparkle size={32} className="text-emerald animate-pulse" weight="bold" />}
-               </div>
-               
-               <div className="h-[400px] w-full bg-[#050505] relative flex items-center justify-center overflow-hidden">
-                  {isEnhancing ? (
-                     <div className="flex flex-col items-center gap-8">
-                        <div className="w-40 h-1 bg-white/5 rounded-full overflow-hidden relative">
-                           <motion.div 
-                              animate={{ x: ['-100%', '100%'] }}
-                              transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                              className="absolute inset-0 bg-emerald shadow-[0_0_15px_#00FFD1]"
-                           />
-                        </div>
-                        <p className="text-[10px] font-black text-text-3 uppercase tracking-[0.5em] animate-pulse italic">Scanning Agreement Context...</p>
-                     </div>
-                  ) : (
-                     <motion.div 
-                        initial={{ scale: 1.1, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="w-full h-full"
-                     >
-                        <img 
-                           src={enhancedImage!} 
-                           className="w-full h-full object-cover opacity-80 mix-blend-screen"
-                           alt="Agreement Context Identity"
-                           onError={(e) => {
-                             // Fallback to a high-quality abstract if image doesn't exist yet
-                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=1920';
-                           }}
-                        />
-                        {/* Overlay Branding */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
-                        <div className="absolute bottom-12 left-12">
-                           <h2 className="heading-display text-4xl text-white italic uppercase tracking-tighter leading-none">{contract.title}</h2>
-                           <p className="text-[10px] font-black text-emerald uppercase tracking-[0.5em] mt-4">Verified Narrative Identity</p>
-                        </div>
-                     </motion.div>
-                  )}
-               </div>
-            </motion.div>
-         )}
-      </AnimatePresence>
-
-      <div className="grid lg:grid-cols-3 gap-12 relative z-10">
-        
-        {/* Main Details */}
-        <div className="lg:col-span-2 space-y-12">
-           {/* Summary Grid */}
-           <div className="grid sm:grid-cols-3 gap-8">
-              {[
-                { label: 'Asset Value', val: `$${(contract.totalAmount || 0).toLocaleString()}`, icon: CurrencyDollar, color: 'text-emerald' },
-                { label: 'Saved On', val: new Date(contract.createdAt).toLocaleDateString(), icon: Clock, color: 'text-blue' },
-                { label: 'Category', val: contract.category, icon: FileText, color: 'text-amber' },
-              ].map((stat) => (
-                <div key={stat.label} className={cn(
-                  "p-10 rounded-[40px] bg-white/[0.03] border backdrop-blur-3xl space-y-8 group transition-all duration-700",
-                  stat.color === 'text-emerald' ? 'border-emerald/10 hover:border-emerald/50 hover:shadow-[0_0_50px_rgba(0,255,209,0.1)]' :
-                  stat.color === 'text-blue' ? 'border-blue/10 hover:border-blue/50 hover:shadow-[0_0_50px_rgba(0,112,255,0.1)]' :
-                  'border-amber/10 hover:border-amber/50 hover:shadow-[0_0_50px_rgba(255,184,0,0.1)]'
-                )}>
-                   <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-text-3 group-hover:bg-white group-hover:text-[#010101] transition-all duration-500 shadow-xl group-hover:scale-110">
-                      <stat.icon size={28} weight="bold" />
-                   </div>
-                   <div>
-                      <p className={cn("text-[11px] font-black uppercase tracking-[0.3em] mb-2", stat.color)}>{stat.label}</p>
-                      <h4 className="text-3xl font-black text-white italic tracking-tighter group-hover:translate-x-2 transition-transform">{stat.val}</h4>
-                   </div>
-                </div>
-              ))}
-           </div>
-
-           {/* Stakeholders Section */}
-           <div className="space-y-8">
-              <h3 className="text-[14px] font-black text-white uppercase tracking-[0.5em] px-2">Agreement Parties</h3>
-              <div className="grid sm:grid-cols-2 gap-8">
-                 {[
-                   { label: 'OWNER', name: contract.parties?.[0]?.name, role: 'Primary' },
-                   { label: 'SIGNATORY', name: contract.parties?.[1]?.name, role: 'Counter-Party' }
-                 ].map(party => (
-                   <div key={party.label} className="p-10 rounded-[50px] bg-white/[0.03] border border-white/5 backdrop-blur-3xl flex items-center gap-8 group hover:border-emerald/30 transition-all duration-700">
-                      <div className="w-20 h-20 rounded-3xl bg-[#080808] border border-white/10 flex items-center justify-center text-emerald shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all">
-                         <User size={40} weight="bold" />
-                      </div>
-                      <div>
-                         <p className="text-[11px] font-black text-text-3 uppercase tracking-widest">{party.label}</p>
-                         <h4 className="text-2xl font-black text-white mt-2 group-hover:text-emerald transition-colors tracking-tighter">{party.name || 'Anonymous User'}</h4>
-                         <span className="text-[11px] font-black text-emerald/50 uppercase tracking-widest mt-1 block">{party.role}</span>
-                      </div>
-                   </div>
-                 ))}
-              </div>
-           </div>
-
-           {/* Clause Registry */}
-           <div className="p-14 rounded-[60px] bg-[#0A0A0A] border border-white/10 relative overflow-hidden shadow-2xl">
-              <div className="absolute -top-10 -right-10 w-64 h-64 bg-emerald/5 blur-[100px]" />
-              <h3 className="text-[14px] font-black text-text-3 uppercase tracking-[0.6em] mb-16">The Deal Points</h3>
-              
-              <div className="space-y-6">
-                 {contract.clauses?.length > 0 ? contract.clauses.map((clause: any, i: number) => (
-                    <div key={clause.id} className="flex items-center justify-between p-8 rounded-3xl bg-white/[0.03] border border-white/5 group hover:bg-emerald hover:border-transparent transition-all duration-500 cursor-pointer shadow-xl">
-                       <div className="flex items-center gap-6">
-                          <div className="w-3 h-3 rounded-full bg-emerald shadow-[0_0_15px_#00FFD1] group-hover:bg-[#010101] group-hover:shadow-none transition-colors" />
-                          <span className="text-[12px] font-black text-white uppercase tracking-widest group-hover:text-[#010101] transition-colors">{clause.title}</span>
-                       </div>
-                       <CaretRight size={28} weight="bold" className="text-text-3 group-hover:text-[#010101] group-hover:translate-x-2 transition-all" />
-                    </div>
-                 )) : [1, 2, 3].map(i => (
-                    <div key={i} className="flex items-center justify-between p-8 rounded-3xl bg-white/[0.03] border border-white/5 group hover:bg-emerald hover:border-transparent transition-all duration-500 cursor-pointer shadow-xl">
-                       <div className="flex items-center gap-6">
-                          <div className="w-3 h-3 rounded-full bg-emerald shadow-[0_0_15px_#00FFD1] group-hover:bg-[#010101] group-hover:shadow-none transition-colors" />
-                          <span className="text-[12px] font-black text-white uppercase tracking-widest group-hover:text-[#010101] transition-colors">Term Point 0{i}</span>
-                       </div>
-                       <CaretRight size={28} weight="bold" className="text-text-3 group-hover:text-[#010101] group-hover:translate-x-2 transition-all" />
-                    </div>
-                 ))}
-              </div>
-           </div>
-        </div>
-
-        {/* Sidebar Status / Digital Seal */}
-        <div className="lg:col-span-1 space-y-10">
-           <div className="p-12 rounded-[60px] bg-emerald text-[#010101] flex flex-col items-center text-center gap-12 shadow-[0_0_120px_rgba(0,255,209,0.3)] border-8 border-[#010101] relative overflow-hidden group">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.4),transparent_70%)] opacity-30 group-hover:opacity-60 transition-opacity" />
-              <div className="relative z-10">
-                 <DigitalSeal />
-                 <div className="absolute -bottom-6 -right-6 w-16 h-16 bg-[#010101] rounded-[24px] flex items-center justify-center text-emerald shadow-[0_20px_40px_rgba(0,0,0,0.5)] border-4 border-emerald group-hover:scale-110 transition-transform">
-                    <ShieldCheck size={36} weight="bold" />
-                 </div>
-              </div>
-              
-              <div className="space-y-6 relative z-10">
-                 <h3 className="heading-display text-5xl italic uppercase underline decoration-2 underline-offset-8">Final Seal</h3>
-                 <p className="text-[11px] font-black opacity-60 uppercase tracking-[0.2em] break-all px-4">AGREEMINT-ID: {contract.id?.slice(0, 16).toUpperCase()}</p>
-              </div>
-
-              <div className="w-full space-y-6 pt-12 border-t border-[#010101]/15 relative z-10 text-center">
-                 <div className="flex items-center justify-between text-[12px] font-black uppercase tracking-widest px-4">
-                    <span className="opacity-50">STATUS</span>
-                    <span>{status.label.split(' ')[0]}</span>
-                 </div>
-                 <div className="flex items-center justify-between text-[12px] font-black uppercase tracking-widest px-4">
-                    <span className="opacity-50">INTEGRITY</span>
-                    <span className="bg-[#010101] text-emerald px-4 py-1 rounded-full shadow-xl">100.00%</span>
-                 </div>
-              </div>
-           </div>
-
-           <div className="p-12 rounded-[60px] bg-[#0A0A0A] border border-white/10 flex flex-col gap-10 shadow-2xl overflow-hidden relative">
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue/5 blur-[80px]" />
-              <h4 className="text-[12px] font-black text-white uppercase tracking-[0.5em] px-2 text-center">History Log</h4>
-              <div className="space-y-8">
-                 {[
-                   { t: '11:04 AM', msg: 'Verified by AgreeMint Network' },
-                   { t: '10:42 AM', msg: 'Digital Seal Applied Successfully' },
-                   { t: '09:12 AM', msg: 'Contract Created' }
-                 ].map((log, i) => (
-                   <div key={i} className="flex gap-6 group">
-                      <div className="text-[10px] font-black text-emerald opacity-60 whitespace-nowrap mt-1 group-hover:opacity-100 transition-opacity">{log.t}</div>
-                      <p className="text-[11px] font-black text-text-3 uppercase tracking-widest leading-relaxed group-hover:text-white transition-colors">{log.msg}</p>
-                   </div>
-                 ))}
-              </div>
-           </div>
-        </div>
-
+              <Icon size={16} weight="bold" /> {tab.label}
+            </button>
+          );
+        })}
       </div>
+
+      {/* TAB CONTENT */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="relative z-10"
+        >
+          {/* OVERVIEW TAB */}
+          {activeTab === 'overview' && (
+            <div className="grid lg:grid-cols-3 gap-10">
+              <div className="lg:col-span-2 space-y-10">
+                {/* Summary Grid */}
+                <div className="grid sm:grid-cols-3 gap-6">
+                  {[
+                    { label: 'Value', val: `$${(contract.totalAmount || 0).toLocaleString()}`, icon: CurrencyDollar, color: 'text-emerald' },
+                    { label: 'Created', val: new Date(contract.createdAt).toLocaleDateString(), icon: Clock, color: 'text-blue' },
+                    { label: 'Category', val: contract.category, icon: FileText, color: 'text-amber' },
+                  ].map((stat) => (
+                    <div key={stat.label} className="p-8 rounded-[32px] bg-white/[0.03] border border-white/5 backdrop-blur-3xl space-y-6 group hover:border-emerald/30 transition-all duration-500">
+                       <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-text-3 group-hover:bg-white group-hover:text-[#010101] transition-all">
+                          <stat.icon size={24} weight="bold" />
+                       </div>
+                       <div>
+                          <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] mb-1", stat.color)}>{stat.label}</p>
+                          <h4 className="text-2xl font-black text-white italic tracking-tighter">{stat.val}</h4>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Parties */}
+                <div className="space-y-6">
+                  <h3 className="text-[12px] font-black text-text-3 uppercase tracking-[0.4em] px-2">Parties</h3>
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {(contract.parties || []).map((party: any, i: number) => (
+                      <div key={i} className="p-8 rounded-[32px] bg-white/[0.03] border border-white/5 flex items-center gap-6 group hover:border-emerald/30 transition-all">
+                         <div className="w-14 h-14 rounded-2xl bg-[#080808] border border-white/10 flex items-center justify-center text-emerald">
+                            <User size={28} weight="bold" />
+                         </div>
+                         <div>
+                            <p className="text-[9px] font-black text-text-3 uppercase tracking-widest">{party.role}</p>
+                            <h4 className="text-lg font-black text-white tracking-tighter">{party.name || 'Anonymous'}</h4>
+                            {party.signedAt && <span className="text-[8px] font-black text-emerald uppercase tracking-widest">Signed ✓</span>}
+                         </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Clauses */}
+                <div className="p-10 rounded-[40px] bg-[#0A0A0A] border border-white/10 space-y-6">
+                  <h3 className="text-[12px] font-black text-text-3 uppercase tracking-[0.4em]">Deal Points</h3>
+                  <div className="space-y-4">
+                    {contract.clauses?.length > 0 ? contract.clauses.map((clause: any) => (
+                      <div key={clause.id} className="flex items-center justify-between p-6 rounded-2xl bg-white/[0.03] border border-white/5 group hover:bg-emerald hover:border-transparent transition-all cursor-pointer">
+                         <div className="flex items-center gap-4">
+                            <div className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_10px_#00FFD1] group-hover:bg-[#010101] transition-colors" />
+                            <span className="text-[11px] font-black text-white uppercase tracking-widest group-hover:text-[#010101]">{clause.title}</span>
+                         </div>
+                         <CaretRight size={20} weight="bold" className="text-text-3 group-hover:text-[#010101] transition-all" />
+                      </div>
+                    )) : [1, 2, 3].map(i => (
+                      <div key={i} className="flex items-center justify-between p-6 rounded-2xl bg-white/[0.03] border border-white/5 group hover:bg-emerald hover:border-transparent transition-all cursor-pointer">
+                         <div className="flex items-center gap-4">
+                            <div className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_10px_#00FFD1] group-hover:bg-[#010101] transition-colors" />
+                            <span className="text-[11px] font-black text-white uppercase tracking-widest group-hover:text-[#010101]">Term Point 0{i}</span>
+                         </div>
+                         <CaretRight size={20} weight="bold" className="text-text-3 group-hover:text-[#010101] transition-all" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Sidebar: 3D Seal + Status */}
+              <div className="lg:col-span-1 space-y-8">
+                <div className="p-10 rounded-[40px] bg-emerald text-[#010101] flex flex-col items-center text-center gap-8 shadow-[0_0_80px_rgba(0,255,209,0.2)] border-4 border-[#010101] relative overflow-hidden">
+                  <div className="w-full h-48 relative">
+                    <Seal3D className="absolute inset-0" />
+                  </div>
+                  <div className="space-y-4 relative z-10">
+                    <h3 className="heading-display text-4xl italic uppercase">Verified</h3>
+                    <p className="text-[9px] font-black opacity-60 uppercase tracking-[0.2em] break-all">ID: {contract.id?.slice(0, 16).toUpperCase()}</p>
+                  </div>
+                  <div className="w-full space-y-4 pt-6 border-t border-[#010101]/15 text-[10px] font-black uppercase tracking-widest">
+                    <div className="flex justify-between px-4"><span className="opacity-50">Status</span><span>{status.label.split(' ')[0]}</span></div>
+                    <div className="flex justify-between px-4"><span className="opacity-50">Integrity</span><span className="bg-[#010101] text-emerald px-3 py-0.5 rounded-full">100%</span></div>
+                  </div>
+                </div>
+
+                {/* History Log */}
+                <div className="p-8 rounded-[32px] bg-[#0A0A0A] border border-white/10 space-y-6">
+                  <h4 className="text-[10px] font-black text-text-3 uppercase tracking-[0.4em] text-center">History</h4>
+                  <div className="space-y-6">
+                    {[
+                      { t: '11:04', msg: 'Verified by Network' },
+                      { t: '10:42', msg: 'Digital Seal Applied' },
+                      { t: '09:12', msg: 'Agreement Created' }
+                    ].map((log, i) => (
+                      <div key={i} className="flex gap-4 group">
+                        <div className="text-[9px] font-black text-emerald opacity-50 whitespace-nowrap mt-0.5">{log.t}</div>
+                        <p className="text-[10px] font-black text-text-3 uppercase tracking-widest group-hover:text-white transition-colors">{log.msg}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SIGN TAB */}
+          {activeTab === 'sign' && (
+            <div className="flex justify-center py-10">
+              <SignaturePad 
+                onSign={handleSign} 
+                onCancel={() => setActiveTab('overview')} 
+                signerName={contract.parties?.[0]?.name}
+              />
+            </div>
+          )}
+
+          {/* PAYMENTS TAB */}
+          {activeTab === 'payments' && (
+            <div className="max-w-2xl mx-auto">
+              <PaymentTracker 
+                payments={contract.paymentSchedule || []}
+                totalAmount={contract.totalAmount || 0}
+                currency={contract.currency}
+                onMarkPaid={handleMarkPaid}
+              />
+              {(!contract.paymentSchedule || contract.paymentSchedule.length === 0) && (
+                <div className="text-center py-16 space-y-4">
+                  <CurrencyCircleDollar size={48} className="text-text-3 mx-auto opacity-20" weight="thin" />
+                  <p className="text-[11px] font-black text-text-3 uppercase tracking-widest">No payments set up yet</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* PARTIES TAB */}
+          {activeTab === 'parties' && (
+            <div className="max-w-2xl mx-auto">
+              <MultiPartySigning
+                parties={contract.parties || []}
+                onInvite={handleInvite}
+                contractTitle={contract.title}
+              />
+            </div>
+          )}
+
+          {/* DISPUTE TAB */}
+          {activeTab === 'dispute' && (
+            <div className="max-w-2xl mx-auto">
+              <DisputeResolution
+                steps={contract.escalation || []}
+                currentLevel={contract.escalation?.length > 0 ? contract.escalation[contract.escalation.length - 1].level : undefined}
+                onEscalate={handleEscalate}
+                contractTitle={contract.title}
+              />
+            </div>
+          )}
+
+          {/* EXPORT TAB */}
+          {activeTab === 'export' && (
+            <div className="max-w-md mx-auto">
+              <PdfExport contract={contract} />
+            </div>
+          )}
+
+          {/* ENHANCE TAB */}
+          {activeTab === 'enhance' && (
+            <div className="flex justify-center py-10">
+              <NanoBananaEnhancer
+                contractTitle={contract.title}
+                contractContent={contract.description || ''}
+                onEnhance={(style) => {
+                  updateContract(contract.id, { metadata: { ...contract.metadata, enhancedStyle: style } });
+                }}
+              />
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

@@ -16,6 +16,9 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Magnetic from '@/components/ui/magnetic';
+import dynamic from 'next/dynamic';
+
+const Vault3D = dynamic(() => import('@/components/ui/vault-3d'), { ssr: false });
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -54,8 +57,8 @@ export default function OnboardingPage() {
             transition={{ duration: 0.8 }}
             className="text-center space-y-16 relative z-10"
           >
-             <div className="w-32 h-32 bg-emerald/10 border-4 border-emerald shadow-[0_0_60px_rgba(0,255,209,0.3)] rounded-[40px] flex items-center justify-center mx-auto text-emerald group hover:scale-110 transition-transform duration-700">
-                <ShieldCheck size={64} weight="bold" className="drop-shadow-[0_0_15px_rgba(0,255,209,0.5)]" />
+             <div className="w-48 h-48 mx-auto">
+                <Vault3D />
              </div>
              
              <div className="space-y-8">

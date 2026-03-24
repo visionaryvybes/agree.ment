@@ -2,26 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useContracts, useProtocolActions } from '@/store/contracts';
+import { useProtocolActions } from '@/store/contracts';
 import { 
   ArrowLeft, 
   ArrowRight, 
-  PlusCircle, 
   ShieldCheck, 
   User, 
-  Files, 
   CurrencyDollar,
-  Sparkle,
-  Plus,
   Users,
-  Note,
-  Clock
+  ChatTeardropText
 } from "@phosphor-icons/react";
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Magnetic from '@/components/ui/magnetic';
 import DigitalSeal from '@/components/ui/digital-seal';
+import ChatImport from '@/components/ChatImport';
 
 export default function NewContractPage() {
   const router = useRouter();
@@ -29,6 +25,7 @@ export default function NewContractPage() {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showChatImport, setShowChatImport] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -36,16 +33,12 @@ export default function NewContractPage() {
     partyA: '',
     partyB: '',
     totalAmount: 0,
-    clauses: []
   });
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   const handleCreate = async () => {
     setLoading(true);
-    // Simulate protocol createing
     await new Promise(r => setTimeout(r, 2000));
     
     const newContract: any = {
@@ -78,10 +71,10 @@ export default function NewContractPage() {
       <div className="vibrant-glow top-0 left-1/4 w-[600px] h-[600px] bg-emerald/10 animate-glow-pulse" />
       <div className="vibrant-glow bottom-0 right-1/4 w-[500px] h-[500px] bg-blue/10" />
 
-      {/* ── HEADER ────────────────────────────────────────────────── */}
+      {/* HEADER */}
       <header className="mb-20 flex items-center justify-between relative z-10">
          <Magnetic>
-            <Link href="/dashboard" className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-text-3 hover:text-white hover:border-emerald/50 transition-all backdrop-blur-3xl shadow-xl group">
+            <Link href="/dashboard" prefetch={true} className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-text-3 hover:text-white hover:border-emerald/50 transition-all backdrop-blur-3xl shadow-xl group">
                <ArrowLeft size={28} weight="bold" className="group-hover:-translate-x-1 transition-transform" />
             </Link>
          </Magnetic>
@@ -95,9 +88,22 @@ export default function NewContractPage() {
          </div>
       </header>
 
-      {/* ── STEPS ─────────────────────────────────────────────────── */}
+      {/* Chat Import Wizard */}
+      {showChatImport && (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-center py-10 relative z-10">
+          <ChatImport
+            onImport={(text, source) => {
+              setFormData({ ...formData, title: `Chat Agreement (${source})` });
+              setShowChatImport(false);
+            }}
+            onCancel={() => setShowChatImport(false)}
+          />
+        </motion.div>
+      )}
+
+      {/* STEPS */}
       <AnimatePresence mode="wait">
-        {step === 1 && (
+        {step === 1 && !showChatImport && (
           <motion.div 
             key="step1"
             initial={{ opacity: 0, x: 20 }}
@@ -109,6 +115,15 @@ export default function NewContractPage() {
                 <span className="text-[12px] font-black text-emerald uppercase tracking-[0.5em] block">Phase 01</span>
                 <h1 className="heading-display text-6xl md:text-9xl text-white tracking-tighter italic uppercase leading-none">Agreement Details.</h1>
              </div>
+
+             {/* Import from Chat */}
+             <button
+               onClick={() => setShowChatImport(true)}
+               className="w-full p-6 rounded-2xl bg-white/[0.03] border border-dashed border-white/10 flex items-center justify-center gap-3 text-[11px] font-black text-text-3 uppercase tracking-widest hover:border-emerald/40 hover:text-emerald transition-all group"
+             >
+               <ChatTeardropText size={20} weight="bold" className="group-hover:text-emerald" />
+               Import from a Chat (WhatsApp, SMS, Email)
+             </button>
 
              <div className="space-y-10">
                 <div className="space-y-6">
@@ -249,7 +264,7 @@ export default function NewContractPage() {
                 <div className="space-y-12 relative z-10 flex flex-col items-center">
                    <div className="w-24 h-24 border-8 border-emerald/20 border-t-emerald rounded-full animate-spin" />
                    <h4 className="text-3xl font-black text-white italic uppercase tracking-tighter leading-none">Securing...</h4>
-                   <p className="text-[12px] font-black text-emerald uppercase tracking-[0.6em] animate-pulse">AGREEMINT INTEGRITY AUDIT</p>
+                   <p className="text-[12px] font-black text-emerald uppercase tracking-[0.6em] animate-pulse">AGREEMINT VERIFICATION</p>
                 </div>
              ) : (
                 <div className="space-y-16 relative z-10">
@@ -257,7 +272,6 @@ export default function NewContractPage() {
                       <ShieldCheck size={64} weight="bold" />
                    </div>
                    <div className="space-y-6">
-                      <h1 className="heading-display text-4xl text-white opacity-40 uppercase italic">Agreement Not Found.</h1>
                       <h2 className="heading-display text-7xl md:text-8xl text-white tracking-tighter uppercase italic leading-none">Ready to <span className="text-emerald not-italic underline decoration-4 underline-offset-8">Finalize</span>.</h2>
                       <p className="text-emerald font-black text-[14px] uppercase tracking-[0.6em] bg-emerald/10 px-10 py-3 rounded-full inline-block">SECURE • VERIFIED • BINDING</p>
                    </div>
