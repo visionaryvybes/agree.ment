@@ -131,7 +131,7 @@ export default function LandingPage() {
           >
             <div className="hero-reveal inline-flex items-center gap-4 px-6 py-3 rounded-full border border-emerald/30 bg-emerald/10 backdrop-blur-md text-emerald text-[12px] font-black uppercase tracking-[0.4em] shadow-[0_0_30px_rgba(0,255,209,0.2)]">
               <div className="w-2.5 h-2.5 rounded-full bg-emerald animate-pulse" />
-              AgreeMint v3.0 — Handshake To Handled
+              AgreeMint — Professional Agreements
             </div>
             
             <h1 className="hero-reveal heading-display text-8xl md:text-9xl lg:text-[150px] tracking-[-0.08em] leading-[0.8] text-white italic uppercase">
@@ -140,7 +140,7 @@ export default function LandingPage() {
             </h1>
             
             <p className="hero-reveal text-2xl md:text-3xl text-text-2 font-medium leading-[1.6] max-w-xl">
-              The one-stop shop for personal deals. Formalize WhatsApp chats, private sales, and loans in seconds. No lawyers needed.
+              The one-stop shop for personal deals. Document WhatsApp chats, private sales, and loans in seconds. No lawyers needed.
             </p>
             
             <div className="hero-reveal flex flex-wrap items-center gap-8 pt-10">

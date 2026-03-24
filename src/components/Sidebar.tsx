@@ -20,11 +20,11 @@ import NotificationCenter from "@/components/NotificationCenter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAVIGATION = [
-  { name: 'DEALS', href: '/dashboard', icon: Layout },
-  { name: 'LIBRARY', href: '/contracts', icon: FolderSimple },
-  { name: 'TEMPLATES', href: '/templates', icon: FileText },
-  { name: 'RESOLVE', href: '/verified-guidance', icon: ShieldCheck },
-  { name: 'SETTINGS', href: '/settings', icon: Gear },
+  { name: 'Summary', href: '/dashboard', icon: Layout },
+  { name: 'Files', href: '/contracts', icon: FolderSimple },
+  { name: 'Library', href: '/templates', icon: FileText },
+  { name: 'Resolve', href: '/verified-guidance', icon: ShieldCheck },
+  { name: 'Settings', href: '/settings', icon: Gear },
 ];
 
 interface SidebarProps {
@@ -98,9 +98,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
               exit={{ opacity: 0, height: 0 }}
               className="mb-8 px-2"
             >
-                <div className="px-4 py-4 rounded-2xl bg-emerald/5 border border-emerald/10 group/promo relative overflow-hidden">
-                  <p className="text-[8px] font-black text-emerald uppercase tracking-[0.2em] relative z-10">Handshake to Handled.</p>
-                </div>
+                {/* Brand slogan or empty space */}
             </motion.div>
           )}
         </AnimatePresence>

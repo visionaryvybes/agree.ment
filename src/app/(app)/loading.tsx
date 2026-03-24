@@ -32,7 +32,7 @@ export default function Loading() {
         {/* Text - Subtler */}
         <div className="space-y-2 text-center">
           <p className="text-[10px] font-black uppercase tracking-[0.5em] text-emerald animate-pulse">
-            MINTING...
+            LOADING...
           </p>
         </div>
       </div>

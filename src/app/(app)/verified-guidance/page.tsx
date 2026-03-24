@@ -4,7 +4,7 @@ import {
   ShieldCheck, 
   ChatTeardropText, 
   Warning, 
-  MagicWand, 
+  Sparkle, 
   PaperPlaneRight,
   Fingerprint,
   CaretRight
@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 
 export default function VerifiedGuidancePage() {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hello! I'm here to help you formalize agreements and navigate disputes. Are you looking to turn a chat into a contract, or do you need help with an existing agreement?" }
+    { role: 'assistant', content: "Hello! I'm here to help you document agreements and resolve issues. How can I help you today?" }
   ]);
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -180,7 +180,7 @@ export default function VerifiedGuidancePage() {
             Not Legal Advice
          </div>
          <div className="flex items-center gap-4 group cursor-default transition-colors hover:text-white">
-            <MagicWand size={18} className="text-emerald shadow-[0_0_10px_rgba(0,255,209,0.5)]" weight="bold" /> 
+            <Sparkle size={18} className="text-emerald shadow-[0_0_10px_rgba(0,255,209,0.5)]" weight="bold" /> 
             AgreeMint Secure
          </div>
       </div>

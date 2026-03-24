@@ -11,20 +11,20 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "AgreeMint | Instant, Ironclad Contracts",
-  description: "Secure your future with AI-driven, legally-binding contracts. Generate, sign, and manage contracts in 60 seconds. Mobile-first, globally-compliant, and ironclad.",
-  keywords: ["legal tech", "contracts", "contracts", "AI law", "smart contracts", "legal automation"],
+  title: "AgreeMint | Instant, Secure Agreements",
+  description: "Secure your future with professional, legally-binding agreements. Generate, sign, and manage contracts in 60 seconds. Mobile-first and globally-compliant.",
+  keywords: ["legal tech", "contracts", "agreements", "legal automation", "secure signatures"],
   openGraph: {
-    title: "AgreeMint | Instant, Ironclad Contracts",
-    description: "Secure your future with AI-driven, legally-binding contracts.",
+    title: "AgreeMint | Instant, Secure Agreements",
+    description: "Secure your future with professional, legally-binding agreements.",
     type: "website",
     locale: "en_US",
     siteName: "AgreeMint",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AgreeMint | Instant, Ironclad Contracts",
-    description: "Secure your future with AI-driven, legally-binding contracts.",
+    title: "AgreeMint | Instant, Secure Agreements",
+    description: "Secure your future with professional, legally-binding agreements.",
   },
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
@@ -34,18 +34,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isMockKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY === 'pk_test_mockkey123' || !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+  const content = (
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#050505] selection:bg-[#00F5D4] selection:text-[#050505]`}>
+        <TooltipProvider>
+          {children}
+          <Toaster />
+          <CookieBanner />
+          <ScrollToTop />
+        </TooltipProvider>
+      </body>
+    </html>
+  );
+
+  if (isMockKey) {
+    return content;
+  }
+
   return (
     <ClerkProvider>
-      <html lang="en" className="dark">
-        <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#050505] selection:bg-[#00F5D4] selection:text-[#050505]`}>
-          <TooltipProvider>
-            {children}
-            <Toaster />
-            <CookieBanner />
-            <ScrollToTop />
-          </TooltipProvider>
-        </body>
-      </html>
+      {content}
     </ClerkProvider>
   );
 }

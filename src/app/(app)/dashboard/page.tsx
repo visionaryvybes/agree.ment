@@ -102,12 +102,12 @@ export default function DashboardPage() {
             ))}
           </div>
           <Magnetic>
-            <Link href="/contracts/new?type=formalize" className="btn-vibrant btn-vibrant-blue px-10 h-14">
-              <span>Formalize Chat</span>
+            <Link href="/contracts/new" className="px-8 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[11px] font-black uppercase tracking-widest text-text-3 hover:text-white hover:border-white/20 transition-all">
+              <span>Create from Chat</span>
             </Link>
           </Magnetic>
           <Magnetic>
-            <Link href="/contracts/new" className="btn-vibrant btn-vibrant-emerald px-10 h-14">
+            <Link href="/contracts/new" className="px-8 h-14 rounded-2xl bg-emerald text-[#010101] flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,255,209,0.3)]">
               <PlusCircle size={22} weight="bold" />
               <span>Create New</span>
             </Link>
@@ -168,9 +168,9 @@ export default function DashboardPage() {
         >
           <div className="flex items-center justify-between mb-16">
              <p className="text-4xl font-black text-white italic uppercase tracking-tighter group-hover:text-emerald transition-colors">Activity.</p>
-             <div className="flex items-center gap-4 px-6 py-4 bg-emerald shadow-[0_0_50px_rgba(0,255,209,0.3)] rounded-2xl border-4 border-[#010101]">
+             <div className="flex items-center gap-4 px-6 py-4 bg-emerald shadow-[0_0_50px_rgba(0,255,209,0.2)] rounded-2xl border-2 border-[#010101]">
                <TrendUp size={24} weight="bold" className="text-[#010101]" />
-               <span className="text-[12px] font-black text-[#010101] tracking-[0.2em] uppercase">Activity +24%</span>
+               <span className="text-[12px] font-black text-[#010101] tracking-[0.2em] uppercase">Volume Up 24%</span>
              </div>
           </div>
           <div className="h-[400px] w-full">
@@ -249,9 +249,9 @@ export default function DashboardPage() {
       {/* ── POPULAR TEMPLATES SECTION (The "Cool" Layout) ────────────────── */}
       <section className="space-y-10 relative z-10">
          <div className="flex items-center justify-between px-2">
-            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-white">Popular Styles</h2>
+            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-white">Project Templates</h2>
             <Link href="/templates" className="text-[10px] font-black text-emerald uppercase tracking-widest flex items-center gap-3 group">
-               BROWSE ALL <ArrowRight size={14} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+               VIEW ALL <ArrowRight size={14} weight="bold" className="group-hover:translate-x-1 transition-transform" />
             </Link>
          </div>
 

@@ -72,27 +72,27 @@ export default function OnboardingPage() {
 
              <div className="flex flex-col items-center gap-10 pt-10">
                 <Magnetic>
-                   <button 
-                     onClick={handleVerify}
-                     disabled={verifying}
-                     className="btn-vibrant btn-vibrant-emerald px-20 py-8 text-2xl"
-                   >
-                     {verifying ? (
-                        <>
-                          <div className="w-8 h-8 border-4 border-[#010101]/20 border-t-[#010101] rounded-full animate-spin" />
-                          VERIFYING...
-                        </>
-                     ) : (
-                        <>
-                           GET STARTED
-                           <ArrowRight size={32} weight="bold" />
-                        </>
-                     )}
-                   </button>
+                    <button 
+                      onClick={handleVerify}
+                      disabled={verifying}
+                      className="px-16 py-6 rounded-3xl bg-emerald text-[#010101] text-xl font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(0,255,209,0.3)] flex items-center gap-4"
+                    >
+                      {verifying ? (
+                         <>
+                           <div className="w-6 h-6 border-4 border-[#010101]/20 border-t-[#010101] rounded-full animate-spin" />
+                           PROCESSING...
+                         </>
+                      ) : (
+                         <>
+                            GET STARTED
+                            <ArrowRight size={28} weight="bold" />
+                         </>
+                      )}
+                    </button>
                 </Magnetic>
                 <div className="flex items-center gap-6">
                    <div className="h-px w-10 bg-emerald/30" />
-                   <p className="text-[12px] font-black text-emerald uppercase tracking-[0.6em]">SIMPLE • SECURE • AGREEMINT</p>
+                   <p className="text-[12px] font-black text-emerald uppercase tracking-[0.4em]">SECURE • PROFESSIONAL • AGREEMINT</p>
                    <div className="h-px w-10 bg-emerald/30" />
                 </div>
              </div>

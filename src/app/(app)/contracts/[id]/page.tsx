@@ -32,20 +32,20 @@ import PaymentTracker from '@/components/PaymentTracker';
 import MultiPartySigning from '@/components/MultiPartySigning';
 import DisputeResolution from '@/components/DisputeResolution';
 import PdfExport from '@/components/PdfExport';
-import NanoBananaEnhancer from '@/components/NanoBananaEnhancer';
+import AgreementEnhancer from '@/components/AgreementEnhancer';
 
 const Seal3D = dynamic(() => import('@/components/ui/seal-3d'), { ssr: false });
 
-type TabId = 'overview' | 'sign' | 'payments' | 'parties' | 'dispute' | 'export' | 'enhance';
+type TabId = 'overview' | 'sign' | 'payments' | 'parties' | 'dispute' | 'export' | 'visuals';
 
 const TABS: { id: TabId; label: string; icon: any }[] = [
-  { id: 'overview', label: 'Overview', icon: FileText },
+  { id: 'overview', label: 'Summary', icon: FileText },
   { id: 'sign', label: 'Sign', icon: PenNib },
   { id: 'payments', label: 'Payments', icon: CurrencyCircleDollar },
   { id: 'parties', label: 'Parties', icon: UsersIcon },
-  { id: 'dispute', label: 'Dispute', icon: Gavel },
+  { id: 'dispute', label: 'Resolve', icon: Gavel },
   { id: 'export', label: 'PDF', icon: FilePdf },
-  { id: 'enhance', label: 'Enhance', icon: Sparkle },
+  { id: 'visuals', label: 'Visuals', icon: Sparkle },
 ];
 
 export default function ContractDetailPage() {
@@ -207,7 +207,7 @@ export default function ContractDetailPage() {
 
                 {/* Clauses */}
                 <div className="p-10 rounded-[40px] bg-[#0A0A0A] border border-white/10 space-y-6">
-                  <h3 className="text-[12px] font-black text-text-3 uppercase tracking-[0.4em]">Deal Points</h3>
+                  <h3 className="text-[12px] font-black text-text-3 uppercase tracking-[0.4em]">Agreement Terms</h3>
                   <div className="space-y-4">
                     {contract.clauses?.length > 0 ? contract.clauses.map((clause: any) => (
                       <div key={clause.id} className="flex items-center justify-between p-6 rounded-2xl bg-white/[0.03] border border-white/5 group hover:bg-emerald hover:border-transparent transition-all cursor-pointer">
@@ -221,7 +221,7 @@ export default function ContractDetailPage() {
                       <div key={i} className="flex items-center justify-between p-6 rounded-2xl bg-white/[0.03] border border-white/5 group hover:bg-emerald hover:border-transparent transition-all cursor-pointer">
                          <div className="flex items-center gap-4">
                             <div className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_10px_#00FFD1] group-hover:bg-[#010101] transition-colors" />
-                            <span className="text-[11px] font-black text-white uppercase tracking-widest group-hover:text-[#010101]">Term Point 0{i}</span>
+                            <span className="text-[11px] font-black text-white uppercase tracking-widest group-hover:text-[#010101]">Point 0{i}</span>
                          </div>
                          <CaretRight size={20} weight="bold" className="text-text-3 group-hover:text-[#010101] transition-all" />
                       </div>
@@ -237,12 +237,12 @@ export default function ContractDetailPage() {
                     <Seal3D className="absolute inset-0" />
                   </div>
                   <div className="space-y-4 relative z-10">
-                    <h3 className="heading-display text-4xl italic uppercase">Verified</h3>
+                    <h3 className="heading-display text-4xl italic uppercase">Secured</h3>
                     <p className="text-[9px] font-black opacity-60 uppercase tracking-[0.2em] break-all">ID: {contract.id?.slice(0, 16).toUpperCase()}</p>
                   </div>
                   <div className="w-full space-y-4 pt-6 border-t border-[#010101]/15 text-[10px] font-black uppercase tracking-widest">
                     <div className="flex justify-between px-4"><span className="opacity-50">Status</span><span>{status.label.split(' ')[0]}</span></div>
-                    <div className="flex justify-between px-4"><span className="opacity-50">Integrity</span><span className="bg-[#010101] text-emerald px-3 py-0.5 rounded-full">100%</span></div>
+                    <div className="flex justify-between px-4"><span className="opacity-50">Integrity</span><span className="bg-[#010101] text-emerald px-3 py-0.5 rounded-full">Solid</span></div>
                   </div>
                 </div>
 
@@ -325,10 +325,10 @@ export default function ContractDetailPage() {
             </div>
           )}
 
-          {/* ENHANCE TAB */}
-          {activeTab === 'enhance' && (
+          {/* VISUALS TAB */}
+          {activeTab === 'visuals' && (
             <div className="flex justify-center py-10">
-              <NanoBananaEnhancer
+              <AgreementEnhancer
                 contractTitle={contract.title}
                 contractContent={contract.description || ''}
                 onEnhance={(style) => {

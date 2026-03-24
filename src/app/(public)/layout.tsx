@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'AgreeMint | Premium AI Contract Generator',
-  description: 'Turn any conversation into a legally sound, professionally formatted contract in seconds. Built globally for 195 jurisdictions. Generative AI for standard contracts.',
+  title: 'AgreeMint | Professional Agreements',
+  description: 'Document any deal into a professionally formatted agreement in seconds. Built for 195 jurisdictions. Secure and standard contracts.',
   openGraph: {
-    title: 'AgreeMint | Describe your deal. We write the contract.',
-    description: 'Stop paying for simple documents. Turn your standard contracts into legally sound contracts in 30 seconds.',
+    title: 'AgreeMint | Describe your deal. We write the agreement.',
+    description: 'Professional documents in seconds. Turn your conversation into a legally sound agreement.',
     url: 'https://agreemint.com',
     siteName: 'AgreeMint',
     images: [
