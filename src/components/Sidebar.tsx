@@ -10,11 +10,14 @@ import {
   ShieldCheck,
   Layout,
   FolderSimple,
-  FileText
+  FileText,
+  Bell
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import NotificationCenter from "@/components/NotificationCenter";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAVIGATION = [
   { name: 'DEALS', href: '/dashboard', icon: Layout },
@@ -32,6 +35,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
   const path = usePathname();
   const { user } = useUser();
   const [isHovered, setIsHovered] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const active = (href: string) => {
     if (href === '/contracts' || href === '/dashboard' || href === '/templates') {
@@ -155,7 +159,20 @@ export default function Sidebar({ onClose }: SidebarProps) {
       </nav>
 
       {/* Footer / Account */}
-      <div className="mt-auto p-4 border-t border-white/5 bg-[#050505]/20 backdrop-blur-2xl">
+      <div className="mt-auto p-4 border-t border-white/5 bg-[#050505]/20 backdrop-blur-2xl space-y-3">
+        {/* Notification Bell + Theme Toggle Row */}
+        <div className={cn("flex items-center gap-2", isHovered ? "justify-between px-3" : "justify-center")}>
+          <button
+            onClick={() => setNotificationsOpen(true)}
+            className="relative p-2 rounded-xl bg-white/[0.03] border border-white/5 text-text-3 hover:text-emerald hover:border-emerald/20 transition-all"
+          >
+            <Bell size={18} weight="bold" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald rounded-full border-2 border-[#010101] shadow-[0_0_8px_rgba(0,255,209,0.4)]" />
+          </button>
+          {isHovered && <ThemeToggle />}
+        </div>
+
+        {/* User Info */}
         <div className={cn(
           "flex items-center gap-3 p-3 bg-white/[0.02] rounded-2xl border border-white/5 group transition-all",
           !isHovered ? "justify-center" : "justify-start"
@@ -179,6 +196,9 @@ export default function Sidebar({ onClose }: SidebarProps) {
           )}
         </div>
       </div>
+
+      {/* Notification Center Panel */}
+      <NotificationCenter isOpen={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
     </motion.aside>
   );
 }
