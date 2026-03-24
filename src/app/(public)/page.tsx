@@ -1,322 +1,368 @@
 'use client';
 
+import { useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import {
-    Sparkle,
-    Chats,
-    Globe as PhosphorGlobe,
-    Files,
-    Scales,
-    Stack,
-    ArrowRight,
-    CheckCircle,
-    ShieldCheck
+import { 
+  ArrowRight, 
+  ShieldCheck, 
+  Clock, 
+  Globe, 
+  Plus,
+  Play,
+  CheckCircle,
+  FileText,
+  Lock,
+  CaretRight,
+  ShieldChevron,
+  Browsers
 } from "@phosphor-icons/react";
-import { cn } from '@/lib/utils';
-import { RadialProgress } from '@/components/ui/radial-progress';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Magnetic from '@/components/ui/magnetic';
+import HandSigningScene from '@/components/ui/hand-signing-scene';
 
-// Animation variants
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.15 } }
-};
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-};
+gsap.registerPlugin(ScrollTrigger);
 
 export default function LandingPage() {
-    const [scrolled, setScrolled] = useState(false);
-    const { scrollYProgress } = useScroll();
-    const yHero = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const heroRef = useRef(null);
+  const vaultRef = useRef(null);
 
-    useEffect(() => {
-        const handler = () => setScrolled(window.scrollY > 40);
-        window.addEventListener('scroll', handler, { passive: true });
-        return () => window.removeEventListener('scroll', handler);
-    }, []);
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero Elements
+      gsap.from(".hero-reveal", {
+        y: 40,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        stagger: 0.1,
+        delay: 0.1
+      });
 
-    return (
-        <div className="bg-[var(--bg)] min-h-screen selection:bg-[var(--blue)] selection:text-[var(--bg)] overflow-x-hidden">
-            {/* ─── Brutalist Nav ─────────────────────────────── */}
-            <nav className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b-4 border-[var(--text-1)]",
-                scrolled ? "bg-[var(--color-white)] py-4 shadow-[0_8px_0_0_var(--text-1)]" : "bg-[var(--bg)]/80 backdrop-blur-md py-6"
-            )}>
-                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
-                    <Link href="/" className="flex items-center gap-3 no-underline group shrink-0">
-                        <div className="w-10 h-10 bg-[var(--blue)] flex items-center justify-center shrink-0 border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)] group-hover:bg-[var(--secondary)] transition-colors">
-                            <Scales weight="bold" size={24} className="text-[var(--bg)]" />
-                        </div>
-                        <span className="text-2xl tracking-tighter text-[var(--text-1)] uppercase font-black">Agree<span className="text-[var(--blue)]">Mint</span></span>
-                    </Link>
+      // 3D Sections
+      gsap.from(".vault-feature", {
+        scrollTrigger: {
+          trigger: ".vault-section",
+          start: "top 70%",
+        },
+        x: -50,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power3.out"
+      });
 
-                    <div className="hidden md:flex items-center gap-8 text-[11px] font-black uppercase tracking-widest text-[var(--text-1)]">
-                        <a href="#how-it-works" className="hover:text-[var(--blue)] transition-colors">How It Works</a>
-                        <a href="#features" className="hover:text-[var(--blue)] transition-colors">Platform</a>
-                        <a href="#pricing" className="hover:text-[var(--blue)] transition-colors">Pricing</a>
-                    </div>
+      gsap.from(".map-reveal", {
+        scrollTrigger: {
+          trigger: ".map-section",
+          start: "top 70%",
+        },
+        scale: 0.8,
+        opacity: 0,
+        duration: 2,
+        ease: "power2.out"
+      });
+    });
 
-                    <div className="flex items-center gap-4 shrink-0">
-                        <Link href="/dashboard" className="hidden sm:block text-xs font-black uppercase tracking-widest text-[var(--text-1)] hover:text-[var(--blue)]">Sign In</Link>
-                        <Link href="/dashboard">
-                            <button className="brutalist-button py-3 px-6 text-[12px] bg-[var(--text-1)] hover:bg-[var(--blue)] text-[var(--bg)] border-[var(--text-1)] shadow-[4px_4px_0_0_var(--blue)] hover:shadow-[4px_4px_0_0_var(--text-1)]">
-                                Start Drafting →
-                            </button>
-                        </Link>
-                    </div>
-                </div>
-            </nav>
+    return () => ctx.revert();
+  }, []);
 
-            {/* ─── HERO ─────────────────────────────── */}
-            <section className="pt-48 pb-32 px-6 relative overflow-hidden">
-                 {/* Decorative Background Elements */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--blue)]/10 rounded-full blur-[120px] -z-10 translate-x-1/3 -translate-y-1/3" />
-                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[var(--secondary)]/10 rounded-full blur-[150px] -z-10 -translate-x-1/4 translate-y-1/4" />
+  return (
+    <div className="bg-[#010101] text-white selection:bg-emerald selection:text-[#010101] min-h-screen font-sans overflow-x-hidden">
+      
+      {/* ── METADATA ────────────────────────────────────────── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "AgreeMint",
+            "operatingSystem": "Web",
+            "applicationCategory": "LegalApplication",
+            "description": "Premium system for creating, signing, and managing legally binding contracts.",
+          })
+        }}
+      />
 
-                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-                    <motion.div 
-                        variants={staggerContainer} 
-                        initial="hidden" 
-                        animate="show"
-                        className="text-left"
-                    >
-                        <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-[var(--color-white)] border-2 border-[var(--text-1)] px-4 py-2 shadow-[2px_2px_0_0_var(--text-1)] mb-8">
-                            <Sparkle size={16} weight="fill" className="text-[var(--blue)]" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-1)]">Gemini 3.1 Pro Powered</span>
-                        </motion.div>
-                        
-                        <motion.h1 variants={fadeUp} className="text-6xl md:text-7xl lg:text-[5.5rem] font-black uppercase tracking-tighter leading-[0.85] text-[var(--text-1)] mb-8">
-                            Words into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--blue)] to-[var(--secondary)]">Contracts</span>
-                        </motion.h1>
-                        
-                        <motion.p variants={fadeUp} className="text-xl md:text-2xl font-bold text-[var(--text-2)] mb-12 max-w-xl leading-relaxed">
-                            Stop paying for rigid templates. Describe your agreement, and let our AI structure it into a professional, legally sound document in 30 seconds.
-                        </motion.p>
+      {/* ── NAVIGATION ────────────────────────────────────────────── */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between bg-white/[0.03] backdrop-blur-3xl px-8 py-5 rounded-[32px] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+          <Link href="/" className="flex items-center gap-4 group">
+            <img src="/logo_verified.png" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-500" alt="Logo" />
+            <h1 className="flex items-center text-3xl font-black italic uppercase tracking-tighter">
+               <span className="brand-agree">AGREE</span>
+               <span className="brand-mint">MINT</span>
+            </h1>
+          </Link>
+          
+          <div className="hidden md:flex items-center gap-10">
+            {['History', 'Deals', 'Templates'].map(item => (
+              <Link key={item} href="/dashboard" className="text-[12px] font-black uppercase tracking-[0.3em] text-text-3 hover:text-white transition-colors">
+                {item}
+              </Link>
+            ))}
+          </div>
 
-                        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                            <Link href="/dashboard" className="w-full sm:w-auto">
-                                <button className="w-full brutalist-button bg-[var(--blue)] text-[var(--bg)] border-[var(--text-1)] shadow-[6px_6px_0_0_var(--text-1)] px-10 py-5 text-sm flex items-center justify-center gap-3 group">
-                                    Generate Agreement
-                                    <ArrowRight size={18} weight="bold" className="group-hover:translate-x-1 transition-transform" />
-                                </button>
-                            </Link>
-                            <div className="flex -space-x-3">
-                                {[1,2,3,4].map(i => (
-                                    <div key={i} className="w-10 h-10 rounded-full border-2 border-[var(--text-1)] bg-gray-200" style={{ backgroundImage: `url(https://i.pravatar.cc/100?img=${i+10})`, backgroundSize: 'cover' }} />
-                                ))}
-                                <div className="w-10 h-10 rounded-full border-2 border-[var(--text-1)] bg-[var(--color-white)] flex items-center justify-center text-[10px] font-black">+10k</div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-
-                    {/* Animated Mock UI */}
-                    <motion.div style={{ y: yHero }} className="hidden lg:block relative z-10 perspective-[1000px]">
-                        <motion.div 
-                            initial={{ rotateY: 15, rotateX: 5, opacity: 0, x: 50 }}
-                            animate={{ rotateY: -5, rotateX: 2, opacity: 1, x: 0 }}
-                            transition={{ duration: 1.5, ease: "easeOut" }}
-                            className="w-full aspect-[4/5] bg-[var(--color-white)] border-4 border-[var(--text-1)] shadow-[16px_16px_0_0_var(--text-1)] flex flex-col overflow-hidden relative"
-                        >
-                            {/* Browser bar */}
-                            <div className="h-12 border-b-4 border-[var(--text-1)] bg-[var(--bg)] flex items-center px-4 gap-2">
-                                <div className="w-3 h-3 rounded-full border-2 border-[var(--text-1)] bg-[#FF5F56]"></div>
-                                <div className="w-3 h-3 rounded-full border-2 border-[var(--text-1)] bg-[#FFBD2E]"></div>
-                                <div className="w-3 h-3 rounded-full border-2 border-[var(--text-1)] bg-[#27C93F]"></div>
-                            </div>
-                            {/* Editor Body */}
-                            <div className="p-8 flex-1 flex flex-col gap-6 relative">
-                                <div className="w-2/3 h-8 bg-gray-200 mb-4 animate-pulse"></div>
-                                <div className="space-y-3">
-                                    <div className="w-full h-4 bg-gray-100"></div>
-                                    <div className="w-full h-4 bg-gray-100"></div>
-                                    <div className="w-5/6 h-4 bg-gray-100"></div>
-                                </div>
-                                <div className="mt-8 border-4 border-[var(--text-1)] p-4 bg-[var(--blue)]/5 relative overflow-hidden">
-                                     <div className="absolute top-0 left-0 w-1 h-full bg-[var(--blue)] pointer-events-none"></div>
-                                     <div className="flex items-center gap-3">
-                                         <Sparkle size={20} className="text-[var(--blue)] animate-spin-slow" />
-                                         <span className="text-xs font-black uppercase tracking-widest text-[var(--blue)]">AI Rewriting Clause 4.2...</span>
-                                     </div>
-                                </div>
-                                <div className="flex justify-between items-center mt-auto">
-                                    <div className="flex items-center gap-2">
-                                        <RadialProgress pct={100} size={30} stroke={4} className="drop-shadow-none" />
-                                        <span className="text-[10px] font-black">100% READY</span>
-                                    </div>
-                                    <div className="w-24 h-8 bg-[var(--text-1)]"></div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </section>
-
-             {/* ─── GEO / TRUST SECTION ─────────────────────────────── */}
-            <section className="py-12 bg-[var(--color-white)] border-y-4 border-[var(--text-1)] overflow-hidden flex whitespace-nowrap">
-                <div className="animate-[scroll_20s_linear_infinite] flex items-center gap-16 px-8 text-xl md:text-3xl font-black uppercase tracking-tighter text-[var(--text-1)]/30">
-                    <span className="flex items-center gap-4"><ShieldCheck size={40} weight="fill"/> 195 Jurisdictions</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-4"><Stack size={40} weight="fill"/> Compliant</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-4"><Files size={40} weight="fill"/> Export to PDF</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-4"><ShieldCheck size={40} weight="fill"/> 195 Jurisdictions</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-4"><Stack size={40} weight="fill"/> Compliant</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-4"><Files size={40} weight="fill"/> Export to PDF</span>
-                </div>
-            </section>
-
-            {/* ─── HOW IT WORKS ─────────────────────────────── */}
-            <section id="how-it-works" className="py-32 px-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-24">
-                        <span className="eyebrow inline-block bg-[var(--text-1)] text-[var(--bg)] px-4 py-2 mb-6">The Workflow</span>
-                        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-[var(--text-1)]">Three steps. Zero jargon.</h2>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-12 relative">
-                        {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-[4.5rem] left-[20%] right-[20%] h-1 border-t-4 border-dashed border-[var(--text-1)]/20 z-0" />
-
-                        {[
-                            { step: "01", title: "Describe", desc: "Explain the deal in plain English. No legal padding required. Just tell us who does what, when, and how much.", icon: <Chats size={40} className="text-[var(--blue)]" weight="duotone" /> },
-                            { step: "02", title: "Generate", desc: "Our AI structures your input into a professional, jurisdiction-aware agreement holding up to standard scrutiny.", icon: <Sparkle size={40} className="text-[var(--secondary)]" weight="duotone" /> },
-                            { step: "03", title: "Sign & Export", desc: "Review the clauses, make any final interactive tweaks, and export directly to a print-ready PDF.", icon: <Files size={40} className="text-[var(--text-1)]" weight="duotone" /> }
-                        ].map((s, i) => (
-                            <motion.div 
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.2 }}
-                                key={i} 
-                                className="brutalist-card p-10 relative z-10 bg-[var(--color-white)] group hover:bg-[var(--text-1)] hover:text-[var(--bg)] transition-colors duration-300"
-                            >
-                                <div className="w-24 h-24 bg-[var(--bg)] border-4 border-[var(--text-1)] flex items-center justify-center font-black mb-10 shadow-[8px_8px_0_0_var(--blue)] group-hover:shadow-[8px_8px_0_0_var(--secondary)] transition-all">
-                                    {s.icon}
-                                </div>
-                                <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-[var(--text-1)]/10 to-[var(--text-1)]/5 -ml-2 mb-4 group-hover:from-white/20 group-hover:to-white/5">{s.step}</div>
-                                <h3 className="text-2xl font-black uppercase tracking-tight mb-4">{s.title}</h3>
-                                <p className="text-sm font-bold text-[var(--text-2)] group-hover:text-[var(--text-3)] leading-relaxed">{s.desc}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── BENTO GRID CAPABILITIES ─────────────────────────────── */}
-            <section id="features" className="py-32 bg-[var(--text-1)] text-[var(--bg)] px-6 border-y-4 border-[var(--text-1)]">
-                <div className="max-w-7xl mx-auto">
-                    <div className="mb-20">
-                        <span className="eyebrow inline-block bg-[var(--color-white)] text-[var(--text-1)] px-4 py-2 mb-6">Capabilities</span>
-                    <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-[var(--bg)] max-w-2xl">Everything you need. Nothing you don&apos;t.</h2>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[250px]">
-                        <div className="md:col-span-2 brutalist-card bg-[var(--blue)] border-[var(--bg)] p-10 shadow-[8px_8px_0_0_#00BA95] flex flex-col justify-end overflow-hidden relative group">
-                            <Sparkle size={120} className="absolute -top-10 -right-10 text-[var(--bg)]/20 group-hover:scale-110 transition-transform duration-700" weight="fill" />
-                            <h3 className="text-3xl font-black uppercase mb-2 text-[var(--text-1)]">Smart AI Drafting</h3>
-                            <p className="text-[var(--text-1)]/80 font-bold max-w-md">Easily rewrite terms, summarize risks, and manage clauses with AI.</p>
-                        </div>
-                        <div className="brutalist-card bg-[var(--color-white)] border-0 p-8 shadow-[8px_8px_0_0_var(--secondary)] flex flex-col justify-between group">
-                            <div className="w-12 h-12 bg-[var(--text-1)] flex items-center justify-center text-[var(--bg)]"><PhosphorGlobe size={24} /></div>
-                            <div>
-                                <h3 className="text-[var(--text-1)] text-xl font-black uppercase mb-1">Global Scale</h3>
-                                <p className="text-[var(--text-2)] text-xs font-bold">195 localized formats.</p>
-                            </div>
-                        </div>
-                        <div className="brutalist-card bg-[var(--bg)] border-0 p-8 shadow-[8px_8px_0_0_var(--blue)] flex flex-col justify-between group">
-                            <div className="w-12 h-12 bg-[var(--text-1)] flex items-center justify-center text-[var(--bg)]"><Stack size={24} /></div>
-                            <div>
-                                <h3 className="text-[var(--text-1)] text-xl font-black uppercase mb-1">Library</h3>
-                                <p className="text-[var(--text-2)] text-xs font-bold">Store and reuse templates.</p>
-                            </div>
-                        </div>
-                        <div className="md:col-span-4 brutalist-card bg-[var(--secondary)] border-[var(--bg)] p-10 shadow-[8px_8px_0_0_#5B52ED] flex sm:flex-row flex-col items-center justify-between overflow-hidden relative">
-                             <div className="max-w-xl z-10">
-                                <h3 className="text-3xl font-black uppercase mb-2 text-[var(--text-1)]">Secure Cloud Storage</h3>
-                                <p className="text-[var(--text-1)]/80 font-bold">Your agreements are securely stored, backed up, and ready to export instantly. Fast and reliable.</p>
-                             </div>
-                             <div className="relative z-10 mt-8 sm:mt-0 flex gap-4">
-                                <RadialProgress pct={100} size={100} stroke={8} color="var(--text-1)" className="drop-shadow-none" />
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── PRICING ─────────────────────────────── */}
-            <section id="pricing" className="py-32 px-6">
-                <div className="max-w-5xl mx-auto text-center">
-                    <span className="eyebrow inline-block bg-[var(--text-1)] text-[var(--bg)] px-4 py-2 mb-6">Open Access</span>
-                    <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-[var(--text-1)] mb-16">Free to start.<br/>Seriously.</h2>
-                    
-                    <div className="max-w-lg mx-auto brutalist-card bg-[var(--color-white)] p-12 shadow-[16px_16px_0_0_var(--blue)] hover:shadow-[24px_24px_0_0_var(--text-1)] transition-all relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--blue)] opacity-10 rounded-full blur-[40px] pointer-events-none"></div>
-
-                        <div className="text-6xl md:text-[5rem] font-black mb-2 flex justify-center items-end gap-2">$0 <span className="text-xl text-[var(--text-3)] mb-4">/forever</span></div>
-                        <p className="text-sm font-black uppercase tracking-widest text-[var(--blue)] mb-10 pb-10 border-b-4 border-[var(--text-1)]">Early Adopter Plan</p>
-                        
-                        <div className="space-y-6 mb-12 text-left">
-                            {[
-                                'Generative AI Drafting', 
-                                'Unlimited PDF Exports', 
-                                '10 AI Queries per hour', 
-                                '195 Jurisdictions Global Coverage'
-                            ].map((item, idx) => (
-                                <div key={idx} className="flex flex-row items-center gap-4">
-                                    <div className="w-6 h-6 bg-[var(--blue)]/20 rounded-full flex items-center justify-center shrink-0">
-                                        <CheckCircle size={16} weight="bold" className="text-[var(--blue)]" />
-                                    </div>
-                                    <span className="font-bold text-base">{item}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        <Link href="/dashboard" className="block w-full">
-                            <button className="brutalist-button w-full bg-[var(--text-1)] text-[var(--bg)] shadow-[6px_6px_0_0_var(--secondary)] border-2 border-[var(--text-1)] text-lg py-6 hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
-                                Sign Up Free &rarr;
-                            </button>
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── FINAL CTA ─────────────────────────────── */}
-            <section className="py-40 bg-[var(--text-1)] px-6 border-y-4 border-[var(--text-1)] overflow-hidden relative">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[800px] bg-gradient-radial from-[var(--blue)]/20 to-transparent pointer-events-none"></div>
-                <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <h2 className="text-6xl md:text-[6rem] font-black uppercase tracking-tighter leading-[0.8] mb-12 text-[var(--bg)]">Your contract is <br/><span className="text-[var(--secondary)]">30 seconds</span> away.</h2>
-                    <Link href="/dashboard">
-                        <button className="brutalist-button bg-[var(--color-white)] text-[var(--text-1)] border-4 border-[var(--bg)] shadow-[8px_8px_0_0_var(--blue)] px-16 py-8 text-xl tracking-widest hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
-                            Start Drafting Now
-                        </button>
-                    </Link>
-                </div>
-            </section>
-
-            {/* ─── FOOTER ─────────────────────────────── */}
-            <footer className="py-16 bg-[var(--bg)] px-6 border-t-4 border-[var(--text-1)]">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex items-center gap-4 group">
-                        <div className="w-10 h-10 bg-[var(--text-1)] flex items-center justify-center shrink-0 border-2 border-[var(--text-1)] group-hover:bg-[var(--blue)] transition-colors">
-                            <Scales weight="fill" size={20} className="text-[var(--bg)]" />
-                        </div>
-                        <span className="text-2xl tracking-tighter text-[var(--text-1)] uppercase font-black">Agree<span className="text-[var(--blue)]">Mint</span></span>
-                    </div>
-                    
-                    <div className="flex flex-wrap justify-center gap-8 text-xs font-black uppercase tracking-widest text-[var(--text-3)]">
-                        <Link href="/privacy" className="hover:text-[var(--text-1)] transition-colors">Privacy Policy</Link>
-                        <Link href="/terms" className="hover:text-[var(--text-1)] transition-colors">Terms of Service</Link>
-                        <a href="mailto:hello@agreemint.com" className="hover:text-[var(--text-1)] transition-colors">Contact</a>
-                    </div>
-                </div>
-            </footer>
+          <div className="flex items-center gap-6">
+            <Magnetic>
+              <Link href="/dashboard" className="btn-vibrant btn-vibrant-emerald !py-3 !px-8 !text-[12px]">
+                <span>ENTER APP</span>
+                <CaretRight size={16} weight="bold" />
+              </Link>
+            </Magnetic>
+          </div>
         </div>
-    );
+      </nav>
+
+      {/* ── HERO SECTION ─────────────────────────────────────────── */}
+      <section ref={heroRef} className="relative pt-40 pb-20 px-6 min-h-screen flex flex-col justify-center overflow-hidden">
+        {/* Massive Background Glows */}
+        <div className="vibrant-glow top-0 left-[-10%] w-[1000px] h-[1000px] bg-emerald/20 animate-glow-pulse" />
+        <div className="vibrant-glow bottom-0 right-[-10%] w-[800px] h-[800px] bg-blue/10" />
+        <div className="vibrant-glow middle-center w-[1200px] h-[1200px] bg-emerald/5 opacity-50" />
+        
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-24 relative z-10">
+          <motion.div 
+            className="space-y-12"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+          >
+            <div className="hero-reveal inline-flex items-center gap-4 px-6 py-3 rounded-full border border-emerald/30 bg-emerald/10 backdrop-blur-md text-emerald text-[12px] font-black uppercase tracking-[0.4em] shadow-[0_0_30px_rgba(0,255,209,0.2)]">
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald animate-pulse" />
+              AgreeMint v3.0 — Handshake To Handled
+            </div>
+            
+            <h1 className="hero-reveal heading-display text-8xl md:text-9xl lg:text-[150px] tracking-[-0.08em] leading-[0.8] text-white italic uppercase">
+              Handshake <br />
+              <span className="text-emerald not-italic">to Handled.</span>
+            </h1>
+            
+            <p className="hero-reveal text-2xl md:text-3xl text-text-2 font-medium leading-[1.6] max-w-xl">
+              The one-stop shop for personal deals. Formalize WhatsApp chats, private sales, and loans in seconds. No lawyers needed.
+            </p>
+            
+            <div className="hero-reveal flex flex-wrap items-center gap-8 pt-10">
+               <Magnetic>
+                 <Link href="/onboarding" className="btn-vibrant btn-vibrant-emerald !px-16 !py-8 !text-2xl h-auto group">
+                   START FOR FREE
+                   <ArrowRight size={32} weight="bold" className="group-hover:translate-x-2 transition-transform" />
+                 </Link>
+               </Magnetic>
+               <Magnetic>
+                  <Link href="/login" className="btn-vibrant btn-vibrant-blue !px-12 !py-8 !text-2xl h-auto">
+                    SIGN IN
+                  </Link>
+               </Magnetic>
+            </div>
+          </motion.div> 
+
+          {/* 3D Scene Container — Optimized for Visibility */}
+          <motion.div 
+            className="scene-reveal h-[600px] lg:h-[900px] w-full relative z-20"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          >
+             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,209,0.15),transparent_70%)] blur-3xl opacity-50" />
+             <div className="w-full h-full transform hover:scale-105 transition-transform duration-1000">
+                <Suspense fallback={<div className="w-full h-full bg-white/5 rounded-[60px] animate-pulse" />}>
+                   <HandSigningScene />
+                </Suspense>
+             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS: BESPOKE TIMELINE ─────────────────────── */}
+      <section className="py-40 px-6 bg-white/[0.02] border-y border-white/5 relative overflow-hidden">
+         <div className="max-w-7xl mx-auto space-y-32">
+            <motion.div 
+              className="text-center space-y-6"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+               <span className="text-[14px] font-black text-emerald uppercase tracking-[0.5em] block">THE PROCESS</span>
+               <h2 className="heading-display text-7xl md:text-[120px] tracking-tighter uppercase italic text-white leading-none">Simple Steps.</h2>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-16 relative">
+                {[
+                   { 
+                     img: 'document_simple.png', title: 'CAPTURE', 
+                     desc: 'Turn a WhatsApp chat or a handshake into a formal agreement in seconds.',
+                     color: 'text-emerald',
+                     glow: 'bg-emerald'
+                   },
+                   { 
+                     img: 'lock_simple.png', title: 'MINT', 
+                     desc: 'Sign and secure your contract with global jurisdiction support and AI guidance.',
+                     color: 'text-blue',
+                     glow: 'bg-blue'
+                   },
+                   { 
+                     img: 'help_simple.png', title: 'ENFORCE', 
+                     desc: 'Built-in escalation paths from friendly reminders to legal action guidance.',
+                     color: 'text-amber',
+                     glow: 'bg-amber'
+                   }
+                 ].map((step, i) => (
+                  <motion.div 
+                    key={i} 
+                    className="flex flex-col items-center text-center gap-12 group relative"
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: i * 0.2 }}
+                  >
+                     <div className="w-64 h-64 relative">
+                        <div className={`absolute inset-0 ${step.glow}/10 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none`} />
+                        <img src={`/assets/3d/${step.img}`} className="w-full h-full object-contain relative z-10 transition-transform duration-1000 group-hover:scale-110 group-hover:-rotate-3" alt={step.title} />
+                     </div>
+                     <div className="space-y-6">
+                        <h3 className={`text-4xl font-black italic uppercase tracking-tighter ${step.color}`}>{step.title}</h3>
+                        <p className="text-text-3 font-bold leading-relaxed max-w-xs mx-auto uppercase text-[12px] tracking-widest">{step.desc}</p>
+                     </div>
+                  </motion.div>
+                ))}
+            </div>
+         </div>
+      </section>
+
+      {/* ── THE INFORMAL GAP: RELATABLE USE CASES ───────────────────── */}
+      <section className="vault-section py-48 px-6 relative overflow-hidden">
+         <div className="vibrant-glow top-[20%] left-[-10%] w-[800px] h-[800px] bg-blue/10 animate-glow-pulse" />
+         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-32 items-center">
+            <motion.div 
+              className="vault-feature space-y-10 group"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+            >
+               <div className="p-16 rounded-[80px] bg-white/[0.02] border border-white/5 relative overflow-hidden shadow-2xl">
+                  <div className="absolute top-0 left-0 w-80 h-80 bg-blue/10 blur-[120px]" />
+                  <img src="/assets/3d/vault_blue.png" className="w-full h-[500px] object-contain mb-16 transform group-hover:scale-105 transition-transform duration-1000" alt="Secure Storage" />
+                  <div className="space-y-8 relative z-10">
+                     <h3 className="text-5xl font-black text-blue italic uppercase tracking-tighter">STOP GUESSING.</h3>
+                     <p className="text-text-2 text-xl font-medium leading-relaxed">Don't lose a friend over a loan or get ghosted by a freelancer. We provide the documentation you need for all life's informal moments.</p>
+                  </div>
+               </div>
+            </motion.div>
+
+            <div className="space-y-20">
+               <motion.div 
+                 className="space-y-8"
+                 initial={{ opacity: 0, y: 50 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 0.8 }}
+               >
+                  <span className="text-[14px] font-black text-blue uppercase tracking-[0.5em] block">REAL USE CASES</span>
+                  <h2 className="heading-display text-7xl md:text-[100px] tracking-tighter uppercase italic text-white leading-none">Made for <br /> Real Life.</h2>
+               </motion.div>
+               
+               <div className="space-y-16">
+                  {[
+                    { icon: Lock, title: 'LENDING MONEY', desc: 'Lent a friend $500? Make it official so there are no hard feelings later.', color: 'text-blue' },
+                    { icon: ShieldChevron, title: 'SELLING A CAR', desc: 'Selling your old ride? Get a bill of sale signed in 60 seconds.', color: 'text-blue' },
+                    { icon: Browsers, title: 'FREELANCE WORK', desc: 'Starting a project? Protect your time and make sure you get paid.', color: 'text-blue' }
+                  ].map((item, i) => (
+                    <motion.div 
+                      key={i} 
+                      className="flex items-start gap-10 group"
+                      initial={{ opacity: 0, x: 50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: i * 0.1 }}
+                    >
+                       <div className={`w-20 h-20 bg-white/[0.05] border border-white/10 rounded-3xl flex items-center justify-center ${item.color} group-hover:scale-110 group-hover:bg-blue group-hover:text-white transition-all shadow-2xl`}>
+                          <item.icon size={40} weight="bold" />
+                       </div>
+                       <div className="space-y-4">
+                          <h4 className="text-2xl font-black text-white uppercase italic tracking-tighter">{item.title}</h4>
+                          <p className="text-text-3 text-lg font-medium">{item.desc}</p>
+                       </div>
+                    </motion.div>
+                  ))}
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* ── GLOBAL NETWORK: HOLOGRAPHIC MAP ─────────────────────── */}
+      <section className="map-section py-48 px-6 relative bg-white/[0.01] border-t border-white/5 overflow-hidden">
+         <div className="vibrant-glow bottom-[-10%] right-[-10%] w-[1000px] h-[1000px] bg-amber/10 animate-glow-pulse" />
+         <div className="max-w-7xl mx-auto flex flex-col items-center gap-32 text-center">
+            <motion.div 
+              className="space-y-8 max-w-4xl"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+               <span className="text-[14px] font-black text-amber uppercase tracking-[0.5em] block">LOCATIONS</span>
+               <h2 className="heading-display text-7xl md:text-[120px] tracking-tighter uppercase italic text-white leading-none">Global Reach.</h2>
+               <p className="text-text-2 text-2xl font-medium leading-relaxed">We operate in every major city to ensure your agreements are valid and respected worldwide.</p>
+            </motion.div>
+
+            <motion.div 
+              className="map-reveal w-full max-w-6xl h-[700px] relative"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5 }}
+            >
+               <div className="absolute inset-0 bg-amber/10 blur-[200px] rounded-full" />
+               <img src="/assets/3d/map_gold.png" className="w-full h-full object-contain relative z-10" alt="Global Map" />
+            </motion.div>
+
+            <div className="flex flex-wrap justify-center gap-12 md:gap-20 opacity-40">
+               {['NEW YORK', 'LONDON', 'LAGOS', 'DUBAI', 'SINGAPORE', 'JAKARTA', 'NAIROBI'].map(city => (
+                  <span key={city} className="text-[14px] md:text-[18px] font-black uppercase tracking-[0.4em] text-amber">{city}</span>
+               ))}
+            </div>
+         </div>
+      </section>
+
+      {/* ── CTA BANNER ───────────────────────────────────────────── */}
+      <section className="py-48 px-6">
+         <motion.div 
+           className="max-w-6xl mx-auto rounded-[80px] bg-emerald px-10 py-40 text-[#010101] flex flex-col items-center text-center gap-16 shadow-[0_0_150px_rgba(0,255,209,0.3)] overflow-hidden relative group cursor-pointer border-8 border-[#010101]"
+           initial={{ opacity: 0, scale: 0.95 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.8 }}
+         >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.4),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <h2 className="heading-display text-8xl md:text-[180px] tracking-[-0.08em] leading-[0.8] italic uppercase relative z-10">Start <br /> <span className="underline decoration-8 underline-offset-10">Now</span>.</h2>
+            <Magnetic>
+               <Link href="/onboarding" className="bg-[#010101] text-emerald px-24 py-10 rounded-3xl text-4xl font-black uppercase tracking-widest hover:scale-110 transition-all shadow-[0_0_100px_rgba(0,0,0,0.6)] relative z-10">
+                  GET STARTED
+               </Link>
+            </Magnetic>
+         </motion.div>
+      </section>
+
+      {/* ── FOOTER ───────────────────────────────────────────────── */}
+      <footer className="py-48 border-t border-white/5 px-6 bg-white/[0.01]">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-24 text-text-3">
+          <div className="flex items-center gap-6 group cursor-pointer">
+            <img src="/logo_verified.png" className="w-16 h-16 object-contain drop-shadow-[0_0_15px_rgba(0,255,209,0.3)]" alt="Logo" />
+            <h1 className="flex items-center text-4xl font-black italic uppercase tracking-tighter">
+               <span className="brand-agree">AGREE</span>
+               <span className="brand-mint">MINT</span>
+            </h1>
+          </div>
+          <div className="text-center md:text-right space-y-6">
+            <p className="text-[14px] font-black text-white uppercase tracking-[0.5em]">Simple Agreements v3.0</p>
+            <p className="text-[12px] font-bold uppercase tracking-widest opacity-40">© 2026 AGREEMINT Inc. — All Data Private.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 }

@@ -36,11 +36,11 @@ export async function POST(req: NextRequest) {
     const { object } = await generateObject({
       model: MODEL,
       schema: ContractSchema,
-      prompt: `Generate a complete, legally sound ${category || 'agreement'} contract for ${jurisdiction || 'the described location'}.
+      prompt: `Generate a complete, legally sound ${category || 'contract'} contract for ${jurisdiction || 'the described location'}.
 Details: ${prompt}
 Parties: ${party1 || 'Party A'} and ${party2 || 'Party B'}
 Make all clauses enforceable under ${jurisdiction || 'the local'} law.
-Always include clauses: Agreement Overview, Payment Terms (if financial), Default & Remedies, Dispute Resolution, Governing Law.
+Always include clauses: Contract Overview, Payment Terms (if financial), Default & Remedies, Dispute Resolution, Governing Law.
 Use clear, professional language. Provide a summary, recommended steps, and any jurisdiction-specific legal warnings.`,
     });
 

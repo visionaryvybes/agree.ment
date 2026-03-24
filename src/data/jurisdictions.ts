@@ -48,9 +48,9 @@ export const prefilledJurisdictions: Record<string, {
   },
   'US': {
     legalFramework: 'COMMON LAW (Federal and State-level variations)',
-    regionalInsight: 'The US legal system is highly litigious and relies on extensive, explicit contract drafting. Each state has its own contract laws, with Delaware and New York being popular for corporate and commercial agreements.',
+    regionalInsight: 'The US legal system is highly litigious and relies on extensive, explicit contract drafting. Each state has its own contract laws, with Delaware and New York being popular for corporate and commercial contracts.',
     enforceability: [
-      'Courts strongly uphold the "freedom of contract", enforcing agreements as written unless unconscionable or illegal.',
+      'Courts strongly uphold the "freedom of contract", enforcing contracts as written unless unconscionable or illegal.',
       'The Uniform Commercial Code (UCC) governs the sale of goods across most states, standardizing commercial transactions.',
       'Arbitration clauses and class-action waivers are highly favored and routinely enforced by federal and state courts.'
     ],

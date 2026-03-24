@@ -10,7 +10,8 @@ export function CookieBanner() {
   useEffect(() => {
     const consent = localStorage.getItem("agreemint_cookie_consent");
     if (!consent) {
-      setShow(true);
+      const timer = setTimeout(() => setShow(true), 1500);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -26,39 +27,40 @@ export function CookieBanner() {
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-0 sm:bottom-8 left-0 sm:left-8 right-0 sm:right-auto z-50 w-full sm:w-[450px] bg-transparent border border-[var(--glass-border)] shadow-2xl p-6"
+          initial={{ y: 100, opacity: 0, scale: 0.95 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={{ y: 100, opacity: 0, scale: 0.95 }}
+          transition={{ type: "spring", damping: 25, stiffness: 200 }}
+          className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-auto z-50 w-auto sm:w-[420px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-lg p-5"
         >
-          <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[var(--blue)] text-[var(--bg)] flex items-center justify-center border-2 border-[var(--glass-border)] shrink-0">
-                <Cookie size={24} weight="bold" />
+              <div className="w-9 h-9 bg-[var(--blue)]/10 text-[var(--blue)] flex items-center justify-center rounded-lg shrink-0">
+                <Cookie size={20} weight="fill" />
               </div>
-              <h3 className="heading-section text-xl uppercase font-black tracking-tight">Protocol Telemetry</h3>
+              <h3 className="text-sm font-semibold text-[var(--text-1)]">Cookie Preferences</h3>
             </div>
-            <button onClick={() => setShow(false)} className="text-[var(--text-3)] hover:text-[var(--text-1)] transition-colors">
-              <X size={20} weight="bold" />
+            <button onClick={() => setShow(false)} className="text-[var(--text-3)] hover:text-[var(--text-1)] transition-colors p-1 rounded-lg hover:bg-[var(--bg-hover)]">
+              <X size={16} weight="bold" />
             </button>
           </div>
           
-          <p className="text-xs font-bold text-[var(--text-2)] mb-6 leading-relaxed">
-            We use absolute necessity cookies for protocol enforcement and optional analytics to optimize the legal architecture network.
+          <p className="text-xs text-[var(--text-2)] mb-4 leading-relaxed">
+            We use essential cookies to keep things running smoothly, and optional analytics cookies to help us improve your experience.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex gap-3">
             <button
               onClick={() => accept(true)}
-              className="flex-1 btn-primary py-3 text-[10px] bg-[var(--text-1)] text-[var(--bg)]"
+              className="flex-1 btn-primary py-2.5 text-xs font-semibold rounded-lg"
             >
               Accept All
             </button>
             <button
               onClick={() => accept(false)}
-              className="flex-1 btn-secondary py-3 text-[10px]"
+              className="flex-1 btn-secondary py-2.5 text-xs font-semibold rounded-lg"
             >
-              Strict Only
+              Essential Only
             </button>
           </div>
         </motion.div>

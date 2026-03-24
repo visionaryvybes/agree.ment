@@ -1,50 +1,48 @@
 import type { Metadata } from "next";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CookieBanner } from "@/components/CookieBanner";
-import { ClerkProvider } from "@clerk/nextjs";
+import ScrollToTop from "@/components/ui/ScrollToTop";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "AgreeMint — Personal Agreements, Legally Grounded",
-  description: "Create, sign, and enforce personal agreements in minutes. AI-powered contract generation, WhatsApp import, payment tracking, and jurisdiction-aware legal guidance for 195+ countries.",
-  authors: [{ name: "AgreeMint" }],
-  keywords: "contract generator,legal agreement,personal loan agreement,AI contract,e-signature,legal advice,WhatsApp agreement,bill of sale,freelance contract,rental agreement",
-  robots: "index, follow",
+  title: "AgreeMint | Instant, Ironclad Contracts",
+  description: "Secure your future with AI-driven, legally-binding contracts. Generate, sign, and manage contracts in 60 seconds. Mobile-first, globally-compliant, and ironclad.",
+  keywords: ["legal tech", "contracts", "contracts", "AI law", "smart contracts", "legal automation"],
   openGraph: {
-    title: "AgreeMint — Personal Agreements, Legally Grounded",
-    description: "The one platform for personal agreements. AI contract creation, WhatsApp import, payment tracking, and legal guidance for 195+ countries.",
+    title: "AgreeMint | Instant, Ironclad Contracts",
+    description: "Secure your future with AI-driven, legally-binding contracts.",
     type: "website",
+    locale: "en_US",
+    siteName: "AgreeMint",
   },
   twitter: {
-    card: "summary",
-    title: "AgreeMint — Personal Agreements, Legally Grounded",
-    description: "The one platform for personal agreements. AI contract creation, WhatsApp import, payment tracking, and legal guidance for 195+ countries.",
+    card: "summary_large_image",
+    title: "AgreeMint | Instant, Ironclad Contracts",
+    description: "Secure your future with AI-driven, legally-binding contracts.",
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <ClerkProvider
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-    >
-      <html lang="en">
-        <body style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-slate-900 focus:text-[var(--bg)] focus:px-4 focus:py-2 rounded-lg text-sm font-medium">
-            Skip to main content
-          </a>
-          <TooltipProvider delayDuration={300}>
+    <ClerkProvider>
+      <html lang="en" className="dark">
+        <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#050505] selection:bg-[#00F5D4] selection:text-[#050505]`}>
+          <TooltipProvider>
             {children}
             <Toaster />
             <CookieBanner />
+            <ScrollToTop />
           </TooltipProvider>
         </body>
       </html>

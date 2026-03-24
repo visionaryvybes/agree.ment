@@ -2,529 +2,403 @@
 
 import { useContracts } from '@/store/contracts';
 import Link from 'next/link';
-import {
-  PlusCircle,
-  Files,
-  BookOpen,
-  Wallet as PhosphorWallet,
-  ShieldCheck,
-  ArrowUpRight,
-  Stack,
-  ArrowRight,
-  Lightning,
-  Warning,
-  Scales,
-  Plus,
-  Gear,
-  Globe as PhosphorGlobe
+import { 
+  PlusCircle, 
+  Files, 
+  CurrencyDollar, 
+  Warning, 
+  ArrowRight, 
+  Clock, 
+  ShieldCheck, 
+  CaretRight,
+  TrendUp,
+  Signature
 } from "@phosphor-icons/react";
-import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/EmptyState';
-import { RadialProgress } from '@/components/ui/radial-progress';
-import { cn } from '@/lib/utils';
-import { useState, useEffect, useMemo } from 'react';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip as RechartsTooltip,
-  CartesianGrid
+import { 
+  RadialBarChart, RadialBar, 
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
+import Magnetic from '@/components/ui/magnetic';
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8 } },
-};
-
-const STATUS_LABEL_TEXT: Record<string, string> = {
-  active: 'Active',
-  pending_signature: 'Pending',
-  completed: 'Completed',
-  disputed: 'Disputed',
-  draft: 'Draft',
-  expired: 'Expired',
-};
-
-const STATUS_COLORS: Record<string, string> = {
-  active: 'var(--blue)',
-  pending_signature: '#f59e0b', // amber
-  completed: '#10b981', // emerald
-  disputed: '#ef4444', // red
-  draft: '#6b7280', // gray
-  expired: '#374151', // slate
-};
-
-export default function Dashboard() {
-  // No-op for now
-  const { contracts, getStats } = useContracts();
-  const s = getStats();
-  
-  // Fix Hydration Issue: Only render time after client mount
+export default function DashboardPage() {
+  const { contracts = [] } = useContracts();
   const [mounted, setMounted] = useState(false);
-  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const [period, setPeriod] = useState('30D');
 
   useEffect(() => {
     setMounted(true);
-    setCurrentTime(new Date());
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
   }, []);
 
-  const distributionData = useMemo(() => {
-    const counts: Record<string, number> = {};
-    contracts.forEach(c => {
-      counts[c.status] = (counts[c.status] || 0) + 1;
-    });
-    return Object.entries(counts).map(([status, value]) => ({
-      name: STATUS_LABEL_TEXT[status] || status,
-      value,
-      color: STATUS_COLORS[status] || '#000'
-    }));
-  }, [contracts]);
+  const activeCount = (contracts || []).filter(c => c.status === 'active').length;
+  const pendingCount = (contracts || []).filter(c => c.status === 'pending_signature').length;
+  const totalValue = (contracts || []).reduce((sum, c) => sum + (c.totalAmount || 0), 0);
+  const disputedCount = (contracts || []).filter(c => c.status === 'disputed').length;
 
-  const financialData = useMemo(() => [
-    { name: 'Paid', amount: s.totalReceivable, color: '#10b981' },
-    { name: 'Owed', amount: s.totalOwed, color: '#f59e0b' },
-  ], [s.totalReceivable, s.totalOwed]);
+  const areaData = [
+    { date: 'Feb 01', volume: 12000 },
+    { date: 'Feb 08', volume: 19000 },
+    { date: 'Feb 15', volume: 15000 },
+    { date: 'Feb 22', volume: 24000 },
+    { date: 'Mar 01', volume: 32000 },
+    { date: 'Mar 08', volume: 28000 },
+    { date: 'Mar 15', volume: 45000 },
+  ];
 
-  const recent = contracts.slice(0, 5);
-  const overdue = contracts
-    .flatMap(c => c.paymentSchedule.map(p => ({ ...p, contractTitle: c.title, contractId: c.id })))
-    .filter(p => p.status === 'overdue');
+  const healthData = [
+    { name: 'Stability', value: 92, fill: '#00FFD1' },
+    { name: 'Usage', value: 85, fill: '#0070FF' },
+    { name: 'Protection', value: 78, fill: '#FFB800' },
+  ];
 
-  const greeting =
-    (currentTime || new Date()).getHours() < 12 ? 'GOOD MORNING.' :
-    (currentTime || new Date()).getHours() < 17 ? 'GOOD AFTERNOON.' :
-    'GOOD EVENING.';
+   const stats = [
+     { label: 'All Deals', value: activeCount, icon: ShieldCheck, color: 'text-emerald', glow: 'bg-emerald/10' },
+     { label: 'To Sign', value: pendingCount, icon: Clock, color: 'text-blue', glow: 'bg-blue/10' },
+     { label: 'Value', value: `$${((totalValue || 0) / 1000).toFixed(1)}k`, icon: CurrencyDollar, color: 'text-amber', glow: 'bg-amber/10' },
+     { label: 'Help', value: disputedCount, icon: Warning, color: 'text-rose', glow: 'bg-rose/10' },
+   ];
+
+   const popularTemplates = [
+     { title: 'Service Agreement', category: 'Commercial', time: 'Instant', grade: 'A+' },
+     { title: 'Privacy Agreement', category: 'General', time: '30s', grade: 'A' },
+     { title: 'Work Contract', category: 'Employment', time: '1m', grade: 'A' },
+   ];
+
 
   return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      animate="show"
-      className="px-8 py-12 md:px-16 md:py-16 bg-[var(--bg)] min-h-full selection:bg-[var(--text-1)] selection:text-[var(--bg)] overflow-x-hidden space-y-16"
-    >
-      {/* ─── Header: The Current State ────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 pb-16 border-b-4 border-[var(--text-1)] relative">
-        <div className="absolute top-0 right-0 p-8 opacity-5 overflow-hidden pointer-events-none">
-            <Scales size={200} weight="fill" className="text-[var(--text-1)]" />
-        </div>
-        
-        <div className="max-w-3xl relative z-10">
-          <motion.div variants={itemVariants} className="flex items-center gap-4 mb-6">
-            <div className="px-4 py-1 brutalist-card font-black uppercase tracking-[0.4em] text-xs flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-[var(--blue)] animate-pulse border border-[var(--text-1)]" />
-              <span className="text-[var(--text-2)]">
-                Status: <span className="text-[var(--blue)]">SYNCED</span> &middot; {mounted && currentTime ? currentTime.toLocaleTimeString() : '...'}
-              </span>
-            </div>
-          </motion.div>
-          
-          <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl md:text-[6rem] lg:text-[7rem] font-black uppercase tracking-tighter leading-[0.85] text-[var(--text-1)] mb-10 break-words hyphens-auto w-full max-w-full">
-            {greeting}
-          </motion.h1>
-          
-          <motion.p variants={itemVariants} className="text-xl text-[var(--text-2)] font-bold tracking-tight max-w-2xl">
-            You have <span className="text-[var(--text-1)]">{s.activeContracts} active agreements</span> being monitored today.
-          </motion.p>
-        </div>
+    <div className={cn("space-y-12 pb-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 relative transition-opacity duration-1000", !mounted ? "opacity-0" : "opacity-100")}>
+      
+      {/* Background Glows — More Vivid */}
+      <div className="vibrant-glow top-0 left-[-10%] w-[800px] h-[800px] bg-emerald/10 animate-glow-pulse" />
+      <div className="vibrant-glow bottom-0 right-[-10%] w-[700px] h-[700px] bg-blue/10 shadow-[0_0_100px_rgba(0,112,255,0.15)]" />
 
-        <motion.div variants={itemVariants} className="flex items-center gap-6 relative z-10">
-          <div className="relative group">
-            <div className="absolute inset-x-0 -bottom-1 h-full bg-[var(--blue)] rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
-            <Link href="/contracts/new" className="no-underline relative block">
+      {/* ── HEADER ────────────────────────────────────────────────── */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-10 border-b border-white/10 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <span className="text-[11px] font-black text-emerald uppercase tracking-[0.5em] block mb-4">Overview</span>
+          <h1 className="heading-display text-7xl md:text-9xl text-white tracking-tighter italic uppercase leading-none">
+            Summary.
+          </h1>
+        </motion.div>
+        
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex bg-white/5 p-2 rounded-2xl border border-white/10 backdrop-blur-3xl">
+            {['7D', '30D', 'ALL'].map((p) => (
               <button 
-                className="bg-[var(--color-white)]/80 backdrop-blur-md border border-[var(--bg)]/50 text-[var(--text-1)] px-8 py-5 rounded-full font-black uppercase tracking-[0.2em] text-xs flex items-center gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-all"
+                key={p} onClick={() => setPeriod(p)}
+                className={cn(
+                  "px-6 py-2.5 rounded-xl text-[11px] font-black tracking-[0.2em] transition-all duration-500",
+                  period === p ? "bg-emerald text-[#010101] shadow-[0_0_30px_rgba(0,255,209,0.4)]" : "text-text-3 hover:text-white"
+                )}
               >
-                <PlusCircle size={20} weight="bold" className="text-[var(--blue)] group-hover:rotate-180 transition-transform duration-500" /> 
-                New Agreement
+                {p}
               </button>
-            </Link>
+            ))}
           </div>
+          <Magnetic>
+            <Link href="/contracts/new?type=formalize" className="btn-vibrant btn-vibrant-blue px-10 h-14">
+              <span>Formalize Chat</span>
+            </Link>
+          </Magnetic>
+          <Magnetic>
+            <Link href="/contracts/new" className="btn-vibrant btn-vibrant-emerald px-10 h-14">
+              <PlusCircle size={22} weight="bold" />
+              <span>Create New</span>
+            </Link>
+          </Magnetic>
+        </div>
+      </header>
+
+      {/* ── STATS ROW ──────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+        {stats.map((stat, i) => (
+          <motion.div 
+            key={stat.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1, duration: 0.8 }}
+            className={cn(
+              "p-8 rounded-[40px] bg-white/[0.03] border transition-all duration-700 relative overflow-hidden group backdrop-blur-3xl",
+              stat.color === 'text-emerald' ? "border-emerald/20 hover:border-emerald/60 hover:shadow-[0_0_50px_rgba(0,255,209,0.2)]" :
+              stat.color === 'text-blue' ? "border-blue/20 hover:border-blue/60 hover:shadow-[0_0_50px_rgba(0,112,255,0.2)]" :
+              stat.color === 'text-amber' ? "border-amber/20 hover:border-amber/60 hover:shadow-[0_0_50px_rgba(255,184,0,0.2)]" :
+              "border-rose/20 hover:border-rose/60 hover:shadow-[0_0_50px_rgba(255,0,110,0.2)]"
+            )}
+          >
+            <div className={cn(
+               "absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity",
+               stat.color === 'text-emerald' ? "bg-emerald" : stat.color === 'text-blue' ? "bg-blue" : stat.color === 'text-amber' ? "bg-amber" : "bg-rose"
+            )} />
+            
+            <div className="flex items-center justify-between mb-8">
+               <p className={cn("text-[10px] font-black uppercase tracking-[0.3em] transition-colors", stat.color)}>{stat.label}</p>
+               <div className="w-14 h-14 relative flex-shrink-0 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-700">
+                  <img 
+                    src={
+                      stat.label === 'All Deals' ? '/assets/3d/document_simple.png' :
+                      stat.label === 'To Sign' ? '/assets/3d/lock_simple.png' :
+                      stat.label === 'Value' ? '/assets/3d/document_simple.png' :
+                      '/assets/3d/help_simple.png'
+                    } 
+                    className="w-full h-full object-contain" 
+                    alt={stat.label} 
+                  />
+               </div>
+            </div>
+            <h3 className="heading-display text-6xl text-white group-hover:translate-x-2 transition-transform">{stat.value}</h3>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* ── ANALYTICS CORE ────────────────────────────────────────── */}
+      <div className="grid lg:grid-cols-3 gap-8 relative z-10">
+        
+        {/* Main Volume Chart */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, duration: 1 }}
+          className="lg:col-span-2 p-12 rounded-[50px] bg-white/[0.03] border border-white/10 relative overflow-hidden backdrop-blur-3xl group"
+        >
+          <div className="flex items-center justify-between mb-16">
+             <p className="text-4xl font-black text-white italic uppercase tracking-tighter group-hover:text-emerald transition-colors">Activity.</p>
+             <div className="flex items-center gap-4 px-6 py-4 bg-emerald shadow-[0_0_50px_rgba(0,255,209,0.3)] rounded-2xl border-4 border-[#010101]">
+               <TrendUp size={24} weight="bold" className="text-[#010101]" />
+               <span className="text-[12px] font-black text-[#010101] tracking-[0.2em] uppercase">Activity +24%</span>
+             </div>
+          </div>
+          <div className="h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={areaData}>
+                <defs>
+                  <linearGradient id="colorEmerald" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00FFD1" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#00FFD1" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08" vertical={false} />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#71717A', fontSize: 11, fontWeight: 800 }} dy={20} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#71717A', fontSize: 11, fontWeight: 800 }} />
+                <Tooltip 
+                  contentStyle={{ background: '#000000', border: '1px solid #00FFD130', borderRadius: '20px', backdropFilter: 'blur(30px)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}
+                  itemStyle={{ color: '#00FFD1', fontWeight: 900, textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.1em' }}
+                  labelStyle={{ color: '#71717A', marginBottom: '8px', fontWeight: 900, fontSize: '10px' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="volume" 
+                  stroke="#00FFD1" 
+                  strokeWidth={6} 
+                  fill="url(#colorEmerald)" 
+                  animationDuration={2500}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+
+        {/* Status Widget */}
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="lg:col-span-1 p-12 rounded-[50px] bg-[#0A0A0A] border border-white/10 flex flex-col justify-between relative overflow-hidden shadow-2xl group"
+        >
+           <div className="absolute -top-20 -right-20 w-80 h-80 bg-blue/15 blur-[120px] rounded-full group-hover:bg-blue/30 transition-all duration-1000" />
+           
+           <div>
+              <p className="text-[12px] font-black uppercase tracking-[0.5em] text-blue mb-12">Protection Grade</p>
+              <div className="h-[250px] relative">
+                <ResponsiveContainer width="100%" height="100%">
+                   <RadialBarChart innerRadius="40%" outerRadius="110%" data={healthData} startAngle={180} endAngle={-180}>
+                      <RadialBar 
+                        background 
+                        dataKey="value" 
+                        cornerRadius={30}
+                        fill="#0070FF" 
+                      />
+                   </RadialBarChart>
+                </ResponsiveContainer>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
+                   <p className="text-6xl font-black text-white italic uppercase tracking-tighter shadow-blue/20">A+</p>
+                   <p className="text-[11px] font-black text-blue uppercase tracking-[0.3em] mt-3">EXCEPTIONAL</p>
+                </div>
+              </div>
+           </div>
+           
+           <div className="space-y-6 pt-12">
+              {healthData.map(item => (
+                <div key={item.name} className="flex items-center justify-between group/row p-3 rounded-2xl hover:bg-white/[0.03] transition-colors border border-transparent hover:border-white/5">
+                   <div className="flex items-center gap-4">
+                      <div className="w-3 h-3 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.2)]" style={{ background: item.fill }} />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-text-2 group-hover/row:text-white transition-colors">{item.name}</span>
+                   </div>
+                   <span className={cn("text-lg font-black", item.name === 'Stability' ? 'text-emerald' : item.name === 'Usage' ? 'text-blue' : 'text-amber')}>{item.value}%</span>
+                </div>
+              ))}
+           </div>
         </motion.div>
       </div>
 
-      {/* ─── Analytic Widgets ────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-        
-        {/* Widget 1: Agreement Builder */}
-        <Link href="/contracts/new" className="brutalist-card p-8 flex flex-col justify-between h-48 group no-underline relative overflow-hidden bg-[var(--color-white)]">
-          <div className="absolute -right-8 -top-8 w-40 h-40 bg-[var(--blue)] opacity-5 rounded-full blur-2xl group-hover:opacity-20 transition-opacity"></div>
-          <div className="flex justify-between items-start relative z-10">
-            <div className="w-12 h-12 border-2 border-[var(--text-1)] bg-[var(--bg)] flex items-center justify-center shadow-[2px_2px_0_0_var(--text-1)] group-hover:bg-[var(--blue)] group-hover:text-[var(--bg)] transition-colors">
-              <Files size={24} weight="bold" />
-            </div>
-            <ArrowUpRight size={16} className="text-[var(--text-3)] group-hover:text-[var(--blue)] transition-all" weight="bold" />
-          </div>
-          <div className="relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-2)] mb-2">Agreement Builder</p>
-            <h3 className="text-xl lg:text-2xl font-black tracking-tighter text-[var(--text-1)] uppercase leading-none">START DRAFTING</h3>
-          </div>
-          <div className="absolute right-6 bottom-6 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
-            <div className="w-12 h-12 border-2 border-dashed border-[var(--blue)] rounded-full animate-[spin_4s_linear_infinite] absolute"></div>
-            <div className="w-8 h-8 bg-[var(--blue)]/10 rounded-full flex items-center justify-center animate-pulse">
-              <Plus size={16} weight="bold" className="text-[var(--blue)]" />
-            </div>
-          </div>
-        </Link>
-        
-        {/* Widget 2: Global Library */}
-        <Link href="/legal-library" className="brutalist-card p-8 flex flex-col justify-between h-48 group no-underline relative overflow-hidden bg-[var(--color-white)]">
-          <div className="absolute inset-0 opacity-10 flex items-end justify-end p-4 pointer-events-none group-hover:opacity-30 transition-opacity">
-            <PhosphorGlobe size={140} weight="duotone" className="text-[var(--secondary)] translate-x-8 translate-y-8" />
-          </div>
-          <div className="flex justify-between items-start relative z-10">
-            <div className="w-12 h-12 border-2 border-[var(--text-1)] bg-[var(--bg)] flex items-center justify-center shadow-[2px_2px_0_0_var(--text-1)] group-hover:bg-[var(--secondary)] group-hover:text-[var(--bg)] transition-colors">
-              <BookOpen size={24} weight="bold" />
-            </div>
-            <ArrowUpRight size={16} className="text-[var(--text-3)] group-hover:text-[var(--secondary)] transition-all" weight="bold" />
-          </div>
-          <div className="relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-2)] mb-2">Global Library</p>
-            <h3 className="text-xl lg:text-2xl font-black tracking-tighter text-[var(--text-1)] uppercase leading-none">195 NATIONS</h3>
-          </div>
-        </Link>
+      {/* ── POPULAR TEMPLATES SECTION (The "Cool" Layout) ────────────────── */}
+      <section className="space-y-10 relative z-10">
+         <div className="flex items-center justify-between px-2">
+            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-white">Popular Styles</h2>
+            <Link href="/templates" className="text-[10px] font-black text-emerald uppercase tracking-widest flex items-center gap-3 group">
+               BROWSE ALL <ArrowRight size={14} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+         </div>
 
-        {/* Widget 3: Total Protected */}
-        <Link href="/contracts" className="brutalist-card p-8 flex flex-col justify-between h-48 group no-underline relative overflow-hidden bg-[var(--color-white)]">
-          <div className="flex justify-between items-start relative z-10">
-            <div className="w-12 h-12 border-2 border-[var(--text-1)] bg-[var(--bg)] flex items-center justify-center shadow-[2px_2px_0_0_var(--text-1)] group-hover:bg-[var(--text-1)] group-hover:text-[var(--bg)] transition-colors">
-              <PhosphorWallet size={24} weight="bold" />
-            </div>
-            <ArrowUpRight size={16} className="text-[var(--text-3)] group-hover:text-[var(--text-1)] transition-all" weight="bold" />
-          </div>
-          <div className="relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-2)] mb-2">Total Protected</p>
-            <h3 className="text-xl lg:text-2xl font-black tracking-tighter text-[var(--text-1)] uppercase leading-none">${s.totalValue.toLocaleString()}</h3>
-          </div>
-          {mounted && (
-            <div className="absolute bottom-0 right-0 left-0 h-16 opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity flex items-end justify-between px-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={[{v:2},{v:4},{v:3},{v:7},{v:5},{v:8},{v:10}]} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                  <Bar dataKey="v" fill="var(--text-1)" radius={[2, 2, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </Link>
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {popularTemplates.map((item, i) => (
+               <motion.div
+                 key={i}
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.7 + (i * 0.1) }}
+               >
+                 <Link 
+                   href="/contracts/new"
+                   className="p-10 rounded-[48px] bg-white/[0.03] border border-white/5 relative group overflow-hidden hover:border-emerald/40 transition-all duration-700 backdrop-blur-3xl flex flex-col h-full hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)]"
+                 >
+                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-40 group-hover:rotate-12 transition-all duration-700">
+                       <Signature size={80} weight="thin" className="text-emerald" />
+                    </div>
 
-        {/* Widget 4: System Status */}
-        <Link href="/settings" className="brutalist-card p-8 flex flex-col justify-between h-48 group no-underline relative overflow-hidden bg-[var(--color-white)]">
-          <div className="absolute right-0 top-0 opacity-50 group-hover:opacity-100 transition-opacity translate-x-4 -translate-y-4">
-            <RadialProgress pct={100} size={150} stroke={6} color="var(--secondary)" className="drop-shadow-none" />
-          </div>
-          <div className="flex justify-between items-start relative z-10">
-            <div className="w-12 h-12 border-2 border-[var(--text-1)] bg-[var(--bg)] flex items-center justify-center shadow-[2px_2px_0_0_var(--text-1)] group-hover:bg-[#10b981] group-hover:text-[var(--bg)] transition-colors">
-              <ShieldCheck size={24} weight="bold" />
-            </div>
-            <div className="bg-[var(--secondary)]/10 text-[var(--secondary)] px-3 py-1 text-[8px] font-black uppercase tracking-widest border border-[var(--secondary)]/20 animate-pulse">Online</div>
-          </div>
-          <div className="relative z-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-2)] mb-2">System Status</p>
-            <h3 className="text-xl lg:text-2xl font-black tracking-tighter text-[var(--text-1)] uppercase leading-none">PROTECTED</h3>
-          </div>
-        </Link>
-      </div>
+                    <div className="space-y-8 relative z-10 flex-1">
+                       <span className="text-[9px] font-black text-emerald uppercase tracking-[0.4em] bg-emerald/10 px-4 py-2 rounded-full border border-emerald/20 inline-block">{item.category}</span>
+                       <h3 className="text-3xl font-black text-white italic tracking-tighter uppercase leading-tight group-hover:text-emerald transition-colors">{item.title}</h3>
 
-      {/* ─── Visual Insights ────────────────────────────────────────── */}
-      <div className="grid lg:grid-cols-2 gap-12">
-        <section className="brutalist-card p-8 sm:p-12 space-y-8 min-h-[400px] flex flex-col relative overflow-hidden group">
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-[var(--blue)] opacity-5 rounded-full blur-[80px] pointer-events-none group-hover:opacity-10 transition-duration-500"></div>
-          <div className="flex items-center gap-4 border-b-4 border-[var(--text-1)] pb-6 relative z-10">
-            <Lightning size={32} weight="fill" className="text-[var(--blue)]" />
-            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter text-[var(--text-1)]">Agreement Distribution</h2>
-          </div>
-          <div className="flex-1 w-full min-h-[300px] relative z-10">
-            {mounted ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={distributionData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={70}
-                    outerRadius={120}
-                    paddingAngle={8}
-                    dataKey="value"
-                    stroke="var(--text-1)"
-                    strokeWidth={4}
-                  >
-                    {distributionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip 
-                     contentStyle={{ 
-                        backgroundColor: 'var(--bg)', 
-                        border: '4px solid var(--text-1)', 
-                        borderRadius: '0', 
-                        fontWeight: '900',
-                        textTransform: 'uppercase',
-                        fontSize: '12px',
-                        boxShadow: '4px 4px 0 0 var(--text-1)'
-                     }} 
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : null}
-          </div>
-          <div className="flex flex-wrap gap-4 pt-6 border-t-4 border-[var(--text-1)] relative z-10">
-            {distributionData.map((d, i) => (
-              <div key={i} className="flex items-center gap-3 bg-[var(--color-white)] border-2 border-[var(--text-1)] px-4 py-2 shadow-[2px_2px_0_0_var(--text-1)]">
-                <div className="w-4 h-4 border-2 border-[var(--text-1)]" style={{ backgroundColor: d.color }} />
-                <span className="text-[11px] font-black uppercase tracking-widest text-[var(--text-1)]">{d.name}: {d.value}</span>
-              </div>
+                       <div className="flex items-center justify-between pt-8 border-t border-white/5">
+                          <div className="space-y-1">
+                             <p className="text-[9px] font-black text-text-3 uppercase">Ready In</p>
+                             <p className="text-sm font-black text-white">{item.time}</p>
+                          </div>
+                          <div className="space-y-1 text-right">
+                             <p className="text-[9px] font-black text-text-3 uppercase">Match Grade</p>
+                             <p className="text-sm font-black text-emerald">{item.grade}</p>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div className="mt-10 flex justify-center relative z-10">
+                       <Magnetic>
+                          <div className="px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-3 group-hover:bg-emerald group-hover:text-[#010101] group-hover:border-emerald transition-all duration-500 shadow-xl">
+                            USE THIS STYLE
+                          </div>
+                       </Magnetic>
+                    </div>
+                 </Link>
+               </motion.div>
             ))}
-          </div>
-        </section>
+         </div>
+      </section>
 
-        <section className="brutalist-card p-8 sm:p-12 space-y-8 min-h-[400px] flex flex-col relative overflow-hidden group">
-          <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-[var(--secondary)] opacity-5 rounded-full blur-[100px] pointer-events-none group-hover:opacity-10 transition-duration-500"></div>
-          <div className="flex items-center gap-4 border-b-4 border-[var(--text-1)] pb-6 relative z-10">
-            <PhosphorWallet size={32} weight="fill" className="text-[var(--secondary)]" />
-            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter text-[var(--text-1)]">Financial Health</h2>
-          </div>
-          <div className="flex-1 w-full min-h-[300px] relative z-10">
-             {mounted ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={financialData} margin={{ top: 20, right: 10, left: 0, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="4 4" stroke="rgba(0,0,0,0.1)" vertical={false} />
-                  <XAxis 
-                    dataKey="name" 
-                    axisLine={{ stroke: 'var(--text-1)', strokeWidth: 4 }} 
-                    tickLine={{ stroke: 'var(--text-1)', strokeWidth: 4 }}
-                    tick={{ fill: 'var(--text-1)', fontWeight: '900', fontSize: 12 }}
-                    dy={10}
-                  />
-                  <YAxis 
-                    axisLine={{ stroke: 'var(--text-1)', strokeWidth: 4 }}
-                    tickLine={{ stroke: 'var(--text-1)', strokeWidth: 4 }}
-                    tick={{ fill: 'var(--text-1)', fontWeight: '900', fontSize: 12 }}
-                    tickFormatter={(value) => `$${value}`}
-                    width={80}
-                  />
-                  <RechartsTooltip 
-                    cursor={{ fill: 'rgba(0,0,0,0.03)' }}
-                    contentStyle={{ 
-                        backgroundColor: 'var(--bg)', 
-                        border: '4px solid var(--text-1)', 
-                        borderRadius: '0', 
-                        fontWeight: '900',
-                        textTransform: 'uppercase',
-                        fontSize: '12px',
-                        boxShadow: '4px 4px 0 0 var(--text-1)'
-                     }} 
-                  />
-                  <Bar dataKey="amount" radius={[0, 0, 0, 0]} stroke="var(--text-1)" strokeWidth={4} activeBar={{ stroke: 'var(--blue)', strokeWidth: 4 }}>
-                    {financialData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-             ) : null}
-          </div>
-          <div className="pt-6 border-t-4 border-[var(--text-1)] relative z-10">
-             <p className="text-[11px] font-black uppercase tracking-widest text-[var(--text-2)] flex items-center gap-3">
-               <span className="w-2 h-2 rounded-full bg-[var(--text-1)]"></span>
-               Capital Status Overview
-             </p>
-          </div>
-        </section>
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-12">
-        {/* Main List Feed */}
-        <div className="lg:col-span-2 space-y-12">
-          <section className="brutalist-card p-0 overflow-hidden">
-            <div className="p-8 border-b-4 border-[var(--text-1)] flex items-center justify-between bg-[var(--bg)]">
-              <div className="flex items-center gap-4">
-                <Stack size={20} weight="bold" className="text-[var(--blue)]" />
-                <h2 className="text-xl font-black uppercase tracking-tighter text-[var(--text-1)]">Recent Agreements</h2>
-              </div>
-              <Link href="/contracts" className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--blue)] hover:text-[var(--text-1)] flex items-center gap-3 no-underline transition-all">
-                View All <ArrowRight size={14} weight="bold" />
-              </Link>
-            </div>
-
-            <div className="divide-y-2 divide-[var(--text-1)]">
-              {recent.length === 0 ? (
-                <EmptyState 
-                  title="No Agreements Found" 
-                  description="Start a new drafting session to populate your list." 
-                  actionLabel="Create Agreement" 
-                  actionHref="/contracts/new" 
-                  icon={<Files size={48} className="text-[var(--blue)] mx-auto mb-6" />} 
-                  className="border-none bg-transparent shadow-none p-24"
-                />
-              ) : (
-                recent.map((c) => (
-                  <Link
-                    key={c.id}
-                    href={`/contracts/${c.id}`}
-                    className="flex flex-col md:flex-row md:items-center justify-between p-8 hover:bg-[var(--bg)] transition-all group no-underline gap-6"
-                  >
-                    <div className="flex items-center gap-8">
-                      <div className="w-14 h-14 border-4 border-[var(--text-1)] bg-[var(--color-white)] text-[var(--text-1)] flex items-center justify-center font-black text-xl shadow-[4px_4px_0_0_var(--text-1)] group-hover:shadow-[2px_2px_0_0_var(--text-1)] group-hover:translate-x-1 group-hover:translate-y-1 transition-all">
-                        {c.title.charAt(0)}
-                      </div>
-                      <div>
-                        <h4 className="font-black text-lg text-[var(--text-1)] uppercase tracking-tighter mb-2 group-hover:text-[var(--blue)] transition-colors">{c.title}</h4>
-                        <div className="flex items-center gap-4">
-                            <span className="text-[10px] font-black text-[var(--text-2)] uppercase tracking-widest">{c.category}</span>
-                            <div className="w-1 h-1 rounded-full bg-[var(--text-1)]" />
-                            <span className="text-[10px] font-black text-[var(--text-2)] uppercase tracking-widest">{c.jurisdiction}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-10">
-                      <div className="text-right hidden md:block">
-                        <div className="font-black text-xl text-[var(--text-1)] tracking-tighter tabular-nums mb-1">
-                          {c.totalAmount ? `$${c.totalAmount.toLocaleString()}` : "IN-KIND"}
-                        </div>
-                        <div className="text-[8px] font-black text-[var(--text-3)] uppercase tracking-[0.3em]">
-                          Value
-                        </div>
-                      </div>
-                      <div className={cn(
-                        "px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] border-2 border-[var(--text-1)] bg-[var(--color-white)] shadow-[2px_2px_0_0_var(--text-1)]"
-                      )}>
-                        {STATUS_LABEL_TEXT[c.status] || c.status}
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              )}
-            </div>
-          </section>
-
-          {/* Activity Logs */}
-          <section className="brutalist-card p-10 bg-[var(--color-white)] text-[var(--text-1)] overflow-hidden relative">
-             <div className="flex items-center justify-between mb-10">
-              <div className="flex items-center gap-4">
-                <Lightning weight="fill" className="text-[var(--secondary)]" />
-                <h3 className="text-[11px] font-black uppercase tracking-[0.5em] text-[var(--text-1)]">Recent Activity</h3>
-              </div>
-              <div className="px-3 py-1 border-2 border-[var(--secondary)] bg-transparent">
-                <span className="text-[8px] font-black text-[var(--secondary)] uppercase tracking-widest animate-pulse">Live</span>
-              </div>
-            </div>
-
-            <div className="font-mono text-xs space-y-4">
-                {[
-                 { time: 'Just Now', msg: 'Ready to draft new agreements.', col: 'text-[var(--secondary)]' },
-                 { time: '1m ago', msg: 'Library synced.', col: 'text-[var(--blue)]' },
-                 { time: '5m ago', msg: 'All agreements verified.', col: 'text-[var(--text-1)]' },
-                 { time: '1h ago', msg: 'Pending signature detected.', col: 'text-amber-400' },
-                 { time: '2h ago', msg: 'System checks passed.', col: 'text-[var(--text-2)]' }
-                ].map((log, i) => (
-                <div key={i} className="flex gap-6 opacity-80 hover:opacity-100 transition-opacity">
-                    <span className="text-[var(--text-3)] shrink-0 w-16">{log.time}</span>
-                    <span className={cn("font-bold tracking-tight uppercase", log.col)}>{log.msg}</span>
-                </div>
-               ))}
-            </div>
-          </section>
-        </div>
-
-        {/* Sidebar Widgets */}
-        <div className="space-y-12">
-          {/* Risk Monitoring Dashboard */}
-          <section className={cn(
-            "brutalist-card p-8 relative overflow-hidden",
-            overdue.length > 0 ? "border-red-500 shadow-[4px_4px_0_0_#ef4444]" : ""
-          )}>
-            {overdue.length > 0 && (
-                <div className="absolute top-0 right-0 p-4 animate-pulse">
-                    <Warning size={24} weight="fill" className="text-red-500" />
-                </div>
-            )}
-            
-            <div className="flex items-center gap-4 mb-8">
-              <div className={cn("w-12 h-12 border-2 border-[var(--text-1)] flex items-center justify-center shadow-[2px_2px_0_0_var(--text-1)]", overdue.length > 0 ? "bg-red-500 text-[var(--bg)]" : "bg-[var(--color-white)]")}>
-                <Warning size={24} weight="bold" className={overdue.length > 0 ? "text-[var(--bg)]" : "text-[var(--text-1)]"} />
-              </div>
-              <div>
-                <h3 className="text-lg font-black uppercase tracking-tighter text-[var(--text-1)]">Action Required</h3>
-                <p className="text-[10px] font-black uppercase tracking-widest text-[var(--text-3)] mt-1">Outstanding Issues</p>
-              </div>
-            </div>
-
-            {overdue.length === 0 ? (
-              <div className="text-center py-12">
-                <ShieldCheck size={64} className="mx-auto mb-6 text-[var(--secondary)] transition-all" weight="duotone" />
-                <p className="text-xs font-black uppercase tracking-[0.4em] text-[var(--text-1)]">All Clear</p>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {overdue.map(p => (
-                  <Link key={p.id} href={`/contracts/${p.contractId}`} className="block p-8 brutalist-card border-red-500 bg-[var(--color-white)] no-underline shadow-[4px_4px_0_0_#ef4444]">
-                    <div className="flex justify-between items-start mb-6">
-                      <span className="font-black text-sm uppercase tracking-tighter text-[var(--text-1)]">{p.contractTitle}</span>
-                      <Badge className="bg-red-500 text-[var(--bg)] border-2 border-[var(--text-1)] text-[10px] font-black px-3 py-1 shadow-[2px_2px_0_0_var(--text-1)]">ACTION</Badge>
-                    </div>
-                    <div className="flex justify-between items-end pt-4 border-t-2 border-[var(--text-1)]">
-                      <span className="text-[10px] font-black text-[var(--text-3)] uppercase tracking-[0.2em]">{mounted ? new Date(p.dueDate).toLocaleDateString() : ''}</span>
-                      <span className="text-2xl font-black text-[var(--text-1)] tracking-tighter tabular-nums">${p.amount.toLocaleString()}</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </section>
-
-          {/* Quick Registry Link */}
-          <section className="brutalist-card bg-[var(--blue)] text-[var(--bg)] p-10 group overflow-hidden relative">
-            <div className="relative z-10 space-y-10">
-              <div className="flex justify-between items-start">
-                <PhosphorGlobe size={40} weight="bold" className="text-[var(--text-1)] group-hover:rotate-180 transition-transform duration-[2s]" />
-                <ArrowUpRight size={20} weight="bold" className="text-[var(--text-1)]" />
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-black uppercase tracking-tighter leading-none mb-3 text-[var(--bg)]">Legal Library</h3>
-                <p className="text-xs font-bold text-[var(--bg)]/80 leading-relaxed uppercase tracking-tight">Access global legal rules for 195+ nations.</p>
-              </div>
-
-              <Link href="/legal-library" className="block no-underline">
-                <button 
-                    className="brutalist-button w-full bg-[var(--color-white)] text-[var(--text-1)] hover:bg-[var(--bg)] shadow-[4px_4px_0_0_var(--text-1)]"
-                >
-                  Enter Library
-                </button>
-              </Link>
-            </div>
-          </section>
-
-          {/* Settings / Gear */}
-          <Link href="/settings" className="block brutalist-card bg-[var(--color-white)] border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)] p-6 no-underline hover:bg-[var(--bg)] group">
-            <div className="flex items-center gap-4">
-                <div className="w-10 h-10 border-2 border-[var(--text-1)] bg-[var(--bg)] flex items-center justify-center group-hover:rotate-90 transition-transform duration-700">
-                    <Gear size={20} className="text-[var(--text-1)]" weight="bold" />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--text-1)]">Settings</span>
-            </div>
+      {/* ── RECENT ACTIVITY ────────────────────────────────────────── */}
+      <section className="space-y-10 relative z-10">
+        <div className="flex items-center justify-between px-2">
+          <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-white">Recent Deals</h2>
+          <Link href="/contracts" className="text-[11px] font-black text-amber uppercase tracking-[0.3em] flex items-center gap-4 group hover:scale-105 transition-all">
+             SEE HISTORY <ArrowRight size={18} weight="bold" className="group-hover:translate-x-2 transition-transform" />
           </Link>
         </div>
-      </div>
-    </motion.div>
+
+        <div className="grid gap-6">
+          <AnimatePresence>
+            {(contracts || []).slice(0, 5).map((contract, i) => (
+              <motion.div
+                key={contract.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.9 + (i * 0.1) }}
+              >
+                <Link 
+                  href={`/contracts/${contract.id}`}
+                  className={cn(
+                    "group p-8 bg-white/[0.03] border border-white/5 rounded-[32px] flex flex-col md:flex-row md:items-center justify-between gap-8 transition-all duration-700 backdrop-blur-3xl relative overflow-hidden hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]",
+                    contract.category?.toLowerCase().includes('service') ? "hover:border-emerald/40" :
+                    contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "hover:border-amber/40" :
+                    contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "hover:border-blue/40" :
+                    "hover:border-rose/40"
+                  )}
+                >
+                  <div className={cn(
+                    "absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity",
+                    contract.category?.toLowerCase().includes('service') ? "bg-emerald" :
+                    contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "bg-amber" :
+                    contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "bg-blue" :
+                    "bg-rose"
+                  )} />
+                  
+                  <div className="flex items-center gap-8 relative z-10">
+                    <div className={cn(
+                      "w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-text-3 shadow-2xl transition-all duration-700 group-hover:rotate-12 group-hover:scale-110",
+                      contract.category?.toLowerCase().includes('service') ? "group-hover:bg-emerald group-hover:text-[#010101]" :
+                      contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "group-hover:bg-amber group-hover:text-[#010101]" :
+                      contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "group-hover:bg-blue group-hover:text-white" :
+                      "group-hover:bg-rose group-hover:text-white"
+                    )}>
+                      <Files size={32} weight="bold" />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className={cn(
+                        "text-2xl font-black text-white transition-colors tracking-tighter lowercase first-letter:uppercase",
+                        contract.category?.toLowerCase().includes('service') ? "group-hover:text-emerald" :
+                        contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "group-hover:text-amber" :
+                        contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "group-hover:text-blue" :
+                        "group-hover:text-rose"
+                      )}>{contract.title}</h4>
+                      <div className="flex items-center gap-4">
+                        <p className={cn(
+                          "text-[10px] font-black uppercase tracking-[0.2em] transition-colors",
+                          contract.category?.toLowerCase().includes('service') ? "text-emerald/60" :
+                          contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "text-amber/60" :
+                          contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "text-blue/60" :
+                          "text-rose/60"
+                        )}>{contract.category}</p>
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                        <span className="text-[10px] text-text-3 font-black uppercase tracking-[0.2em] opacity-40"># {contract.id.slice(0, 8)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between md:justify-end gap-10 relative z-10 h-full">
+                    <div className="flex items-center gap-10">
+                      <div className={cn(
+                        "badge-vibrant px-6 py-2 transition-all duration-700 group-hover:scale-110",
+                        contract.status === 'active' ? "badge-active" :
+                        contract.status === 'pending_signature' ? "badge-pending" :
+                        "badge-disputed"
+                      )}>
+                        {contract.status.replace('_', ' ')}
+                      </div>
+                      <div className={cn(
+                        "w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-transparent group-hover:translate-x-3 transition-all duration-500 shadow-xl",
+                        contract.category?.toLowerCase().includes('service') ? "group-hover:bg-emerald" :
+                        contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "group-hover:bg-amber" :
+                        contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "group-hover:bg-blue" :
+                        "group-hover:bg-rose"
+                      )}>
+                         <CaretRight size={28} weight="bold" className={cn(
+                           "text-text-3 transition-colors",
+                           (contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') || contract.category?.toLowerCase().includes('real estate')) ? "group-hover:text-white" : "group-hover:text-[#010101]"
+                         )} />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      </section>
+
+    </div>
   );
 }

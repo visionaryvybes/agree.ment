@@ -1,206 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 @import "tailwindcss";
 
-/* ─── AgreeMint Rebirth: Aggressive Neo-Brutalist (2025) ────────────────────────── */
+/* ─── AgreeMint 2.0 — "Emerald & Obsidian" Design System ─────────── */
 
 @theme {
-  --color-brand-paper: #EAE7E0;
-  --color-brand-onyx: #1C1B1A;
-  --color-brand-accent: #5B52ED;
-  --color-white: #FAF8F5; /* Replaces blinding #FFFFFF with a warm pearl */
-  --font-serif: "Inter", system-ui, sans-serif;
+  --color-brand-emerald: #00FFD1;
+  --color-brand-titanium: #2D2D33;
+  --color-brand-obsidian: #020202;
+  --font-display: "Outfit", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 :root {
-  /* Cyber-Brutalist Palette */
-  --bg: #0A0A0B;          /* Deepest obsidian background */
-  --text-1: #F5F5F5;      /* Blinding off-white for sharp contrast */
-  --text-2: #CCCCCC;      /* Muted tactical gray */
-  --text-3: #999999;      /* Interface shadows/lines */
-  --blue: #6366F1;        /* Cyber indigo */
-  --secondary: #10B981;   /* Neon emerald */
-  --color-white: #171717; /* Replaces blinding white with dark surface component */
+  /* ── Deep Obsidian Base ── */
+  --bg: #010101;
+  --bg-subtle: #050505;
+  --bg-card: #080808;
+  --bg-elevated: #0C0C0C;
+  
+  /* ── Neon High-Intensity Palette ── */
+  --emerald: 155 100% 50%; /* Pure Neon Emerald */
+  --blue: 210 100% 50%;    /* Electric Blue */
+  --rose: 330 100% 50%;    /* Hot Rose */
+  --amber: 45 100% 50%;    /* Vibrant Amber */
+  --obsidian: 0 0% 0%; 
+  
+  --text-1: 0 0% 100%;
+  --text-2: 0 0% 85%;
+  --text-3: 0 0% 65%;
+  --text-muted: #27272A;
 
-  /* Brutalist Tokens */
-  --border-width: 2px;
-  --border-color: #F5F5F5;
-  --shadow-hard: 4px 4px 0 0 var(--border-color);
-  --shadow-hard-hover: 6px 6px 0 0 var(--border-color);
+  /* ── Status Tokens (Maximum Contrast) ── */
+  --success: hsl(155, 100%, 50%);
+  --warning: hsl(45, 100%, 50%);
+  --danger: hsl(330, 100%, 50%);
+  --info: hsl(210, 100%, 50%);
 
-  --radius: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
+  /* ── Border & Surface ── */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(10, 10, 10, 0.8);
 
-  /* Global Enforcement Style */
-  --font-serif: "Inter", sans-serif;
-  --font-sans: "Inter", sans-serif;
+  /* ── Effects ── */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 40px;
 }
 
-@media print {
-  :root {
-    --bg: #FFFFFF;
-    --text-1: #000000;
-    --text-2: #333333;
-    --text-3: #666666;
-    --border-color: #000000;
-    --color-white: #FFFFFF;
-  }
-}
+/* ─── Global Reset & Base ───────────────────────────────────────────── */
 
-/* ─── Reset & Base ───────────────────────────────────────────────── */
 body {
   background: var(--bg);
   color: var(--text-1);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  position: relative;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Texture Overlay */
+/* Premium Grain Texture Overlay */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
   pointer-events: none;
   z-index: 9999;
 }
 
-/* ─── Brutalist Components ────────────────────────────────────────── */
+/* ─── High-Intensity Palette Classes ────────────────────────────────── */
 
-.brutalist-card {
-  background: var(--color-white);
-  border: 4px solid var(--text-1);
-  box-shadow: 4px 4px 0 0 var(--text-1);
-  transition: all 0.1s ease;
-}
+.text-emerald { color: hsl(var(--emerald)); }
+.bg-emerald { background: hsl(var(--emerald)); }
+.border-emerald { border-color: hsl(var(--emerald)); }
 
-.brutalist-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0 0 var(--text-1);
-}
+.text-blue { color: hsl(var(--blue)); }
+.bg-blue { background: hsl(var(--blue)); }
+.border-blue { border-color: hsl(var(--blue)); }
 
-.brutalist-card-flat {
-  background: var(--color-white);
-  border: 4px solid var(--text-1);
-  box-shadow: 8px 8px 0 0 var(--text-1);
-}
+.text-rose { color: hsl(var(--rose)); }
+.bg-rose { background: hsl(var(--rose)); }
+.border-rose { border-color: hsl(var(--rose)); }
 
-.brutalist-button {
-  background: var(--text-1);
-  color: var(--color-white);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: 2px 2px 0 0 var(--border-color);
-  font-weight: 800;
+.text-amber { color: hsl(var(--amber)); }
+.bg-amber { background: hsl(var(--amber)); }
+.border-amber { border-color: hsl(var(--amber)); }
+
+.heading-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.06em;
+  font-weight: 900;
+  line-height: 0.85;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  transition: all 0.1s ease;
+}
+
+/* Branding Typography */
+.brand-agree {
+  color: #888888;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+}
+
+.brand-mint {
+  background: hsl(var(--emerald));
+  color: #000000;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  margin-left: 2px;
+}
+
+/* Section Themes */
+.theme-emerald { --accent: var(--emerald); }
+.theme-blue { --accent: var(--blue); }
+.theme-amber { --accent: var(--amber); }
+.theme-rose { --accent: var(--rose); }
+
+.vibrant-glow {
+  position: absolute;
+  filter: blur(140px);
+  border-radius: 100%;
+  z-index: -1;
+  opacity: 0.15;
+}
+
+/* Solid High-Contrast Buttons */
+.btn-vibrant {
+  font-weight: 900;
+  font-family: var(--font-display);
+  padding: 1.2rem 2.4rem;
+  border-radius: var(--radius-md);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.875rem 1.75rem;
-  min-height: 3rem;
-  box-sizing: border-box;
-  white-space: nowrap;
-  line-height: 1.2;
-}
-
-.brutalist-button:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 0 var(--border-color);
-}
-
-.brutalist-button:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0px 0px 0 0 var(--border-color);
-}
-
-.brutalist-button-outline {
-  background: transparent;
-  color: var(--text-1);
-  border: var(--border-width) solid var(--border-color);
-  box-shadow: 2px 2px 0 0 var(--border-color);
-}
-
-/* ─── Typography ─────────────────────────────────────────────────── */
-
-.heading-display {
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-  font-weight: 800;
+  gap: 0.8rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
-  color: var(--text-1);
+  letter-spacing: 0.15em;
+  color: #000000;
+  border: none;
+  cursor: pointer;
 }
 
-.heading-section {
-  font-family: var(--font-serif);
-  font-size: clamp(1.5rem, 4vw, 3rem);
-  line-height: 0.9;
-  letter-spacing: -0.02em;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--text-1);
+.btn-vibrant-emerald {
+  background: hsl(var(--emerald));
+  box-shadow: 0 0 35px hsla(var(--emerald), 0.3);
+}
+.btn-vibrant-emerald:hover {
+  transform: translateY(-4px) scale(1.04);
+  background: #FFFFFF;
+  box-shadow: 0 0 60px hsla(var(--emerald), 0.5);
 }
 
-.eyebrow {
-  font-size: 11px;
+.btn-vibrant-blue {
+  background: hsl(var(--blue));
+  color: #FFFFFF;
+  box-shadow: 0 0 35px hsla(var(--blue), 0.3);
+}
+.btn-vibrant-blue:hover {
+  transform: translateY(-4px) scale(1.04);
+  background: #FFFFFF;
+  color: #000000;
+  box-shadow: 0 0 60px hsla(var(--blue), 0.5);
+}
+
+.btn-vibrant-rose {
+  background: hsl(var(--rose));
+  color: #FFFFFF;
+  box-shadow: 0 0 35px hsla(var(--rose), 0.3);
+}
+.btn-vibrant-rose:hover {
+  transform: translateY(-4px) scale(1.04);
+  background: #FFFFFF;
+  color: #000000;
+  box-shadow: 0 0 60px hsla(var(--rose), 0.5);
+}
+
+/* Vibrant Badges */
+.badge-vibrant {
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  font-size: 0.65rem;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: var(--blue);
-  margin-bottom: 1rem;
-  display: block;
+  letter-spacing: 0.2em;
 }
 
-/* ─── Navigation ─────────────────────────────────────────────────── */
-
-.nav-brutalist {
-  border-bottom: var(--border-width) solid var(--border-color);
-  background: var(--bg);
+.badge-active {
+  background: hsla(var(--emerald), 0.15);
+  color: hsl(var(--emerald));
+  border: 1px solid hsla(var(--emerald), 0.3);
 }
 
-/* ─── Grid Systems ───────────────────────────────────────────────── */
-
-.grid-brutalist {
-  display: grid;
-  border: 1px solid var(--border-color);
+.badge-pending {
+  background: hsla(var(--blue), 0.15);
+  color: hsl(var(--blue));
+  border: 1px solid hsla(var(--blue), 0.3);
 }
 
-.grid-brutalist>* {
-  border: 1px solid var(--border-color);
-  padding: 2rem;
+.badge-disputed {
+  background: hsla(var(--rose), 0.15);
+  color: hsl(var(--rose));
+  border: 1px solid hsla(var(--rose), 0.3);
 }
 
-/* ─── Utility ────────────────────────────────────────────────────── */
+/* ─── Animations ───────────────────────────────────────────── */
 
-.no-underline {
-  text-decoration: none;
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+@keyframes glow-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.15; }
+  50% { transform: scale(1.2); opacity: 0.25; }
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--text-1);
+.shimmer-text {
+  background: linear-gradient(90deg, #27272A 0%, #FFFFFF 50%, #27272A 100%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5s linear infinite;
 }
 
-/* Animation */
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes shimmer {
+  to { background-position: 200% center; }
 }
 
-.animate-slide-up {
-  animation: slide-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+/* Custom Selection */
+::selection {
+  background: hsl(var(--emerald));
+  color: #000000;
 }

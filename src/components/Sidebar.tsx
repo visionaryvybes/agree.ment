@@ -5,25 +5,26 @@ import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import {
-  PlusCircle,
-  Files,
-  Stack,
-  BookOpen,
-  Sparkle,
   Gear,
-  House,
   CaretRight,
-  X
+  CaretLeft,
+  X,
+  ShieldCheck,
+  Layout,
+  FolderSimple,
+  FileText,
+  List
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
-const nav = [
-  { label: "Dashboard", href: "/dashboard", icon: House },
-  { label: "New Agreement", href: "/contracts/new", icon: PlusCircle },
-  { label: "My Agreements", href: "/contracts", icon: Files },
-  { label: "Templates", href: "/templates", icon: Stack },
-  { label: "Legal Library", href: "/legal-library", icon: BookOpen },
-  { label: "AI Advisor", href: "/ai", icon: Sparkle },
+const NAVIGATION = [
+  { name: 'DEALS', href: '/dashboard', icon: Layout },
+  { name: 'LIBRARY', href: '/contracts', icon: FolderSimple },
+  { name: 'TEMPLATES', href: '/templates', icon: FileText },
+  { name: 'RESOLVE', href: '/verified-guidance', icon: ShieldCheck },
+  { name: 'SETTINGS', href: '/settings', icon: Gear },
 ];
 
 interface SidebarProps {
@@ -33,6 +34,8 @@ interface SidebarProps {
 export default function Sidebar({ onClose }: SidebarProps) {
   const path = usePathname();
   const { user } = useUser();
+  const [isHovered, setIsHovered] = useState(false);
+
   const active = (href: string) => {
     if (href === '/contracts' || href === '/dashboard' || href === '/templates') {
       return path === href;
@@ -41,27 +44,43 @@ export default function Sidebar({ onClose }: SidebarProps) {
   };
 
   return (
-    <aside className="w-[300px] flex-shrink-0 bg-[var(--bg)] border-r-4 border-[var(--text-1)] flex flex-col h-screen overflow-hidden relative z-50">
+    <motion.aside 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      initial={false}
+      animate={{ width: isHovered ? 280 : 100 }}
+      transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+      className="flex-shrink-0 bg-[#010101]/40 backdrop-blur-2xl border-r border-white/5 flex flex-col h-screen overflow-hidden relative shadow-[20px_0_60px_rgba(0,0,0,0.4)] z-50"
+    >
+      
+      {/* Background Glows — Subtler */}
+      <div className="vibrant-glow top-0 left-0 w-32 h-32 bg-emerald/5 blur-[80px]" />
+      <div className="vibrant-glow bottom-0 left-0 w-32 h-32 bg-blue/5 blur-[80px]" />
 
-      {/* Brand Section */}
-      <div className="p-8 border-b-4 border-[var(--text-1)] bg-[var(--bg)] flex items-center h-[120px] justify-between z-10">
-        <Link href="/" className="flex items-center gap-4 no-underline group mb-0 min-w-0 flex-1">
-          <div className="w-10 h-10 bg-[var(--text-1)] flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0_0_var(--text-1)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-none transition-all">
-            <svg width="20" height="20" viewBox="0 0 14 14" fill="none" className="flex-shrink-0">
-              <path d="M2 3h10M2 7h7M2 11h5" stroke="var(--bg)" strokeWidth="2" strokeLinecap="square" />
-            </svg>
+      {/* Brand */}
+      <div className="p-6 flex items-center h-[100px] border-b border-white/10 overflow-hidden px-7">
+        <Link href="/" prefetch={true} className="flex items-center gap-4 no-underline group min-w-0">
+          <div className="w-11 h-11 relative flex-shrink-0 group-hover:scale-110 transition-all duration-700">
+             <img src="/logo_verified.png" className="w-full h-full object-contain" alt="Logo" />
           </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-2xl tracking-tighter leading-none text-[var(--text-1)] uppercase font-black truncate">AgreeMint</h1>
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-3)] mt-1 truncate">Legal Platform</p>
-          </div>
+          {isHovered && (
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="min-w-0"
+            >
+               <h1 className="flex items-center text-xl tracking-tighter leading-none font-black italic uppercase">
+                 <span className="brand-agree">AGREE</span>
+                 <span className="brand-mint">MINT</span>
+              </h1>
+            </motion.div>
+          )}
         </Link>
         
-        {/* Mobile Close Button */}
         {onClose && (
           <button 
             onClick={onClose}
-            className="lg:hidden p-2 border-2 border-[var(--text-1)] bg-[var(--color-white)] shadow-[2px_2px_0_0_var(--text-1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all ml-4"
+            className="lg:hidden p-3 rounded-2xl bg-white/5 hover:bg-emerald hover:text-[#010101] transition-all ml-auto"
           >
             <X size={20} weight="bold" />
           </button>
@@ -69,33 +88,69 @@ export default function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-10 px-6 overflow-y-auto space-y-2 custom-scrollbar">
-        <p className="px-4 mb-6 text-[9px] font-black uppercase tracking-[0.3em] text-[var(--text-3)] opacity-60">
-          Navigation
+      <nav className="flex-1 py-6 px-4 overflow-y-auto custom-scrollbar overflow-x-hidden">
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-8 px-2"
+            >
+                <div className="px-4 py-4 rounded-2xl bg-emerald/5 border border-emerald/10 group/promo relative overflow-hidden">
+                  <p className="text-[8px] font-black text-emerald uppercase tracking-[0.2em] relative z-10">Handshake to Handled.</p>
+                </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <p className={cn(
+          "px-4 mb-4 text-[9px] font-black uppercase tracking-[0.4em] text-white/20 transition-opacity",
+          !isHovered ? "opacity-0" : "opacity-100"
+        )}>
+          Menu
         </p>
-        <div className="flex flex-col gap-2">
-          {nav.map(({ label, href, icon: Icon }) => (
+
+        <div className="flex flex-col gap-1.5">
+          {NAVIGATION.map(({ name, href, icon: Icon }) => (
             <Link
               key={href}
               href={href}
+              prefetch={true}
               className={cn(
-                "group relative flex items-center gap-4 px-4 py-3 text-sm transition-all duration-100 border-2",
+                "group relative flex items-center gap-4 px-5 py-4 text-[12px] font-black uppercase tracking-[0.15em] transition-all duration-500 rounded-2xl border border-transparent overflow-hidden",
                 active(href)
-                  ? "bg-[var(--text-1)] text-[var(--bg)] border-[var(--text-1)] shadow-[4px_4px_0_0_#1447E6]"
-                  : "text-[var(--text-2)] border-transparent hover:border-[var(--text-1)] hover:bg-[var(--bg-subtle)]"
+                  ? "bg-emerald text-[#010101] shadow-[0_10px_30px_rgba(0,255,209,0.2)] border-emerald/5"
+                  : "text-text-3 hover:text-white hover:bg-white/[0.03]"
               )}
             >
-              <Icon
-                size={22}
-                weight={active(href) ? "bold" : "regular"}
-                className={cn(
-                  "transition-colors",
-                  active(href) ? "text-[var(--bg)]" : "text-[var(--text-3)] group-hover:text-[var(--text-1)]"
-                )}
-              />
-              <span className="flex-1 font-black uppercase tracking-tight text-[11px]">{label}</span>
+              {/* Active Indicator Line */}
               {active(href) && (
-                <CaretRight size={14} weight="bold" />
+                <motion.div 
+                  layoutId="active-line"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-black rounded-r-full z-20"
+                />
+              )}
+
+              <div className="relative flex-shrink-0 flex items-center justify-center w-8">
+                <Icon
+                  size={20}
+                  weight="bold"
+                  className={cn(
+                    "transition-all duration-500 relative z-10", 
+                    active(href) ? "scale-110" : "opacity-40 group-hover:opacity-100 group-hover:scale-110 group-hover:text-emerald"
+                  )}
+                />
+              </div>
+
+              {isHovered && (
+                <motion.span 
+                  initial={{ opacity: 0, x: -5 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="flex-1 truncate relative z-10"
+                >
+                  {name}
+                </motion.span>
               )}
             </Link>
           ))}
@@ -103,29 +158,30 @@ export default function Sidebar({ onClose }: SidebarProps) {
       </nav>
 
       {/* Footer / Account */}
-      <div className="mt-auto p-6 border-t-4 border-[var(--text-1)] bg-[var(--bg)]">
-        <Link
-          href="/settings"
-          className="flex items-center gap-4 px-4 py-3 text-[11px] font-black uppercase tracking-widest text-[var(--text-2)] hover:text-[var(--text-1)] transition-colors mb-6"
-        >
-          <Gear size={20} weight="bold" />
-          <span>General Settings</span>
-        </Link>
-
-        <div className="flex items-center gap-4 p-4 bg-[var(--color-white)] border-2 border-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)]">
-          <div className="w-10 h-10 bg-[var(--blue)] border-2 border-[var(--text-1)] flex items-center justify-center flex-shrink-0 text-xs font-black text-[var(--bg)] overflow-hidden uppercase">
+      <div className="mt-auto p-4 border-t border-white/5 bg-[#050505]/20 backdrop-blur-2xl">
+        <div className={cn(
+          "flex items-center gap-3 p-3 bg-white/[0.02] rounded-2xl border border-white/5 group transition-all",
+          !isHovered ? "justify-center" : "justify-start"
+        )}>
+          <div className="w-9 h-9 bg-blue/80 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-black text-white overflow-hidden shadow-xl group-hover:scale-110 transition-transform">
             {user?.imageUrl ? (
-              <Image src={user.imageUrl} alt={user.fullName || "User"} width={40} height={40} className="w-full h-full object-cover" />
+              <Image src={user.imageUrl} alt={user.fullName || "User"} width={36} height={36} className="w-full h-full object-cover" />
             ) : (
-              user?.firstName?.charAt(0) || "ADM"
+              user?.firstName?.charAt(0) || "U"
             )}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-black text-[var(--text-1)] truncate leading-none uppercase tracking-tighter">{user?.fullName || "User Account"}</p>
-            <p className="text-[9px] font-black text-[var(--text-3)] mt-1 truncate uppercase tracking-widest">{user?.primaryEmailAddress?.emailAddress || "Verified Access"}</p>
-          </div>
+          {isHovered && (
+            <motion.div 
+              initial={{ opacity: 0, x: -5 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex-1 min-w-0"
+            >
+              <p className="text-[11px] font-black text-white truncate leading-none tracking-tighter">{user?.firstName || "Account"}</p>
+              <p className="text-[8px] text-emerald font-black mt-2 truncate tracking-[0.2em] uppercase opacity-60">Verified</p>
+            </motion.div>
+          )}
         </div>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

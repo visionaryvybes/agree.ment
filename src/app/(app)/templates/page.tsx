@@ -1,332 +1,177 @@
 'use client';
 
-import { useState } from 'react';
-import { contractTemplates } from '@/data/templates';
-import { useContracts } from '@/store/contracts';
-import { ContractCategory, ContractTemplate } from '@/lib/types';
-import Link from 'next/link';
-import {
-  MagnifyingGlass,
-  SquaresFour,
-  Gavel,
-  Briefcase,
-  House,
-  Shield,
-  Lightning,
-  Info,
-  Compass,
-  Sparkle,
+import { useTemplates } from '@/store/contracts';
+import { 
+  PlusCircle, 
+  Books, 
+  MagnifyingGlass, 
+  ArrowRight,
   FileText,
-  BookOpen,
-  ArrowRight
+  Star,
+  Tag,
+  Rocket,
+  Shield,
+  Briefcase,
+  PaintBrush,
+  User as UserIcon,
+  Handshake
 } from "@phosphor-icons/react";
-import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import Magnetic from '@/components/ui/magnetic';
 
-const categories: { value: ContractCategory | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Templates' },
-  { value: 'loan', label: 'Lending' },
-  { value: 'sale', label: 'Asset Sales' },
-  { value: 'service', label: 'Professional' },
-  { value: 'rental', label: 'Rental' },
-  { value: 'nda', label: 'NDA & Privacy' },
-  { value: 'freelance', label: 'Freelance' },
-  { value: 'roommate', label: 'Living' },
-  { value: 'custom', label: 'My Custom Templates' },
+const CATEGORIES = [
+  { id: 'all', label: 'ALL DESIGNS', icon: Books },
+  { id: 'personal', label: 'PERSONAL', icon: UserIcon },
+  { id: 'business', label: 'BUSINESS', icon: Briefcase },
+  { id: 'creative', label: 'CREATIVE', icon: PaintBrush },
+  { id: 'nda', label: 'SECURITY', icon: Shield },
+  { id: 'loan', label: 'FINANCIAL', icon: Handshake },
+  { id: 'partnership', label: 'COLLABS', icon: Rocket },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
-const CATEGORY_ICONS: Record<string, typeof Gavel> = {
-  loan: Gavel,
-  sale: Lightning,
-  service: Briefcase,
-  rental: House,
-  nda: Shield,
-  freelance: Compass,
-  roommate: Info,
-  employment: Briefcase,
-  partnership: SquaresFour,
-  custom: Sparkle,
-};
-
 export default function TemplatesPage() {
-  const { contracts } = useContracts();
+  const { templates = [] } = useTemplates();
   const [search, setSearch] = useState('');
-  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-  const [category, setCategory] = useState<ContractCategory | 'all'>('all');
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [mounted, setMounted] = useState(false);
 
-  const customTemplates: ContractTemplate[] = contracts.map(c => ({
-    id: c.id,
-    name: c.title,
-    description: c.description || 'Agreement created in your workspace.',
-    category: c.category as ContractCategory || 'custom',
-    popular: false,
-    image: '/placeholder-contract.png',
-    icon: 'FileText',
-    isCustom: true,
-    fields: [
-      { id: 'party1_name', label: 'Primary Party', type: 'text', required: true, placeholder: 'Enter name' },
-      { id: 'party2_name', label: 'Counterparty', type: 'text', required: true, placeholder: 'Enter name' },
-      { id: 'jurisdiction', label: 'Jurisdiction', type: 'text', required: true, placeholder: 'State/Country' }
-    ],
-    clauses: c.clauses,
-    preview: c.clauses.map(cl => cl.content).join(' ').substring(0, 200) + '...'
-  }));
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const allTemplates = [...customTemplates, ...contractTemplates.map(t => ({ ...t, isCustom: false }))];
-
-  const filtered = allTemplates.filter(t => {
-    const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase()) || 
+  const filteredTemplates = (templates || []).filter((t: any) => {
+    const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase()) ||
                          t.description.toLowerCase().includes(search.toLowerCase());
-    
-    if (category === 'all') return matchesSearch;
-    if (category === 'custom') return matchesSearch && (t as ContractTemplate & { isCustom?: boolean }).isCustom;
-    
-    return matchesSearch && t.category === category && !(t as ContractTemplate & { isCustom?: boolean }).isCustom;
+    const matchesCategory = activeCategory === 'all' || t.category === activeCategory;
+    return matchesSearch && matchesCategory;
   });
 
+  if (!mounted) return <div className="min-h-screen bg-[#010101]" />;
+
   return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      animate="show"
-      className="px-8 py-12 md:px-16 md:py-16 bg-[var(--bg)] min-h-full selection:bg-[var(--text-1)] selection:text-[var(--bg)] overflow-x-hidden space-y-16"
-    >
-      {/* ─── Header ─────────────────────────────────────── */}
-      <motion.div variants={item} className="max-w-4xl">
-        <div className="mb-8">
-          <span className="px-5 py-2 brutalist-card font-black uppercase tracking-[0.4em] text-[11px] text-[var(--blue)]">Agreement Library</span>
+    <div className="space-y-12 pb-32 max-w-7xl mx-auto px-4 relative">
+      
+      {/* Background Glows */}
+      <div className="vibrant-glow top-0 left-1/4 w-[600px] h-[600px] bg-emerald/15 animate-glow-pulse" />
+      <div className="vibrant-glow bottom-0 right-1/4 w-[500px] h-[500px] bg-blue/10" />
+
+      {/* ── HEADER ────────────────────────────────────────────────── */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-10 pb-12 border-b border-white/10 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <span className="text-[11px] font-black text-emerald uppercase tracking-[0.5em] mb-4 block">Your Templates</span>
+          <h1 className="heading-display text-7xl md:text-8xl text-white tracking-tighter italic uppercase leading-none">Styles.</h1>
+        </motion.div>
+        
+        <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
+          <div className="relative flex-1 md:w-64 group">
+            <MagnifyingGlass className="absolute left-5 top-1/2 -translate-y-1/2 text-text-3 group-focus-within:text-emerald transition-colors" weight="bold" />
+            <input 
+              type="text" 
+              placeholder="Search templates..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-[11px] font-black tracking-[0.2em] uppercase focus:outline-none focus:border-emerald/50 focus:bg-white/[0.07] transition-all backdrop-blur-3xl shadow-2xl"
+            />
+          </div>
+          <Magnetic>
+            <Link href="/templates/new" className="btn-vibrant btn-vibrant-emerald !px-10 h-16">
+              <PlusCircle size={24} weight="bold" />
+              <span>Create New</span>
+            </Link>
+          </Magnetic>
         </div>
-        <h1 className="text-6xl md:text-[6rem] lg:text-[7rem] font-black uppercase tracking-tighter text-[var(--text-1)] mb-10 leading-[0.85]">
-          Start With<br/>A Template.
-        </h1>
-        <p className="text-xl md:text-2xl text-[var(--text-2)] font-bold tracking-tight mb-8 max-w-3xl leading-relaxed">
-          Select a verified official template or reuse one of your custom-built agreements.
-        </p>
-      </motion.div>
+      </header>
 
-      {/* ─── Search & Filters ───────────────────────────── */}
-      <motion.div variants={item} className="flex flex-col lg:flex-row gap-8 items-center justify-between border-b-4 border-[var(--text-1)] pb-12">
-        <div className="relative flex-1 w-full lg:max-w-xl group bg-[var(--color-white)] border-2 border-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)] focus-within:shadow-[2px_2px_0_0_var(--text-1)] transition-all">
-          <MagnifyingGlass
-            size={24}
-            weight="bold"
-            className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--text-1)] group-focus-within:text-[var(--blue)] transition-colors"
-          />
-          <input
-            className="w-full bg-transparent p-5 pl-16 text-sm font-black uppercase tracking-tight outline-none placeholder:text-[var(--text-3)] text-[var(--text-1)]"
-            placeholder="Search all templates..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
-
-        {/* Brutalist Category Filters */}
-        <div className="flex flex-wrap items-center gap-2 bg-[var(--bg)] p-2 border-4 border-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)] w-full lg:w-auto">
-          {categories.map(cat => (
-            <button
-              key={cat.value}
-              onClick={() => setCategory(cat.value)}
-              className={cn(
-                "h-12 px-6 text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap border-2 border-transparent",
-                category === cat.value
-                  ? "bg-[var(--text-1)] text-[var(--bg)] shadow-none"
-                  : "bg-transparent text-[var(--text-2)] hover:border-[var(--text-1)] hover:bg-[var(--color-white)]"
-              )}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* ─── Grid ────────────────────────────────────────── */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {filtered.map(template => (
-          <motion.div key={template.id} variants={item} className="h-full">
-            <Dialog onOpenChange={(open) => { if (!open) setSelectedVariant(null); }}>
-              <DialogTrigger asChild>
-                <button
-                  className="w-full text-left group flex flex-col h-full brutalist-card bg-[var(--color-white)] p-10 hover:bg-[var(--bg)] transition-colors focus:outline-none relative"
-                >
-                  <div className="mb-8 relative">
-                    <div className="w-16 h-16 border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)] bg-[var(--bg)] flex items-center justify-center group-hover:bg-[var(--color-white)] transition-colors duration-500">
-                      {(() => {
-                        const Icon = CATEGORY_ICONS[template.category] || BookOpen;
-                        return <Icon size={32} weight="bold" className="text-[var(--text-1)] group-hover:text-[var(--blue)] transition-colors" />;
-                      })()}
-                    </div>
-
-                    {template.popular && (
-                      <div className="absolute top-0 right-0 px-4 py-1 bg-[var(--secondary)] text-[var(--bg)] border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)] text-[9px] font-black uppercase tracking-widest">
-                        POPULAR
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 mb-10">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--blue)]">{template.category}</span>
-                      <div className="w-1.5 h-1.5 rounded-full bg-[var(--text-1)]" />
-                      <span className="text-[10px] font-black text-[var(--text-2)] uppercase tracking-widest">{template.fields.length} Fields</span>
-                    </div>
-                    <h3 className="text-2xl font-black text-[var(--text-1)] tracking-tighter uppercase leading-tight mb-4 group-hover:text-[var(--blue)] transition-all duration-300">
-                      {template.name}
-                    </h3>
-                    <p className="text-sm font-bold text-[var(--text-2)] leading-relaxed group-hover:text-[var(--text-1)] transition-colors duration-300">
-                      {template.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-8 border-t-2 border-[var(--text-1)] flex items-center justify-between mt-auto">
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-2)]">
-                      <FileText size={16} weight="bold" />
-                      {template.clauses.length} Clauses
-                    </div>
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--blue)] group-hover:translate-x-2 transition-transform duration-300">
-                      PREVIEW <ArrowRight size={14} weight="bold" />
-                    </div>
-                  </div>
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-5xl p-0 bg-[var(--color-white)] border-4 border-[var(--text-1)] shadow-[8px_8px_0_0_var(--text-1)] rounded-none overflow-hidden flex flex-col lg:flex-row h-[85vh] max-h-[800px]">
-                {/* Left Side: Mockup Preview */}
-                <div className="w-full lg:w-3/5 bg-[var(--bg)] relative overflow-hidden group/preview border-r-4 border-[var(--text-1)]">
-                  
-                  {/* Variant Switcher Overlay */}
-                  {template.variants && template.variants.length > 0 && (
-                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 p-3 bg-[var(--color-white)] border-2 border-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)] z-20">
-                      {template.variants.map((v: { image: string; label: string }, i: number) => (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedVariant(v.image)}
-                          className={cn(
-                            "px-5 py-2 text-[10px] font-black uppercase tracking-widest transition-all border-2 border-[var(--text-1)]",
-                            (selectedVariant === v.image || (!selectedVariant && i === 0))
-                              ? "bg-[var(--blue)] text-[var(--bg)] shadow-[2px_2px_0_0_var(--text-1)]"
-                              : "text-[var(--text-1)] hover:bg-[var(--bg)]"
-                          )}
-                        >
-                          {v.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="w-full h-full flex items-center justify-center p-12">
-                    <motion.img
-                      key={selectedVariant || template.image}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      src={selectedVariant || template.image || '/placeholder-contract.png'}
-                      alt={template.name}
-                      className="max-w-full max-h-full object-contain border-2 border-[var(--text-1)] shadow-[8px_8px_0_0_var(--text-1)] bg-[var(--color-white)]"
-                    />
-                  </div>
-                </div>
-
-                {/* Right Side: Details & Actions */}
-                <div className="w-full lg:w-2/5 p-12 flex flex-col h-full bg-[var(--color-white)]">
-                  
-                  <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
-                    <DialogHeader className="mb-12 relative z-10 text-left">
-                      <div className="flex items-center gap-6 mb-6">
-                        <div className="w-16 h-16 bg-[var(--bg)] border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)] flex items-center justify-center text-[var(--blue)]">
-                          {(() => {
-                            const Icon = CATEGORY_ICONS[template.category] || BookOpen;
-                            return <Icon size={32} weight="bold" />;
-                          })()}
-                        </div>
-                        <div>
-                          <Badge className="bg-[var(--blue)] text-[var(--bg)] border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)] text-[9px] font-black uppercase tracking-widest mb-2 px-3 py-1">
-                            {template.category}
-                          </Badge>
-                          <DialogTitle className="text-3xl font-black tracking-tighter uppercase text-[var(--text-1)] leading-none">{template.name}</DialogTitle>
-                        </div>
-                      </div>
-                      <p className="text-sm font-bold text-[var(--text-2)] leading-relaxed">{template.description}</p>
-                    </DialogHeader>
-
-                    <div className="space-y-10 relative z-10">
-                      <div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-[var(--text-1)] mb-6 flex items-center gap-3">
-                          <Sparkle size={18} weight="bold" className="text-[var(--blue)]" /> Technical Fields
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          {template.fields.slice(0, 6).map(f => (
-                            <div key={f.id} className="p-4 bg-[var(--bg)] border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)]">
-                              <div className="text-[9px] font-black uppercase tracking-widest text-[var(--text-2)] mb-1">{f.label}</div>
-                              <div className="text-[11px] font-black text-[var(--text-1)] uppercase">{f.type}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-[var(--text-1)] mb-6 flex items-center gap-3">
-                          <FileText size={18} weight="bold" className="text-[var(--blue)]" /> Schema Preview
-                        </div>
-                        <div className="p-6 bg-[var(--bg)] border-2 border-[var(--text-1)] shadow-[2px_2px_0_0_var(--text-1)] font-mono text-[11px] font-bold leading-relaxed text-[var(--text-1)] relative group/schema overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent opacity-50" />
-                          <div className="relative z-10 line-clamp-5 italic">
-                            &ldquo;{template.preview}&rdquo;
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <DialogFooter className="mt-10 sm:justify-start relative z-10 border-t-4 border-[var(--text-1)] pt-10">
-                    <div className="w-full space-y-4">
-                      <Link href={`/contracts/new?template=${template.id}`} className="w-full no-underline block">
-                        <button 
-                          className="brutalist-button w-full h-16 bg-[var(--blue)] text-[var(--bg)] text-[12px] font-black uppercase tracking-[0.2em] shadow-[4px_4px_0_0_var(--text-1)] flex flex-row items-center justify-center"
-                        >
-                          Use Template
-                        </button>
-                      </Link>
-                      <p className="text-[9px] font-black text-[var(--text-2)] text-center uppercase tracking-widest">
-                        Governing Jurisdiction: Automated Detection
-                      </p>
-                    </div>
-                  </DialogFooter>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </motion.div>
+      {/* ── CATEGORY FILTERS ────────────────────────────────────────── */}
+      <div className="flex flex-wrap items-center gap-4 py-4 relative z-10 custom-scrollbar-hide overflow-x-auto">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id)}
+            className={cn(
+              "flex items-center gap-4 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all duration-500 whitespace-nowrap",
+              activeCategory === cat.id 
+                ? "bg-emerald text-[#010101] border-emerald shadow-[0_10px_30px_rgba(0,255,209,0.3)] scale-105" 
+                : "bg-white/5 text-text-3 border-white/10 hover:border-white/30 hover:bg-white/10"
+            )}
+          >
+            <cat.icon size={18} weight={activeCategory === cat.id ? "fill" : "bold"} />
+            {cat.label}
+          </button>
         ))}
       </div>
 
-      {filtered.length === 0 && (
-        <motion.div variants={item} className="brutalist-card bg-[var(--color-white)] p-24 text-center">
-          <BookOpen size={64} weight="bold" className="mx-auto mb-8 text-[var(--text-1)]" />
-          <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 text-[var(--text-1)]">Template not found</h3>
-          <p className="text-sm text-[var(--text-2)] font-bold mb-10 max-w-md mx-auto">Try adjusting your search filters or create a custom agreement.</p>
-          <button
-            onClick={() => { setSearch(''); setCategory('all'); }}
-            className="brutalist-button bg-[var(--color-white)] text-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)]"
-          >
-            Reset All Filters
-          </button>
-        </motion.div>
+      {/* ── GRID ──────────────────────────────────────────────────── */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 relative z-10">
+        <AnimatePresence mode="popLayout">
+          {filteredTemplates.map((template: any, i: number) => (
+            <motion.div
+              key={template.id}
+              layout
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ delay: i * 0.03, duration: 0.5 }}
+            >
+              <Link 
+                href={`/templates/${template.id}`}
+                className="group h-full p-10 bg-[#0A0A0B] border border-white/5 rounded-[50px] flex flex-col transition-all duration-700 backdrop-blur-3xl relative overflow-hidden hover:shadow-[0_40px_80px_rgba(0,0,0,0.8)] hover:border-emerald/30 hover:-translate-y-2"
+              >
+                {/* Visual Accent */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald/5 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                
+                <div className="flex-1 space-y-8">
+                  <div className="flex items-center justify-between">
+                    <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-emerald text-3xl group-hover:bg-emerald group-hover:text-[#010101] transition-all duration-700 shadow-2xl group-hover:rotate-6 group-hover:scale-110">
+                       {template.icon || '📜'}
+                    </div>
+                    <div className="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] font-black text-text-3 uppercase tracking-widest group-hover:border-emerald/40 transition-colors">
+                      {template.category}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-3xl font-black text-white transition-colors mb-4 tracking-tighter italic uppercase group-hover:text-emerald leading-tight">
+                      {template.name}
+                    </h3>
+                    <p className="text-[11px] text-text-3 font-black leading-relaxed line-clamp-3 mb-10 uppercase tracking-widest opacity-40 group-hover:opacity-60 transition-opacity">
+                      {template.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-8 border-t border-white/5 mt-auto">
+                   <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-emerald animate-pulse shadow-[0_0_10px_#00FFD1]" />
+                      <span className="text-[10px] font-black text-text-3 uppercase tracking-widest">VERIFIED</span>
+                   </div>
+                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-text-3 group-hover:bg-emerald group-hover:text-[#010101] group-hover:translate-x-2 transition-all duration-500 shadow-2xl">
+                     <ArrowRight size={28} weight="bold" />
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {filteredTemplates.length === 0 && (
+         <div className="py-60 text-center flex flex-col items-center space-y-10">
+            <div className="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center text-text-3 mb-6 border border-white/10 shadow-2xl relative">
+               <div className="absolute inset-0 bg-white/5 blur-3xl rounded-full" />
+               <Books size={56} weight="bold" className="opacity-40" />
+            </div>
+            <h3 className="heading-display text-5xl text-white italic opacity-40 uppercase">No Templates Found.</h3>
+            <p className="text-text-3 font-black text-[12px] uppercase tracking-[0.5em] max-w-md leading-relaxed">Your design library is currently empty. Try creating a new template to get started.</p>
+         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

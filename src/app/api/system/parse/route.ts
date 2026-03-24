@@ -2,7 +2,7 @@ import { MODEL, generateObject } from '@/lib/ai';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-const AgreementSchema = z.object({
+const ContractSchema = z.object({
   title: z.string(),
   category: z.string().optional(),
   extractedTerms: z.object({
@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
 
     const { object } = await generateObject({
       model: MODEL,
-      schema: AgreementSchema,
-      prompt: `Extract key agreement details from this conversation:
+      schema: ContractSchema,
+      prompt: `Extract key contract details from this conversation:
 ${conversation}
 
 Context:

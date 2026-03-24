@@ -1,233 +1,205 @@
 'use client';
 
-import { useState } from 'react';
 import { useContracts } from '@/store/contracts';
-import { ContractStatus } from '@/lib/types';
-import { EmptyState } from '@/components/EmptyState';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import {
-  MagnifyingGlass,
-  Plus,
-  ArrowUpRight,
-  Globe as PhosphorGlobe
+import { 
+  PlusCircle, 
+  Files, 
+  MagnifyingGlass, 
+  Funnel,
+  CaretRight,
+  ShieldCheck,
+  Clock,
+  Warning,
+  ArrowRight
 } from "@phosphor-icons/react";
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { RadialProgress } from '@/components/ui/radial-progress';
-
-const STATUS_LABEL: Record<ContractStatus, string> = {
-  active: 'Active',
-  pending_signature: 'Pending',
-  draft: 'Draft',
-  completed: 'Completed',
-  disputed: 'Disputed',
-  expired: 'Expired',
-};
-
-const STATUS_DOT: Record<ContractStatus, string> = {
-  active: 'bg-emerald-500',
-  pending_signature: 'bg-yellow-500',
-  draft: 'bg-gray-400',
-  completed: 'bg-blue-500',
-  disputed: 'bg-red-500',
-  expired: 'bg-gray-400',
-};
-
-// Filter logic below
+import Magnetic from '@/components/ui/magnetic';
 
 export default function ContractsPage() {
-  const router = useRouter();
-  const { contracts } = useContracts();
+  const { contracts = [] } = useContracts();
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<ContractStatus | 'all'>('all');
+  const [filter, setFilter] = useState<'all' | 'active' | 'pending' | 'disputed'>('all');
+  const [mounted, setMounted] = useState(false);
 
-  const filtered = contracts.filter(c => {
-    const q = search.toLowerCase();
-    const matchSearch = !search ||
-      c.title.toLowerCase().includes(q) ||
-      c.parties.some(p => p.name.toLowerCase().includes(q)) ||
-      c.jurisdiction.toLowerCase().includes(q);
-    const matchStatus = filter === 'all' || c.status === filter;
-    return matchSearch && matchStatus;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const filteredContracts = contracts.filter(c => {
+    const matchesSearch = c.title.toLowerCase().includes(search.toLowerCase());
+    const matchesFilter = filter === 'all' || 
+      (filter === 'active' && c.status === 'active') ||
+      (filter === 'pending' && c.status === 'pending_signature') ||
+      (filter === 'disputed' && c.status === 'disputed');
+    return matchesSearch && matchesFilter;
   });
 
-  const totalOwed = filtered.reduce((sum, c) => {
-    const outstanding = c.paymentSchedule.filter(p => ['pending', 'overdue'].includes(p.status)).reduce((s, p) => s + p.amount, 0);
-    return sum + outstanding;
-  }, 0);
-
-  const activeCount = contracts.filter(c => c.status === 'active').length;
-
   return (
-    <div className="px-8 py-12 md:px-16 md:py-16 bg-[var(--bg)] min-h-full selection:bg-[var(--text-1)] selection:text-[var(--bg)] overflow-x-hidden">
-      {/* ─── Header: My Contracts ────────────────── */}
-      <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-12 pb-14 border-b border-[var(--text-1)] border-opacity-30 mb-16">
-        <div className="max-w-4xl">
-          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--blue)] mb-8">
-            My Contracts &middot; {contracts.length} Total Contracts
-          </p>
-          <h1 className="text-6xl md:text-[6rem] lg:text-[7rem] font-black uppercase tracking-tighter leading-[0.85] text-[var(--text-1)] mb-10">
-            My<br/>Contracts.
-          </h1>
-          <div className="flex items-center gap-6">
-            <div className="text-[11px] font-black uppercase tracking-[0.15em] text-[var(--text-1)]">
-              {activeCount} Active Contract{activeCount !== 1 ? 's' : ''}
-            </div>
-            {totalOwed > 0 && (
-              <>
-                <div className="w-2.5 h-2.5 bg-gray-300" />
-                <div className="text-[11px] font-black uppercase tracking-[0.15em] text-[var(--text-1)]">
-                  ${totalOwed.toLocaleString()} Outstanding Amount
-                </div>
-              </>
-            )}
+    <div className={cn("space-y-12 pb-32 max-w-7xl mx-auto px-4 relative transition-opacity duration-1000", !mounted ? "opacity-0" : "opacity-100")}>
+      <div className="vibrant-glow top-0 right-1/4 w-[600px] h-[600px] bg-emerald/10 animate-glow-pulse" />
+      <div className="vibrant-glow bottom-0 left-1/4 w-[500px] h-[500px] bg-blue/10" />
+
+      {/* ── HEADER ────────────────────────────────────────────────── */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-10 border-b border-white/10 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <span className="text-[12px] font-black text-emerald uppercase tracking-[0.5em] mb-4 block">ALL YOUR DEALS</span>
+          <h1 className="heading-display text-6xl md:text-9xl text-white tracking-tighter italic uppercase">All Deals.</h1>
+        </motion.div>
+        
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <Magnetic>
+            <Link href="/contracts/new" className="btn-vibrant btn-vibrant-emerald px-12">
+              <PlusCircle size={24} weight="bold" />
+              <span>NEW AGREEMENT</span>
+            </Link>
+          </Magnetic>
+        </div>
+      </header>
+
+      {/* ── FILTERS & TABS ─────────────────────────────────────────── */}
+      <div className="space-y-12 relative z-10">
+        <div className="flex items-center justify-between border-b border-white/10 pb-10">
+          <div className="flex items-center gap-12">
+            {['Active', 'Pending', 'Past'].map((tab) => (
+              <button 
+                key={tab}
+                className={`text-[12px] font-black uppercase tracking-[0.4em] transition-all relative px-2 ${
+                  tab === 'Active' ? 'text-emerald' : 'text-text-3 hover:text-white'
+                }`}
+              >
+                {tab}
+                {tab === 'Active' && (
+                  <motion.div layoutId="tab" className="absolute -bottom-10 left-0 right-0 h-1.5 bg-emerald shadow-[0_0_20px_rgba(0,255,209,0.5)]" />
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="relative group">
-          <div className="absolute inset-0 bg-[var(--blue)] rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
-          <Link href="/contracts/new" className="relative block">
-            <button className="bg-[var(--color-white)]/80 backdrop-blur-md border border-[var(--bg)]/50 text-[var(--text-1)] px-8 py-5 font-black uppercase tracking-[0.2em] text-sm flex items-center gap-3 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-all">
-              <Plus size={20} weight="bold" className="text-[var(--blue)]" /> New Agreement
-            </button>
-          </Link>
-        </div>
-      </div>
-
-      {/* ─── Search & Stream (Brutalist) ────────────────────── */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-16 relative z-10 p-1">
-        <div className="relative w-full md:max-w-xl group">
-          <MagnifyingGlass size={20} weight="bold" className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--text-1)] z-10" />
-          <input
-            type="text"
-            placeholder="Search Contracts..."
-            className="w-full h-16 bg-[var(--color-white)] border-4 border-[var(--text-1)] pl-16 pr-6 font-black uppercase tracking-[0.2em] text-lg text-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)] focus:outline-none placeholder-[var(--text-3)] transition-all focus:shadow-[8px_8px_0_0_var(--blue)] focus:-translate-y-1 focus:-translate-x-1"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
-        <div className="flex overflow-x-auto no-scrollbar items-center gap-2 bg-[var(--bg)] p-2 border-4 border-[var(--text-1)] shadow-[4px_4px_0_0_var(--text-1)] w-full lg:w-auto">
-          {['all', 'active', 'pending_signature', 'draft', 'completed'].map((f) => (
+        <div className="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+          {['all', 'active', 'pending', 'disputed'].map((f) => (
             <button
               key={f}
-              onClick={() => setFilter(f as ContractStatus | 'all')}
+              onClick={() => setFilter(f as any)}
               className={cn(
-                "px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border-2 border-transparent",
-                filter === f
-                  ? "bg-[var(--text-1)] text-[var(--bg)] shadow-none"
-                  : "text-[var(--text-2)] hover:border-[var(--text-1)] hover:bg-[var(--color-white)] bg-transparent"
+                "px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] border transition-all duration-700 whitespace-nowrap",
+                filter === f 
+                  ? "bg-emerald text-[#010101] border-emerald shadow-[0_0_40px_rgba(0,255,209,0.3)] scale-105" 
+                  : "bg-white/5 border-white/5 text-text-3 hover:text-white hover:border-white/15"
               )}
             >
-              {f === 'all' ? 'All' : f.replace('_', ' ')}
+              {f === 'all' ? 'All Files' : f}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ─── Data Ledger ───────────────────────────────────── */}
-      <div className="border-2 border-[var(--text-1)] bg-transparent overflow-hidden">
-        <div className="p-8 md:p-12 border-b-2 border-[var(--text-1)] bg-[var(--color-white)]">
-          <h2 className="text-4xl md:text-[3.5rem] uppercase font-black tracking-tighter text-[var(--text-1)] leading-none">
-            Contracts List
-          </h2>
-        </div>
+      {/* ── RESULTS ───────────────────────────────────────────────── */}
+      <div className="grid gap-8 relative z-10">
+        <AnimatePresence mode="popLayout">
+          {filteredContracts.length > 0 ? (
+            filteredContracts.map((contract, i) => (
+              <motion.div
+                key={contract.id}
+                layout
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: i * 0.05, duration: 0.6 }}
+              >
+                <Link 
+                  href={`/contracts/${contract.id}`}
+                  className={cn(
+                    "group p-10 bg-white/[0.03] border border-white/5 rounded-[40px] flex flex-col md:flex-row md:items-center justify-between gap-10 transition-all duration-700 backdrop-blur-3xl relative overflow-hidden hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)]",
+                    contract.category?.toLowerCase().includes('service') ? "hover:border-emerald/40" :
+                    contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "hover:border-amber/40" :
+                    contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "hover:border-blue/40" :
+                    "hover:border-rose/40"
+                  )}
+                >
+                  <div className={cn(
+                    "absolute top-0 right-0 w-48 h-48 blur-[80px] opacity-0 group-hover:opacity-20 transition-opacity",
+                    contract.category?.toLowerCase().includes('service') ? "bg-emerald" :
+                    contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "bg-amber" :
+                    contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "bg-blue" :
+                    "bg-rose"
+                  )} />
+                  
+                  <div className="flex items-center gap-10 relative z-10">
+                    <div className={cn(
+                      "w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-text-3 transition-all duration-700 group-hover:rotate-12 group-hover:scale-110 shadow-2xl border border-white/5",
+                      contract.category?.toLowerCase().includes('service') ? "group-hover:bg-emerald group-hover:text-[#010101]" :
+                      contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "group-hover:bg-amber group-hover:text-[#010101]" :
+                      contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "group-hover:bg-blue group-hover:text-white" :
+                      "group-hover:bg-rose group-hover:text-white"
+                    )}>
+                      <Files size={36} weight="bold" />
+                    </div>
+                    <div>
+                        <h3 className="text-4xl font-black text-white group-hover:text-emerald transition-colors uppercase italic tracking-tighter leading-none">{contract.title}</h3>
+                      <div className="flex items-center gap-6 mt-3">
+                        <span className={cn(
+                          "text-[12px] font-black uppercase tracking-[0.2em] transition-colors",
+                          contract.category?.toLowerCase().includes('service') ? "text-emerald/60" :
+                          contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "text-amber/60" :
+                          contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "text-blue/60" :
+                          "text-rose/60"
+                        )}>{contract.category}</span>
+                        <div className="w-2 h-2 rounded-full bg-white/10" />
+                        <span className="text-[11px] text-text-3 font-black uppercase tracking-[0.2em] opacity-40"># {contract.id.slice(0, 12).toUpperCase()}</span>
+                      </div>
+                    </div>
+                  </div>
 
-        <div className="overflow-x-auto custom-scrollbar bg-[var(--color-white)]">
-          {filtered.length === 0 ? (
-            <EmptyState 
-              title="No Contracts Found" 
-              description="No contracts match your current search." 
-              actionLabel="New Agreement" 
-              actionHref="/contracts/new"
-              className="m-8 border-none shadow-none"
-            />
+                  <div className="flex items-center justify-between md:justify-end gap-12 relative z-10">
+                    <div className="text-right hidden lg:block border-r border-white/10 pr-12">
+                       <p className="text-[10px] font-black text-text-3 uppercase tracking-[0.4em] mb-2 opacity-50">DATE</p>
+                       <p className="text-lg font-black text-white tracking-tighter">{new Date(contract.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    </div>
+                    
+                    <div className={cn(
+                      "badge-vibrant px-8 py-2.5 transition-all duration-700 group-hover:scale-110",
+                      contract.status === 'active' ? "badge-active text-[11px]" :
+                      contract.status === 'pending_signature' ? "badge-pending text-[11px]" :
+                      "badge-disputed text-[11px]"
+                    )}>
+                      {contract.status.replace('_', ' ')}
+                    </div>
+
+                    <div className={cn(
+                      "w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-transparent group-hover:translate-x-3 transition-all duration-500 shadow-2xl",
+                      contract.category?.toLowerCase().includes('service') ? "group-hover:bg-emerald" :
+                      contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "group-hover:bg-amber" :
+                      contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "group-hover:bg-blue" :
+                      "group-hover:bg-rose"
+                    )}>
+                       <CaretRight size={32} weight="bold" className={cn(
+                         "text-text-3 transition-colors",
+                         (contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') || contract.category?.toLowerCase().includes('real estate')) ? "group-hover:text-white" : "group-hover:text-[#010101]"
+                       )} />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))
           ) : (
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b-2 border-[var(--text-1)] bg-[var(--bg)]">
-                  <th className="px-6 lg:px-12 py-8 text-left text-[11px] font-black uppercase tracking-[0.25em] text-[var(--text-3)] whitespace-nowrap">Status</th>
-                  <th className="px-6 lg:px-12 py-8 text-left text-[11px] font-black uppercase tracking-[0.25em] text-[var(--text-3)] whitespace-nowrap">Contract Title</th>
-                  <th className="px-6 lg:px-12 py-8 text-left text-[11px] font-black uppercase tracking-[0.25em] text-[var(--text-3)] hidden sm:table-cell whitespace-nowrap">Parties</th>
-                  <th className="px-6 lg:px-12 py-8 text-left text-[11px] font-black uppercase tracking-[0.25em] text-[var(--text-3)] hidden xl:table-cell whitespace-nowrap">Jurisdiction</th>
-                  <th className="px-6 lg:px-12 py-8 text-right text-[11px] font-black uppercase tracking-[0.25em] text-[var(--text-3)] whitespace-nowrap">Amount</th>
-                  <th className="px-6 lg:px-12 py-8 text-left text-[11px] font-black uppercase tracking-[0.25em] text-[var(--text-3)] hidden md:table-cell whitespace-nowrap">Progress</th>
-                  <th className="px-6 lg:px-12 py-8 text-left text-[11px] font-black uppercase tracking-[0.25em] text-[var(--text-3)] hidden lg:table-cell whitespace-nowrap">Date</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--text-1)] divide-opacity-30">
-                {filtered.map(c => {
-                  const paid = c.paymentSchedule.filter(p => p.status === 'paid').length;
-                  const total = c.paymentSchedule.length;
-                  return (
-                    <motion.tr
-                      key={c.id}
-                      onClick={() => router.push(`/contracts/${c.id}`)}
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      className="group cursor-pointer hover:bg-[#F0F0F2] transition-colors"
-                    >
-                      <td className="px-6 lg:px-12 py-8">
-                        <div className="flex items-center gap-4">
-                          <div className={cn(
-                            "w-3 h-3 rounded-full border border-[var(--text-1)]/10",
-                            STATUS_DOT[c.status]
-                          )} />
-                          <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--text-1)]">
-                            {STATUS_LABEL[c.status]}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 lg:px-12 py-8">
-                        <div className="max-w-[150px] md:max-w-[250px] lg:max-w-none">
-                          <div className="font-black text-base md:text-xl text-[var(--text-1)] uppercase tracking-tighter leading-none mb-2 group-hover:text-[var(--blue)] transition-colors truncate">
-                            {c.title}
-                          </div>
-                          <div className="text-[9px] font-black text-[var(--text-3)] uppercase tracking-[0.25em] truncate">
-                            {c.category}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 lg:px-12 py-8 hidden sm:table-cell">
-                        <div className="max-w-[150px] lg:max-w-[250px] text-sm font-black text-[var(--text-2)] uppercase tracking-tight truncate">
-                          {c.parties.map(p => p.name).join(' // ')}
-                        </div>
-                      </td>
-                      <td className="px-6 lg:px-12 py-8 hidden xl:table-cell">
-                        <div className="inline-flex items-center gap-3 text-[11px] font-black text-[var(--text-1)] uppercase tracking-widest">
-                          <PhosphorGlobe size={16} weight="bold" className="text-[var(--text-3)]" />
-                          {c.jurisdiction || 'ROOT'}
-                        </div>
-                      </td>
-                      <td className="px-6 lg:px-12 py-8 text-right">
-                        <div className="font-serif font-black text-xl md:text-2xl text-[var(--text-1)] leading-none tabular-nums">
-                          {c.totalAmount ? `$${c.totalAmount.toLocaleString()}` : 'N/A'}
-                        </div>
-                      </td>
-                      <td className="px-6 lg:px-12 py-8 hidden md:table-cell">
-                        {total > 0 ? (
-                          <div className="flex items-center gap-4">
-                            <RadialProgress pct={(paid/total)*100} size={36} stroke={4} color="var(--blue)" className="drop-shadow-none" />
-                            <span className="text-[11px] font-black text-[var(--text-1)] tabular-nums tracking-widest">{paid}/{total}</span>
-                          </div>
-                        ) : (
-                          <span className="text-[10px] font-black text-[var(--text-3)] uppercase tracking-[0.25em]">IMMUTABLE</span>
-                        )}
-                      </td>
-                      <td className="px-6 lg:px-12 py-8 hidden lg:table-cell">
-                        <div className="text-[10px] font-black text-[var(--text-3)] uppercase tracking-[0.25em] flex items-center gap-3">
-                          {new Date(c.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' }).replace(/\//g, '.')}
-                          <ArrowUpRight size={16} weight="bold" className="text-[var(--text-1)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
-                        </div>
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <div className="py-60 text-center space-y-10 flex flex-col items-center">
+               <div className="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center text-text-3 mb-6 border border-white/10 shadow-2xl relative">
+                  <div className="absolute inset-0 bg-white/5 blur-3xl rounded-full" />
+                  <MagnifyingGlass size={48} weight="bold" />
+               </div>
+               <h3 className="heading-display text-5xl text-white italic opacity-40 uppercase">Archive Empty.</h3>
+               <p className="text-text-3 font-black text-[12px] uppercase tracking-[0.5em] max-w-md leading-relaxed">No matching entries found in your library. Try adjusting your filters.</p>
+            </div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );

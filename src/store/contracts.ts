@@ -187,3 +187,16 @@ export const useContracts = create<ContractsState>((set, get) => ({
     };
   },
 }));
+
+export const useTemplates = () => {
+  const templates = useContracts((state) => state.templates);
+  return { templates };
+};
+
+export const useProtocolActions = () => {
+  const addContract = useContracts((state) => state.addContract);
+  const updateContract = useContracts((state) => state.updateContract);
+  const deleteContract = useContracts((state) => state.deleteContract);
+  return { addContract, updateContract, deleteContract };
+};
+

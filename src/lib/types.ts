@@ -14,6 +14,12 @@ export type ContractCategory =
   | 'partnership'
   | 'roommate'
   | 'family'
+  | 'personal'
+  | 'creative'
+  | 'event'
+  | 'business'
+  | 'legal'
+  | 'professional'
   | 'custom';
 
 export interface User {
