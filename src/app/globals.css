@@ -26,9 +26,9 @@
   --amber: 45 100% 50%;    /* Vibrant Amber */
   --obsidian: 0 0% 0%; 
   
-  --text-1: 0 0% 100%;
-  --text-2: 0 0% 85%;
-  --text-3: 0 0% 65%;
+  --text-1: #ffffff;
+  --text-2: #d9d9d9;
+  --text-3: #a6a6a6;
   --text-muted: #27272A;
 
   /* ── Status Tokens (Maximum Contrast) ── */
@@ -93,9 +93,9 @@ body::after {
 
 .heading-display {
   font-family: var(--font-display);
-  letter-spacing: -0.06em;
+  letter-spacing: -0.03em;
   font-weight: 900;
-  line-height: 0.85;
+  line-height: 1.0;
   text-transform: uppercase;
 }
 
@@ -140,19 +140,20 @@ body::after {
 .btn-vibrant {
   font-weight: 900;
   font-family: var(--font-display);
-  padding: 1.2rem 2.4rem;
-  border-radius: var(--radius-md);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
-  font-size: 0.9rem;
+  gap: 0.5rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   color: #000000;
   border: none;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .btn-vibrant-emerald {
@@ -245,4 +246,112 @@ body::after {
 ::selection {
   background: hsl(var(--emerald));
   color: #000000;
+}
+
+/* ─── Text Utility Classes ──────────────────────────────────────────── */
+
+.text-text-1 { color: var(--text-1); }
+.text-text-2 { color: var(--text-2); }
+.text-text-3 { color: var(--text-3); }
+
+/* ─── Button Variants ───────────────────────────────────────────────── */
+
+.btn-primary {
+  background: hsl(var(--emerald));
+  color: #000000;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-titanium {
+  background: #2D2D33;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-titanium:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* ─── Glass / Gloss Effects ─────────────────────────────────────────── */
+
+.liquid-gloss {
+  background: rgba(8, 8, 8, 0.65);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ─── Scrollbar Styles ──────────────────────────────────────────────── */
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.custom-scrollbar-hide::-webkit-scrollbar { display: none; }
+.custom-scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Alias for custom-scrollbar-hide */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── 3D / Transform Utilities ──────────────────────────────────────── */
+
+.perspective-1000 { perspective: 1000px; }
+.transform-style-3d { transform-style: preserve-3d; }
+
+/* ─── Spin-slow animation (used by DigitalSeal rings etc.) ─────────── */
+
+.animate-spin-slow { animation: spin-slow 10s linear infinite; }
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

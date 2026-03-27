@@ -42,8 +42,8 @@ function VaultMesh() {
         </mesh>
 
         {/* Lock center */}
-        <mesh position={[0, 0, 0.92]}>
-          <cylinderGeometry args={[0.15, 0.15, 0.05, 32]} rotation={[Math.PI / 2, 0, 0]} />
+        <mesh position={[0, 0, 0.92]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.15, 0.15, 0.05, 32]} />
           <meshStandardMaterial color="#00FFD1" emissive="#00FFD1" emissiveIntensity={1} />
         </mesh>
 
@@ -55,8 +55,8 @@ function VaultMesh() {
 
         {/* Corner bolts */}
         {[[-0.65, 0.75], [0.65, 0.75], [-0.65, -0.75], [0.65, -0.75]].map(([x, y], i) => (
-          <mesh key={i} position={[x, y, 0.86]}>
-            <cylinderGeometry args={[0.06, 0.06, 0.08, 16]} rotation={[Math.PI / 2, 0, 0]} />
+          <mesh key={i} position={[x, y, 0.86]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.06, 0.06, 0.08, 16]} />
             <meshStandardMaterial color="#FFB800" metalness={1} roughness={0.3} />
           </mesh>
         ))}

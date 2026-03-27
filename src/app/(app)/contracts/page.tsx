@@ -1,203 +1,205 @@
 'use client';
 
 import { useContracts } from '@/store/contracts';
-import { 
-  PlusCircle, 
-  Files, 
-  MagnifyingGlass, 
-  Funnel,
-  CaretRight,
-  ShieldCheck,
-  Clock,
-  Warning,
-  ArrowRight
+import {
+  PlusCircle, Files, MagnifyingGlass, CaretRight,
+  ShieldCheck, Clock, Warning, ArrowRight, FunnelSimple,
 } from "@phosphor-icons/react";
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import Magnetic from '@/components/ui/magnetic';
+
+type Filter = 'all' | 'active' | 'pending' | 'disputed';
+
+function categoryColor(cat = '') {
+  const c = cat.toLowerCase();
+  if (c.includes('service'))                           return 'emerald';
+  if (c.includes('loan') || c.includes('financial'))  return 'amber';
+  if (c.includes('sale') || c.includes('tech'))       return 'blue';
+  return 'rose';
+}
+
+const colorMap = {
+  emerald: { text: 'text-emerald', hoverBg: 'group-hover:bg-emerald', hoverBorder: 'group-hover:border-emerald/40', glow: 'group-hover:shadow-[0_0_20px_rgba(0,255,209,0.12)]', light: false },
+  amber:   { text: 'text-amber',   hoverBg: 'group-hover:bg-amber',   hoverBorder: 'group-hover:border-amber/40',   glow: 'group-hover:shadow-[0_0_20px_rgba(255,184,0,0.12)]',   light: false },
+  blue:    { text: 'text-blue',    hoverBg: 'group-hover:bg-blue',    hoverBorder: 'group-hover:border-blue/40',    glow: 'group-hover:shadow-[0_0_20px_rgba(0,112,255,0.12)]',    light: true  },
+  rose:    { text: 'text-rose',    hoverBg: 'group-hover:bg-rose',    hoverBorder: 'group-hover:border-rose/40',    glow: 'group-hover:shadow-[0_0_20px_rgba(255,0,110,0.12)]',    light: true  },
+} as const;
 
 export default function ContractsPage() {
   const { contracts = [] } = useContracts();
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<'all' | 'active' | 'pending' | 'disputed'>('all');
+  const [search,  setSearch]  = useState('');
+  const [filter,  setFilter]  = useState<Filter>('all');
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
-  const filteredContracts = contracts.filter(c => {
-    const matchesSearch = c.title.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter = filter === 'all' || 
-      (filter === 'active' && c.status === 'active') ||
-      (filter === 'pending' && c.status === 'pending_signature') ||
-      (filter === 'disputed' && c.status === 'disputed');
-    return matchesSearch && matchesFilter;
+  const filtered = contracts.filter(c => {
+    const matchSearch = c.title.toLowerCase().includes(search.toLowerCase());
+    const matchFilter =
+      filter === 'all'      ? true :
+      filter === 'active'   ? c.status === 'active' :
+      filter === 'pending'  ? c.status === 'pending_signature' :
+                              c.status === 'disputed';
+    return matchSearch && matchFilter;
   });
 
-  return (
-    <div className={cn("space-y-12 pb-32 max-w-7xl mx-auto px-4 relative transition-opacity duration-1000", !mounted ? "opacity-0" : "opacity-100")}>
-      <div className="vibrant-glow top-0 right-1/4 w-[600px] h-[600px] bg-emerald/10 animate-glow-pulse" />
-      <div className="vibrant-glow bottom-0 left-1/4 w-[500px] h-[500px] bg-blue/10" />
+  if (!mounted) return <div className="min-h-screen bg-[#010101]" />;
 
-      {/* ── HEADER ────────────────────────────────────────────────── */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-10 border-b border-white/10 relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="text-[12px] font-black text-emerald uppercase tracking-[0.5em] mb-4 block">ALL YOUR DEALS</span>
-          <h1 className="heading-display text-6xl md:text-9xl text-white tracking-tighter italic uppercase">All Deals.</h1>
+  return (
+    <div className="space-y-7 pb-24 max-w-6xl mx-auto relative">
+
+      {/* Glows */}
+      <div className="vibrant-glow top-0 right-1/4 w-[400px] h-[400px] bg-emerald/[0.06] animate-glow-pulse" />
+      <div className="vibrant-glow bottom-0 left-1/4 w-[350px] h-[350px] bg-blue/[0.05]" />
+
+      {/* ── HEADER ─────────────────────────────────────────────────── */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.07] relative z-10">
+        <motion.div initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+          <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-1">Your Documents</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight italic uppercase">All Deals.</h1>
         </motion.div>
-        
-        <div className="flex flex-col md:flex-row items-center gap-6">
-          <Magnetic>
-            <Link href="/contracts/new" className="btn-vibrant btn-vibrant-emerald px-12">
-              <PlusCircle size={24} weight="bold" />
-              <span>NEW AGREEMENT</span>
-            </Link>
-          </Magnetic>
-        </div>
+        <Link
+          href="/contracts/new"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-wider hover:scale-105 transition-transform shadow-[0_0_16px_rgba(0,255,209,0.2)] self-start sm:self-auto"
+        >
+          <PlusCircle size={15} weight="bold" />
+          New Agreement
+        </Link>
       </header>
 
-      {/* ── FILTERS & TABS ─────────────────────────────────────────── */}
-      <div className="space-y-12 relative z-10">
-        <div className="flex items-center justify-between border-b border-white/10 pb-10">
-          <div className="flex items-center gap-12">
-            {['Active', 'Pending', 'Past'].map((tab) => (
-              <button 
-                key={tab}
-                className={`text-[12px] font-black uppercase tracking-[0.4em] transition-all relative px-2 ${
-                  tab === 'Active' ? 'text-emerald' : 'text-text-3 hover:text-white'
-                }`}
-              >
-                {tab}
-                {tab === 'Active' && (
-                  <motion.div layoutId="tab" className="absolute -bottom-10 left-0 right-0 h-1.5 bg-emerald shadow-[0_0_20px_rgba(0,255,209,0.5)]" />
-                )}
-              </button>
-            ))}
-          </div>
+      {/* ── SEARCH + FILTERS ───────────────────────────────────────── */}
+      <div className="space-y-4 relative z-10">
+        {/* Search */}
+        <div className="relative group">
+          <MagnifyingGlass
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/25 group-focus-within:text-emerald transition-colors"
+            size={15} weight="bold"
+          />
+          <input
+            type="text"
+            placeholder="Search agreements…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl py-3 pl-10 pr-4 text-[12px] font-medium tracking-wide text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 focus:bg-white/[0.05] transition-all"
+          />
         </div>
 
-        <div className="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
-          {['all', 'active', 'pending', 'disputed'].map((f) => (
+        {/* Filter pills */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <FunnelSimple size={13} weight="bold" className="text-white/25 flex-shrink-0" />
+          {(['all', 'active', 'pending', 'disputed'] as Filter[]).map(f => (
             <button
               key={f}
-              onClick={() => setFilter(f as any)}
+              onClick={() => setFilter(f)}
               className={cn(
-                "px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] border transition-all duration-700 whitespace-nowrap",
-                filter === f 
-                  ? "bg-emerald text-[#010101] border-emerald shadow-[0_0_40px_rgba(0,255,209,0.3)] scale-105" 
-                  : "bg-white/5 border-white/5 text-text-3 hover:text-white hover:border-white/15"
+                'px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all duration-300',
+                filter === f
+                  ? 'bg-emerald text-[#010101] border-emerald shadow-[0_0_16px_rgba(0,255,209,0.25)]'
+                  : 'bg-white/[0.03] border-white/[0.07] text-white/35 hover:text-white hover:border-white/20',
               )}
             >
-              {f === 'all' ? 'All Files' : f}
+              {f === 'all' ? 'All' : f === 'pending' ? 'Pending Sign' : f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
+          {search && (
+            <span className="text-[10px] font-bold text-white/25 ml-auto">
+              {filtered.length} result{filtered.length !== 1 ? 's' : ''}
+            </span>
+          )}
         </div>
       </div>
 
-      {/* ── RESULTS ───────────────────────────────────────────────── */}
-      <div className="grid gap-8 relative z-10">
+      {/* ── CONTRACT LIST ───────────────────────────────────────────── */}
+      <div className="space-y-3 relative z-10">
         <AnimatePresence mode="popLayout">
-          {filteredContracts.length > 0 ? (
-            filteredContracts.map((contract, i) => (
-              <motion.div
-                key={contract.id}
-                layout
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: i * 0.05, duration: 0.6 }}
-              >
-                <Link 
-                  href={`/contracts/${contract.id}`}
-                  className={cn(
-                    "group p-10 bg-white/[0.03] border border-white/5 rounded-[40px] flex flex-col md:flex-row md:items-center justify-between gap-10 transition-all duration-700 backdrop-blur-3xl relative overflow-hidden hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)]",
-                    contract.category?.toLowerCase().includes('service') ? "hover:border-emerald/40" :
-                    contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "hover:border-amber/40" :
-                    contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "hover:border-blue/40" :
-                    "hover:border-rose/40"
-                  )}
+          {filtered.length > 0 ? (
+            filtered.map((contract, i) => {
+              const col = categoryColor(contract.category);
+              const cm  = colorMap[col];
+              return (
+                <motion.div
+                  key={contract.id}
+                  layout
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ delay: i * 0.04, duration: 0.4 }}
                 >
-                  <div className={cn(
-                    "absolute top-0 right-0 w-48 h-48 blur-[80px] opacity-0 group-hover:opacity-20 transition-opacity",
-                    contract.category?.toLowerCase().includes('service') ? "bg-emerald" :
-                    contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "bg-amber" :
-                    contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "bg-blue" :
-                    "bg-rose"
-                  )} />
-                  
-                  <div className="flex items-center gap-10 relative z-10">
-                    <div className={cn(
-                      "w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-text-3 transition-all duration-700 group-hover:rotate-12 group-hover:scale-110 shadow-2xl border border-white/5",
-                      contract.category?.toLowerCase().includes('service') ? "group-hover:bg-emerald group-hover:text-[#010101]" :
-                      contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "group-hover:bg-amber group-hover:text-[#010101]" :
-                      contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "group-hover:bg-blue group-hover:text-white" :
-                      "group-hover:bg-rose group-hover:text-white"
-                    )}>
-                      <Files size={36} weight="bold" />
+                  <Link
+                    href={`/contracts/${contract.id}`}
+                    className={cn(
+                      'group flex items-center gap-4 p-4 sm:p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl transition-all duration-400 relative overflow-hidden',
+                      cm.hoverBorder, cm.glow,
+                    )}
+                  >
+                    {/* Subtle hover glow */}
+                    <div className={cn('absolute top-0 right-0 w-32 h-32 blur-[60px] opacity-0 group-hover:opacity-15 transition-opacity pointer-events-none', cm.text.replace('text-', 'bg-'))} />
+
+                    {/* Icon */}
+                    <div className={cn('w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-white/25 flex-shrink-0 transition-all duration-400 group-hover:scale-110 group-hover:rotate-6', cm.hoverBg, cm.light ? 'group-hover:text-white' : 'group-hover:text-[#010101]')}>
+                      <Files size={18} weight="bold" />
                     </div>
-                    <div>
-                        <h3 className="text-4xl font-black text-white group-hover:text-emerald transition-colors uppercase italic tracking-tighter leading-none">{contract.title}</h3>
-                      <div className="flex items-center gap-6 mt-3">
-                        <span className={cn(
-                          "text-[12px] font-black uppercase tracking-[0.2em] transition-colors",
-                          contract.category?.toLowerCase().includes('service') ? "text-emerald/60" :
-                          contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "text-amber/60" :
-                          contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "text-blue/60" :
-                          "text-rose/60"
-                        )}>{contract.category}</span>
-                        <div className="w-2 h-2 rounded-full bg-white/10" />
-                        <span className="text-[11px] text-text-3 font-black uppercase tracking-[0.2em] opacity-40"># {contract.id.slice(0, 12).toUpperCase()}</span>
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className={cn('text-sm font-black text-white truncate tracking-tight transition-colors', cm.text.replace('text-', 'group-hover:text-'))}>{contract.title}</h3>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        <span className={cn('text-[9px] font-black uppercase tracking-[0.2em] opacity-60', cm.text)}>{contract.category}</span>
+                        <span className="text-white/10">·</span>
+                        <span className="text-[9px] text-white/20 font-mono">{contract.id.slice(0, 10).toUpperCase()}</span>
+                        <span className="text-white/10 hidden sm:inline">·</span>
+                        <span className="text-[9px] text-white/20 hidden sm:inline">
+                          {new Date(contract.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center justify-between md:justify-end gap-12 relative z-10">
-                    <div className="text-right hidden lg:block border-r border-white/10 pr-12">
-                       <p className="text-[10px] font-black text-text-3 uppercase tracking-[0.4em] mb-2 opacity-50">DATE</p>
-                       <p className="text-lg font-black text-white tracking-tighter">{new Date(contract.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    {/* Status + Arrow */}
+                    <div className="flex items-center gap-2.5 flex-shrink-0">
+                      <span className={cn('badge-vibrant hidden sm:inline-flex',
+                        contract.status === 'active'            ? 'badge-active' :
+                        contract.status === 'pending_signature' ? 'badge-pending' : 'badge-disputed',
+                      )}>
+                        {contract.status.replace('_', ' ')}
+                      </span>
+                      {/* Mobile dot */}
+                      <span className={cn('sm:hidden w-2 h-2 rounded-full flex-shrink-0',
+                        contract.status === 'active'            ? 'bg-emerald' :
+                        contract.status === 'pending_signature' ? 'bg-blue' : 'bg-rose',
+                      )} />
+                      <div className={cn('w-8 h-8 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center flex-shrink-0 group-hover:translate-x-0.5 transition-all duration-400', cm.hoverBg, 'group-hover:border-transparent')}>
+                        <CaretRight size={13} weight="bold" className={cn('text-white/25 transition-colors', cm.light ? 'group-hover:text-white' : 'group-hover:text-[#010101]')} />
+                      </div>
                     </div>
-                    
-                    <div className={cn(
-                      "badge-vibrant px-8 py-2.5 transition-all duration-700 group-hover:scale-110",
-                      contract.status === 'active' ? "badge-active text-[11px]" :
-                      contract.status === 'pending_signature' ? "badge-pending text-[11px]" :
-                      "badge-disputed text-[11px]"
-                    )}>
-                      {contract.status.replace('_', ' ')}
-                    </div>
-
-                    <div className={cn(
-                      "w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-transparent group-hover:translate-x-3 transition-all duration-500 shadow-2xl",
-                      contract.category?.toLowerCase().includes('service') ? "group-hover:bg-emerald" :
-                      contract.category?.toLowerCase().includes('loan') || contract.category?.toLowerCase().includes('financial') ? "group-hover:bg-amber" :
-                      contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') ? "group-hover:bg-blue" :
-                      "group-hover:bg-rose"
-                    )}>
-                       <CaretRight size={32} weight="bold" className={cn(
-                         "text-text-3 transition-colors",
-                         (contract.category?.toLowerCase().includes('sale') || contract.category?.toLowerCase().includes('tech') || contract.category?.toLowerCase().includes('real estate')) ? "group-hover:text-white" : "group-hover:text-[#010101]"
-                       )} />
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))
+                  </Link>
+                </motion.div>
+              );
+            })
           ) : (
-            <div className="py-60 text-center space-y-10 flex flex-col items-center">
-               <div className="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center text-text-3 mb-6 border border-white/10 shadow-2xl relative">
-                  <div className="absolute inset-0 bg-white/5 blur-3xl rounded-full" />
-                  <MagnifyingGlass size={48} weight="bold" />
-               </div>
-               <h3 className="heading-display text-5xl text-white italic opacity-40 uppercase">Archive Empty.</h3>
-               <p className="text-text-3 font-black text-[12px] uppercase tracking-[0.5em] max-w-md leading-relaxed">No matching entries found in your library. Try adjusting your filters.</p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="py-24 text-center flex flex-col items-center gap-4"
+            >
+              <div className="w-16 h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center border border-white/[0.06]">
+                <MagnifyingGlass size={24} weight="bold" className="text-white/20" />
+              </div>
+              <div>
+                <p className="text-sm font-black text-white/20 uppercase tracking-widest">
+                  {search ? 'No matching deals' : 'Archive empty'}
+                </p>
+                <p className="text-xs text-white/15 mt-1">
+                  {search ? 'Try a different search term.' : 'Create your first agreement to get started.'}
+                </p>
+              </div>
+              {!search && (
+                <Link href="/contracts/new" className="mt-2 inline-flex items-center gap-2 text-emerald text-[11px] font-black uppercase tracking-widest hover:opacity-75 transition-opacity">
+                  Create Agreement <ArrowRight size={12} weight="bold" />
+                </Link>
+              )}
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

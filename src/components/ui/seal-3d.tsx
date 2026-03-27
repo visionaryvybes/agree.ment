@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, MeshDistortMaterial, Environment, Text3D, Center } from '@react-three/drei';
+import { Float, MeshDistortMaterial, Environment } from '@react-three/drei';
 import { useRef, Suspense } from 'react';
 import * as THREE from 'three';
 

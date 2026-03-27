@@ -1,9 +1,9 @@
 'use client';
 
-import { useUser, UserButton } from '@clerk/nextjs';
+import { useUser, UserButton } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
-import { 
-  ShieldCheck, 
+import {
+  ShieldCheck,
   Plus,
   Stack,
   PlusCircle,
@@ -11,7 +11,6 @@ import {
   FileText
 } from "@phosphor-icons/react";
 import Sidebar from "@/components/Sidebar";
-import ScrollToTop from "@/components/ScrollToTop";
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -19,28 +18,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { isLoaded: clerkLoaded } = useUser();
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { isLoaded } = useUser();
+  const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (clerkLoaded) {
-      setIsLoaded(true);
-    } else {
-      const timer = setTimeout(() => setIsLoaded(true), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [clerkLoaded]);
+    if (isLoaded) setMounted(true);
+  }, [isLoaded]);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-
-  if (!isLoaded) return (
+  if (!mounted) return (
     <div className="min-h-screen bg-[#010101] flex items-center justify-center">
       <div className="w-10 h-10 border-2 border-emerald/20 border-t-emerald rounded-full animate-spin shadow-[0_0_15px_rgba(0,255,209,0.2)]" />
     </div>
@@ -48,7 +41,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[#010101] text-white selection:bg-emerald selection:text-[#010101] flex font-sans overflow-x-hidden">
-      
+
       {/* ── SIDEBAR (DESKTOP) ──────────────────────────────────────── */}
       {!isMobile && <Sidebar />}
 
@@ -66,7 +59,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               return (
                 <Link key={item.name} href={item.href} className={cn("relative p-2 transition-all duration-500", active ? "text-emerald scale-110" : "text-text-3")}>
                   <item.icon size={28} weight={active ? 'fill' : 'bold'} />
-                  {active && <motion.div layoutId="mobile-nav-dot" className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-emerald rounded-full shadow-[0_0_15px_#00FFD1]" />}
+                  {active && (
+                    <motion.div layoutId="mobile-nav-dot" className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-emerald rounded-full shadow-[0_0_15px_#00FFD1]" />
+                  )}
                 </Link>
               );
             })}
@@ -87,7 +82,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <div className="w-10 h-10 bg-emerald rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,209,0.2)]">
                   <Plus weight="bold" size={20} className="text-[#010101]" />
                 </div>
-                <span className="font-display font-black text-xl tracking-tighter uppercase italic">Agree<span className="text-emerald not-italic">Mint</span></span>
+                <span className="font-display font-black text-xl tracking-tighter uppercase italic">
+                  Agree<span className="text-emerald not-italic">Mint</span>
+                </span>
               </div>
               <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 rounded-2xl border border-white/10" } }} />
             </header>
@@ -107,7 +104,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </main>
 
-      <ScrollToTop />
     </div>
   );
 }

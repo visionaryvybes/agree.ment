@@ -1,188 +1,241 @@
 'use client';
 
-import { 
-  ShieldCheck, 
-  ChatTeardropText, 
-  Warning, 
-  Sparkle, 
-  PaperPlaneRight,
-  Fingerprint,
-  CaretRight
+import {
+  ShieldCheck, ChatTeardropText, Warning, Sparkle,
+  PaperPlaneRight, Fingerprint, CaretRight, Robot,
 } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import Magnetic from '@/components/ui/magnetic';
 import { cn } from '@/lib/utils';
 
+type Message = { role: 'user' | 'assistant'; content: string };
+
+const ESCALATION_STEPS = [
+  { title: 'Friendly Reminder', desc: 'Soft outreach via app notification.',         active: true  },
+  { title: 'Formal Notice',     desc: 'Timestamped official communication.',          active: false },
+  { title: 'Demand Letter',     desc: 'Legally structured final warning.',            active: false },
+  { title: 'Legal Escalation',  desc: 'Small claims court or attorney referral.',    active: false },
+];
+
+const SUGGESTED = [
+  'What are my rights if someone doesn\'t pay?',
+  'How do I send a formal notice?',
+  'Is my contract enforceable internationally?',
+];
+
 export default function VerifiedGuidancePage() {
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hello! I'm here to help you document agreements and resolve issues. How can I help you today?" }
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'assistant', content: "Hi! I'm here to help you navigate agreements and resolve disputes. What's going on?" },
   ]);
-  const [input, setInput] = useState('');
+  const [input,   setInput]   = useState('');
+  const [typing,  setTyping]  = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, typing]);
 
-  const handleSend = () => {
-    if (!input) return;
-    setMessages(prev => [...prev, { role: 'user', content: input }]);
+  const handleSend = (text = input) => {
+    if (!text.trim()) return;
+    setMessages(prev => [...prev, { role: 'user', content: text.trim() }]);
     setInput('');
-    
-    // Simulated system response
+    setTyping(true);
     setTimeout(() => {
-        setMessages(prev => [...prev, { role: 'assistant', content: "I've analyzed your request. Based on local regulations in your jurisdiction (e.g., Lagos, London, Dubai), I recommend following the 'Enforcement Path' on the right: starting with a Friendly Reminder before moving to a Formal Notice." }]);
-    }, 1000);
+      setTyping(false);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: "Based on your jurisdiction, I recommend starting with the Enforcement Path on the right. Begin with a Friendly Reminder before escalating to a Formal Notice — this preserves the relationship while establishing a paper trail.",
+      }]);
+    }, 1400);
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-180px)] max-w-7xl mx-auto space-y-12 px-4 relative">
-      
-      {/* Background Glows */}
-      <div className="vibrant-glow top-0 left-1/4 w-[600px] h-[600px] bg-emerald/10 animate-glow-pulse" />
-      <div className="vibrant-glow bottom-0 right-1/4 w-[500px] h-[500px] bg-blue/10" />
+    <div className="flex flex-col pb-8 max-w-6xl mx-auto gap-6 h-[calc(100svh-120px)] relative">
 
-      {/* ── HEADER ────────────────────────────────────────────────── */}
-      <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 pb-12 border-b border-white/10 relative z-10">
-         <div className="space-y-4 text-center lg:text-left">
-            <span className="text-[12px] font-black text-emerald uppercase tracking-[0.5em] block">Secure Support</span>
-            <h1 className="heading-display text-6xl md:text-8xl text-white tracking-tighter italic uppercase leading-none">Guidance.</h1>
-         </div>
+      {/* Glows */}
+      <div className="vibrant-glow top-0 left-1/4 w-[350px] h-[350px] bg-emerald/[0.06] animate-glow-pulse" />
+      <div className="vibrant-glow bottom-0 right-1/4 w-[280px] h-[280px] bg-blue/[0.05]" />
 
-         <div className="flex flex-wrap justify-center lg:justify-end gap-6">
-            {[
-              { label: 'Friendly', color: 'emerald' },
-              { label: 'Formal', color: 'blue' },
-              { label: 'Demand', color: 'amber' },
-              { label: 'Court', color: 'rose' }
-            ].map((step, i) => (
-              <div key={step.label} className="flex items-center gap-3">
-                <div className={cn(
-                  "w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black border",
-                  i === 0 ? "bg-emerald/20 border-emerald/40 text-emerald" : "bg-white/5 border-white/10 text-white/40"
-                )}>{i + 1}</div>
-                <span className={cn(
-                  "text-[10px] font-black uppercase tracking-widest",
-                  i === 0 ? "text-emerald" : "text-white/40"
-                )}>{step.label}</span>
-                {i < 3 && <CaretRight size={12} className="text-white/10" />}
-              </div>
-            ))}
-         </div>
-      </header>
-
-      <div className="flex flex-col lg:flex-row gap-8 flex-1 min-h-0">
-        {/* ── CHAT INTERFACE ────────────────────────────────────────── */}
-        <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-[56px] flex flex-col overflow-hidden relative group backdrop-blur-3xl shadow-[0_40px_80px_rgba(0,0,0,0.5)] z-10">
-           <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#010101]/80 to-transparent z-10 pointer-events-none" />
-           
-           <div 
-             ref={scrollRef}
-             className="flex-1 overflow-y-auto p-12 space-y-12 no-scrollbar scroll-smooth"
-            >
-              <AnimatePresence>
-                 {messages.map((m, i) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ duration: 0.6 }}
-                      className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                       <div className={cn(
-                          "max-w-[85%] p-10 rounded-[40px] shadow-2xl relative overflow-hidden",
-                          m.role === 'user' 
-                          ? 'bg-emerald text-[#010101] font-black uppercase tracking-tight rounded-br-[8px] border-4 border-[#010101] shadow-emerald/20' 
-                          : 'bg-white/[0.05] border border-white/10 text-white font-black leading-relaxed rounded-bl-[8px] backdrop-blur-3xl'
-                       )}>
-                          <div className={cn(
-                             "flex items-center gap-4 mb-6",
-                             m.role === 'user' ? 'opacity-40' : 'text-emerald'
-                          )}>
-                             {m.role === 'assistant' ? <Fingerprint size={24} weight="bold" /> : <div className="w-3 h-3 rounded-full bg-[#010101]" />}
-                             <span className="text-[10px] font-black uppercase tracking-[0.3em]">{m.role === 'assistant' ? 'AGREEMINT SUPPORT' : 'YOU'}</span>
-                          </div>
-                          <p className={cn(
-                             "text-xl tracking-tight leading-relaxed italic uppercase",
-                             m.role === 'assistant' ? 'text-white/90' : 'text-[#010101]'
-                          )}>{m.content}</p>
-                       </div>
-                    </motion.div>
-                 ))}
-              </AnimatePresence>
-           </div>
-
-           {/* ── INPUT AREA ───────────────────────────────────────────── */}
-           <div className="p-10 pb-16 bg-white/[0.03] border-t border-white/10 backdrop-blur-3xl">
-              <div className="relative max-w-4xl mx-auto flex items-center gap-6">
-                 <div className="flex-1 relative group">
-                    <ChatTeardropText size={22} className="absolute left-8 top-1/2 -translate-y-1/2 text-text-3 group-focus-within:text-emerald transition-colors" weight="bold" />
-                    <input 
-                      type="text" 
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                      placeholder="ASK A QUESTION..."
-                      className="w-full bg-white/5 border border-white/10 rounded-[32px] py-8 pl-20 pr-10 text-[12px] font-black tracking-[0.3em] uppercase focus:outline-none focus:border-emerald/50 focus:bg-white/10 transition-all text-white placeholder:text-text-3/40"
-                    />
-                 </div>
-                 <Magnetic>
-                    <button 
-                      onClick={handleSend}
-                      className="btn-vibrant btn-vibrant-emerald w-20 h-20 rounded-[32px]"
-                    >
-                       <PaperPlaneRight size={32} weight="bold" />
-                    </button>
-                 </Magnetic>
-              </div>
-           </div>
+      {/* ── HEADER ─────────────────────────────────────────────────── */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/[0.07] relative z-10 flex-shrink-0">
+        <div>
+          <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-1">Secure Support</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight italic uppercase">Guidance.</h1>
         </div>
 
-        {/* ── SIDEBAR ESCALATION ───────────────────────────────────── */}
-        <aside className="hidden lg:flex flex-col gap-6 w-80">
-           <div className="p-8 rounded-[40px] bg-white/[0.03] border border-white/10 backdrop-blur-3xl space-y-6 flex-1">
-              <h4 className="text-[12px] font-black text-amber uppercase tracking-[0.4em]">Enforcement Path</h4>
-              <div className="space-y-4">
-                 {[
-                    { title: 'Friendly Reminder', desc: 'Soft outreach via app notification.', active: true },
-                    { title: 'Formal Notice', desc: 'Timestamped official communication.', active: false },
-                    { title: 'Demand Letter', desc: 'Legally structured final warning.', active: false },
-                    { title: 'Legal Escalation', desc: 'Small claims or court guidance.', active: false }
-                 ].map((step, i) => (
-                    <div key={i} className={cn(
-                      "p-5 rounded-2xl border transition-all",
-                      step.active ? "bg-amber/10 border-amber/40" : "bg-white/5 border-white/5 opacity-40"
-                    )}>
-                       <p className="text-[10px] font-black text-white uppercase tracking-widest mb-1">{step.title}</p>
-                       <p className="text-[9px] font-bold text-text-3 uppercase opacity-60 leading-tight">{step.desc}</p>
-                    </div>
-                 ))}
-              </div>
-           </div>
+        {/* Escalation progress */}
+        <div className="flex items-center gap-2">
+          {[
+            { label: 'Friendly', color: 'text-emerald', active: true  },
+            { label: 'Formal',   color: 'text-blue',    active: false },
+            { label: 'Demand',   color: 'text-amber',   active: false },
+            { label: 'Court',    color: 'text-rose',    active: false },
+          ].map((step, i) => (
+            <div key={step.label} className="flex items-center gap-1.5">
+              <div className={cn(
+                'w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black border',
+                step.active
+                  ? 'bg-emerald/15 border-emerald/30 text-emerald'
+                  : 'bg-white/[0.03] border-white/[0.07] text-white/20',
+              )}>{i + 1}</div>
+              <span className={cn('text-[9px] font-black uppercase tracking-wider hidden sm:block', step.active ? step.color : 'text-white/20')}>
+                {step.label}
+              </span>
+              {i < 3 && <CaretRight size={10} className="text-white/10" />}
+            </div>
+          ))}
+        </div>
+      </header>
 
-           <div className="p-8 rounded-[40px] bg-emerald/10 border border-emerald/20 backdrop-blur-3xl group cursor-pointer hover:bg-emerald transition-all">
-              <div className="flex items-center gap-4 mb-4">
-                 <ShieldCheck size={28} weight="bold" className="text-emerald group-hover:text-[#010101]" />
-                 <h4 className="text-[12px] font-black text-white group-hover:text-[#010101] uppercase tracking-widest">Global Sync</h4>
+      {/* ── MAIN LAYOUT ────────────────────────────────────────────── */}
+      <div className="flex flex-col lg:flex-row gap-5 flex-1 min-h-0">
+
+        {/* Chat */}
+        <div className="flex-1 flex flex-col bg-white/[0.02] border border-white/[0.07] rounded-3xl overflow-hidden relative z-10">
+          {/* Top fade */}
+          <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#010101]/60 to-transparent z-10 pointer-events-none rounded-t-3xl" />
+
+          {/* Messages */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar scroll-smooth">
+            <AnimatePresence>
+              {messages.map((m, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0,  scale: 1    }}
+                  transition={{ duration: 0.4 }}
+                  className={cn('flex', m.role === 'user' ? 'justify-end' : 'justify-start')}
+                >
+                  <div className={cn(
+                    'max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-2xl relative',
+                    m.role === 'user'
+                      ? 'bg-emerald text-[#010101] font-black rounded-br-md'
+                      : 'bg-white/[0.05] border border-white/[0.08] text-white rounded-bl-md',
+                  )}>
+                    {m.role === 'assistant' && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <Robot size={12} weight="bold" className="text-emerald opacity-60" />
+                        <span className="text-[8px] font-black text-white/25 uppercase tracking-widest">AgreeMint AI</span>
+                      </div>
+                    )}
+                    <p className={cn('text-sm leading-relaxed', m.role === 'user' ? 'text-[#010101]' : 'text-white/80')}>
+                      {m.content}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+
+              {/* Typing indicator */}
+              {typing && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-white/[0.05] border border-white/[0.08] rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
+                    {[0, 0.15, 0.3].map(d => (
+                      <motion.div key={d} className="w-1.5 h-1.5 rounded-full bg-emerald/60"
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 1, delay: d, repeat: Infinity }}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Suggested prompts */}
+          {messages.length === 1 && (
+            <div className="px-5 pb-3 flex flex-wrap gap-2">
+              {SUGGESTED.map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleSend(s)}
+                  className="text-[10px] font-bold text-white/40 border border-white/[0.08] px-3 py-1.5 rounded-xl hover:border-emerald/30 hover:text-emerald transition-all"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Input */}
+          <div className="p-4 border-t border-white/[0.07] bg-white/[0.02] flex-shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 relative group">
+                <ChatTeardropText
+                  size={14}
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-emerald transition-colors"
+                  weight="bold"
+                />
+                <input
+                  type="text"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSend()}
+                  placeholder="Ask a question about your agreement…"
+                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl py-3 pl-10 pr-4 text-[12px] font-medium text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
+                />
               </div>
-              <p className="text-[10px] font-bold text-text-3 group-hover:text-[#010101] uppercase tracking-widest opacity-60 leading-relaxed">Your agreement is verified against local laws in Lagos, London, Dubai, and beyond.</p>
-           </div>
+              <button
+                onClick={() => handleSend()}
+                disabled={!input.trim()}
+                className="w-10 h-10 rounded-xl bg-emerald text-[#010101] flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-30 disabled:scale-100 flex-shrink-0"
+              >
+                <PaperPlaneRight size={16} weight="bold" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <aside className="hidden lg:flex flex-col gap-4 w-72 flex-shrink-0">
+          {/* Enforcement path */}
+          <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/[0.07] space-y-3 flex-1">
+            <h4 className="text-[10px] font-black text-amber uppercase tracking-[0.35em] mb-4">Enforcement Path</h4>
+            {ESCALATION_STEPS.map((step, i) => (
+              <div key={i} className={cn(
+                'p-3.5 rounded-xl border transition-all',
+                step.active ? 'bg-amber/[0.08] border-amber/25' : 'bg-white/[0.02] border-white/[0.05] opacity-40',
+              )}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={cn('w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-black border flex-shrink-0',
+                    step.active ? 'bg-amber/20 border-amber/30 text-amber' : 'bg-white/[0.04] border-white/10 text-white/30',
+                  )}>{i + 1}</span>
+                  <p className="text-[10px] font-black text-white uppercase tracking-wide">{step.title}</p>
+                </div>
+                <p className="text-[9px] text-white/30 leading-relaxed pl-7">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Global sync card */}
+          <div className="p-5 rounded-3xl bg-emerald/[0.07] border border-emerald/20 group hover:bg-emerald transition-all duration-400 cursor-pointer">
+            <div className="flex items-center gap-3 mb-2">
+              <ShieldCheck size={18} weight="bold" className="text-emerald group-hover:text-[#010101] transition-colors" />
+              <h4 className="text-[11px] font-black text-white group-hover:text-[#010101] uppercase tracking-wide transition-colors">Global Sync</h4>
+            </div>
+            <p className="text-[10px] text-white/30 group-hover:text-[#010101]/60 leading-relaxed transition-colors">
+              Your agreement is verified against local laws in 180+ countries including Lagos, London, and Dubai.
+            </p>
+          </div>
         </aside>
       </div>
 
-      {/* ── FOOTER HINT ───────────────────────────────────────────── */}
-      <div className="flex items-center justify-center gap-16 text-[12px] font-black text-text-3 uppercase tracking-[0.5em] pb-10">
-         <div className="flex items-center gap-4 group cursor-help transition-colors hover:text-white">
-            <Warning size={18} className="text-emerald animate-pulse" weight="bold" /> 
-            Not Legal Advice
-         </div>
-         <div className="flex items-center gap-4 group cursor-default transition-colors hover:text-white">
-            <Sparkle size={18} className="text-emerald shadow-[0_0_10px_rgba(0,255,209,0.5)]" weight="bold" /> 
-            AgreeMint Secure
-         </div>
+      {/* Footer disclaimer */}
+      <div className="flex items-center justify-center gap-8 flex-shrink-0">
+        <div className="flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-widest">
+          <Warning size={12} className="text-amber/50" weight="bold" />
+          Not Legal Advice
+        </div>
+        <div className="flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-widest">
+          <Sparkle size={12} className="text-emerald/50" weight="bold" />
+          AgreeMint Secure
+        </div>
       </div>
     </div>
   );

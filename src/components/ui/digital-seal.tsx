@@ -63,39 +63,36 @@ export default function DigitalSeal() {
   }, []);
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="relative w-48 h-48 flex items-center justify-center perspective-1000 cursor-pointer"
+      className="relative w-48 h-48 flex items-center justify-center cursor-pointer"
+      style={{ perspective: '1000px' }}
     >
       {/* Outer Glow Ring */}
-      <div 
+      <div
         ref={ring2Ref}
-        className="absolute inset-0 border border-create/10 rounded-full blur-xl animate-pulse" 
+        className="absolute inset-0 rounded-full blur-xl animate-pulse"
+        style={{ border: '1px solid rgba(0,255,209,0.1)' }}
       />
-      
+
       {/* Middle Orbit Ring */}
-      <div 
+      <div
         ref={ring1Ref}
-        className="absolute inset-4 border-2 border-dashed border-create/20 rounded-full animate-spin-slow" 
+        className="absolute inset-4 rounded-full animate-spin-slow"
+        style={{ border: '2px dashed rgba(0,255,209,0.2)' }}
       />
 
       {/* The Central Seal */}
-      <div 
+      <div
         ref={sealRef}
-        className="relative z-10 w-24 h-24 bg-gradient-to-br from-emerald to-emerald/40 rounded-3xl flex items-center justify-center shadow-[0_0_50px_rgba(0,255,209,0.3)] transform-style-3d"
+        className="relative z-10 w-24 h-24 bg-gradient-to-br from-emerald to-emerald/40 rounded-3xl flex items-center justify-center shadow-[0_0_50px_rgba(0,255,209,0.3)]"
+        style={{ transformStyle: 'preserve-3d' }}
       >
         <div className="absolute inset-1 bg-[#010101] rounded-[22px] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-emerald/10 to-transparent" />
           <SealCheck size={40} weight="duotone" className="text-emerald relative z-20" />
         </div>
       </div>
-
-      <style jsx>{`
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
-        .animate-spin-slow { animation: spin 10s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 }

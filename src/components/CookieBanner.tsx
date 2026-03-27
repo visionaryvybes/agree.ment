@@ -31,21 +31,24 @@ export function CookieBanner() {
           animate={{ y: 0, opacity: 1, scale: 1 }}
           exit={{ y: 100, opacity: 0, scale: 0.95 }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-auto z-50 w-auto sm:w-[420px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-lg p-5"
+          className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-auto z-50 w-auto sm:w-[420px] bg-[#080808] border border-white/[0.08] rounded-2xl shadow-lg p-5"
         >
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-[var(--blue)]/10 text-[var(--blue)] flex items-center justify-center rounded-lg shrink-0">
+              <div className="w-9 h-9 bg-blue-500/10 text-blue-400 flex items-center justify-center rounded-lg shrink-0">
                 <Cookie size={20} weight="fill" />
               </div>
-              <h3 className="text-sm font-semibold text-[var(--text-1)]">Cookie Preferences</h3>
+              <h3 className="text-sm font-semibold text-white">Cookie Preferences</h3>
             </div>
-            <button onClick={() => setShow(false)} className="text-[var(--text-3)] hover:text-[var(--text-1)] transition-colors p-1 rounded-lg hover:bg-[var(--bg-hover)]">
+            <button
+              onClick={() => setShow(false)}
+              className="text-white/40 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
+            >
               <X size={16} weight="bold" />
             </button>
           </div>
-          
-          <p className="text-xs text-[var(--text-2)] mb-4 leading-relaxed">
+
+          <p className="text-xs text-white/60 mb-4 leading-relaxed">
             We use essential cookies to keep things running smoothly, and optional analytics cookies to help us improve your experience.
           </p>
 

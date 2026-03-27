@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import Image from "next/image";
+import { useUser } from "@/lib/auth";
 import {
   Gear,
   X,
@@ -175,12 +174,8 @@ export default function Sidebar({ onClose }: SidebarProps) {
           "flex items-center gap-3 p-3 bg-white/[0.02] rounded-2xl border border-white/5 group transition-all",
           !isHovered ? "justify-center" : "justify-start"
         )}>
-          <div className="w-9 h-9 bg-blue/80 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-black text-white overflow-hidden shadow-xl group-hover:scale-110 transition-transform">
-            {user?.imageUrl ? (
-              <Image src={user.imageUrl} alt={user.fullName || "User"} width={36} height={36} className="w-full h-full object-cover" />
-            ) : (
-              user?.firstName?.charAt(0) || "U"
-            )}
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-black text-[#010101] overflow-hidden shadow-xl group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(135deg,#00FFD1,#0070FF)' }}>
+            {user?.firstName?.charAt(0) ?? "G"}
           </div>
           {isHovered && (
             <motion.div 
