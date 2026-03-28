@@ -1,193 +1,329 @@
 'use client';
 
-import { 
-  Books, 
-  Scales, 
-  FileText, 
-  ShieldCheck, 
-  MagnifyingGlass,
-  ArrowRight,
-  Gavel,
-  Files,
-  Signature
+import {
+  Books, Scales, FileText, ShieldCheck, MagnifyingGlass,
+  ArrowRight, Gavel, Files, Signature, Robot, Sparkle,
+  Handshake, House, Car, Briefcase, PaperPlane,
+  CaretRight, Warning, CheckCircle,
 } from "@phosphor-icons/react";
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import Magnetic from '@/components/ui/magnetic';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
-export default function LegalLibraryPage() {
-  const categories = [
-    { name: 'Personal Sales', icon: Files, count: 124, color: 'emerald' },
-    { name: 'Private Loans', icon: Scales, count: 85, color: 'blue' },
-    { name: 'Work & Freelance', icon: ShieldCheck, count: 62, color: 'amber' },
-    { name: 'Private Rentals', icon: Gavel, count: 45, color: 'rose' },
-  ];
+const CATEGORIES = [
+  { name: 'Personal Sales',    icon: Files,      count: 124, color: 'emerald', href: '/templates?cat=personal' },
+  { name: 'Private Loans',     icon: Scales,     count: 85,  color: 'blue',    href: '/templates?cat=loan'     },
+  { name: 'Work & Freelance',  icon: ShieldCheck,count: 62,  color: 'amber',   href: '/templates?cat=creative'  },
+  { name: 'Private Rentals',   icon: Gavel,      count: 45,  color: 'rose',    href: '/templates?cat=rental'   },
+];
 
-  const featured = [
-    { title: 'Simple Service Agreement', category: 'Commercial', time: 'Instant', grade: 'A+', color: 'emerald' },
-    { title: 'Privacy Agreement', category: 'General', time: '30s', grade: 'A', color: 'blue' },
-    { title: 'Software Use Agreement', category: 'Tech', time: '45s', grade: 'A-', color: 'amber' },
-  ];
+const ARTICLES = [
+  {
+    category: 'Contracts 101',
+    color: 'emerald',
+    icon: FileText,
+    title: 'What Makes a Contract Legally Binding?',
+    summary: 'A contract requires: offer, acceptance, consideration, mutual assent, and legal capacity. Without all five, it may not be enforceable.',
+    points: ['Both parties must agree voluntarily', 'There must be an exchange of value', 'Both parties must have legal capacity', 'The subject must be legal'],
+  },
+  {
+    category: 'Signatures',
+    color: 'blue',
+    icon: Signature,
+    title: 'Electronic Signatures Are Legally Valid',
+    summary: 'Under ESIGN (USA), eIDAS (EU), and similar laws in 50+ countries, digital signatures carry the same legal weight as handwritten ones.',
+    points: ['Accepted in US, UK, EU, Canada, Australia', 'Email or typed name can qualify', 'Timestamps add legal strength', 'AgreeMint signatures are compliant'],
+  },
+  {
+    category: 'Disputes',
+    color: 'amber',
+    icon: Gavel,
+    title: 'How to Resolve a Contract Dispute',
+    summary: 'Start with friendly communication, then escalate systematically. Most disputes are resolved before court.',
+    points: ['1. Document everything in writing', '2. Send a formal notice via AgreeMint', '3. Propose mediation or arbitration', '4. Small claims court as last resort'],
+  },
+  {
+    category: 'Loans',
+    color: 'rose',
+    icon: Handshake,
+    title: 'Lending Money to Friends & Family',
+    summary: 'Without a written agreement, loans to loved ones can destroy relationships. A simple written record protects everyone.',
+    points: ['Specify exact repayment date', 'Include what happens if late', '0% interest loans are legal', 'Both parties should sign'],
+  },
+];
+
+const QUICK_FACTS = [
+  { icon: CheckCircle, color: 'text-emerald', text: 'Verbal contracts are legally binding but nearly impossible to enforce' },
+  { icon: Warning,     color: 'text-amber',   text: 'A contract without consideration (exchange of value) is void' },
+  { icon: CheckCircle, color: 'text-emerald', text: 'You can contract with anyone over 18 with legal capacity' },
+  { icon: Warning,     color: 'text-rose',    text: 'Contracts for illegal activities are unenforceable in all jurisdictions' },
+  { icon: CheckCircle, color: 'text-emerald', text: 'Digital signatures are legally equivalent to handwritten ones in 50+ countries' },
+  { icon: CheckCircle, color: 'text-blue',    text: 'A "handshake deal" is a contract — get it in writing to prove it' },
+];
+
+export default function LegalLibraryPage() {
+  const [search, setSearch] = useState('');
+  const [expandedArticle, setExpandedArticle] = useState<number | null>(null);
+  const [aiQuestion, setAiQuestion] = useState('');
+  const [aiAnswer, setAiAnswer] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const filteredArticles = ARTICLES.filter(a =>
+    !search || a.title.toLowerCase().includes(search.toLowerCase()) ||
+    a.summary.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const askAI = async () => {
+    if (!aiQuestion.trim()) return;
+    setAiLoading(true);
+    setAiAnswer('');
+    try {
+      const res = await fetch('/api/system/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: `Legal library question: ${aiQuestion}` }],
+          jurisdiction: '',
+        }),
+      });
+      if (!res.ok) throw new Error();
+      const reader = res.body?.getReader();
+      if (!reader) return;
+      const decoder = new TextDecoder();
+      let acc = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        setAiAnswer(acc);
+      }
+    } catch {
+      setAiAnswer('Sorry, AI is temporarily unavailable. Please try the Guidance page.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
-    <div className="space-y-16 pb-32 max-w-7xl mx-auto px-4 relative">
-      
-      {/* Background Glows */}
-      <div className="vibrant-glow top-0 right-0 w-[600px] h-[600px] bg-emerald/10 animate-glow-pulse" />
-      <div className="vibrant-glow bottom-0 left-0 w-[500px] h-[500px] bg-blue/10" />
+    <div className="space-y-10 pb-32 max-w-6xl mx-auto relative">
 
-      {/* ── HEADER ────────────────────────────────────────────────── */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-12 pb-12 border-b border-white/10 relative overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-4"
-        >
-          <span className="text-[11px] font-black text-emerald uppercase tracking-[0.5em] block">AGREEMENT STYLE</span>
-          <h1 className="heading-display text-7xl md:text-9xl text-white tracking-tighter italic uppercase leading-none">Library.</h1>
+      <div className="vibrant-glow top-0 right-0 w-[500px] h-[500px] bg-emerald/8 animate-glow-pulse" />
+      <div className="vibrant-glow bottom-0 left-0 w-[400px] h-[400px] bg-blue/8" />
+
+      {/* Header */}
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/[0.07] relative z-10">
+        <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+          <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-1">Knowledge Base</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight italic uppercase">Library.</h1>
         </motion.div>
 
-        <div className="flex-1 max-w-md relative group">
-           <MagnifyingGlass className="absolute left-6 top-1/2 -translate-y-1/2 text-text-3 group-focus-within:text-emerald transition-colors" size={20} weight="bold" />
-           <input
-             type="text"
-             placeholder="SEARCH AGREEMENTS..."
-             className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-16 pr-8 text-[11px] font-black tracking-widest uppercase focus:outline-none focus:border-emerald/50 focus:bg-white/10 transition-all liquid-gloss shadow-2xl"
-           />
+        <div className="flex-1 max-w-xs relative group">
+          <MagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/25 group-focus-within:text-emerald transition-colors" size={14} weight="bold" />
+          <input
+            type="text"
+            placeholder="Search articles…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl py-2.5 pl-9 pr-4 text-[11px] font-medium text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
+          />
         </div>
       </header>
 
-      {/* ── CATEGORIES ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-         {categories.map((cat, i) => (
-           <motion.div
-             key={cat.name}
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: i * 0.1 }}
-             className={cn(
-               "p-8 rounded-[40px] bg-white/[0.03] border transition-all duration-700 group backdrop-blur-3xl cursor-pointer relative overflow-hidden flex flex-col items-center text-center",
-               cat.color === 'emerald' ? "border-emerald/20 hover:border-emerald/60 shadow-[0_0_40px_rgba(0,255,209,0.05)] hover:shadow-[0_0_60px_rgba(0,255,209,0.15)]" :
-               cat.color === 'blue' ? "border-blue/20 hover:border-blue/60 shadow-[0_0_40px_rgba(0,112,255,0.05)] hover:shadow-[0_0_60px_rgba(0,112,255,0.15)]" :
-               cat.color === 'amber' ? "border-amber/20 hover:border-amber/60 shadow-[0_0_40px_rgba(255,184,0,0.05)] hover:shadow-[0_0_60px_rgba(255,184,0,0.15)]" :
-               "border-rose/20 hover:border-rose/60 shadow-[0_0_40px_rgba(255,0,110,0.05)] hover:shadow-[0_0_60px_rgba(255,0,110,0.15)]"
-             )}
-           >
-              <div className={cn(
-                 "absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity",
-                 cat.color === 'emerald' ? "bg-emerald" : cat.color === 'blue' ? "bg-blue" : cat.color === 'amber' ? "bg-amber" : "bg-rose"
-              )} />
-              
-              <div className={cn(
-                "w-16 h-16 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-700 shadow-2xl mx-auto",
-                cat.color === 'emerald' ? "bg-emerald/10 text-emerald" :
-                cat.color === 'blue' ? "bg-blue/10 text-blue" :
-                cat.color === 'amber' ? "bg-amber/10 text-amber" :
-                "bg-rose/10 text-rose"
+      {/* Categories */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+        {CATEGORIES.map((cat, i) => (
+          <motion.div
+            key={cat.name}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08 }}
+          >
+            <Link
+              href={cat.href}
+              className={cn(
+                'p-5 rounded-2xl bg-white/[0.02] border flex flex-col items-center text-center gap-3 cursor-pointer transition-all duration-500 group relative overflow-hidden',
+                cat.color === 'emerald' ? 'border-emerald/15 hover:border-emerald/40 hover:bg-emerald/5' :
+                cat.color === 'blue'    ? 'border-blue/15    hover:border-blue/40    hover:bg-blue/5'    :
+                cat.color === 'amber'   ? 'border-amber/15   hover:border-amber/40   hover:bg-amber/5'   :
+                                          'border-rose/15    hover:border-rose/40    hover:bg-rose/5',
+              )}
+            >
+              <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500',
+                cat.color === 'emerald' ? 'bg-emerald/10 text-emerald' :
+                cat.color === 'blue'    ? 'bg-blue/10    text-blue'    :
+                cat.color === 'amber'   ? 'bg-amber/10   text-amber'   :
+                                          'bg-rose/10    text-rose',
               )}>
-                 <cat.icon size={32} weight="bold" />
+                <cat.icon size={20} weight="bold" />
               </div>
-              <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter mb-2 transition-transform">{cat.name}</h3>
-              <p className="text-[10px] font-black text-text-3 uppercase tracking-[0.2em]">{cat.count} Available</p>
-           </motion.div>
-         ))}
+              <div>
+                <h3 className="text-[11px] font-black text-white uppercase tracking-tight">{cat.name}</h3>
+                <p className="text-[9px] text-white/30 uppercase tracking-widest mt-0.5">{cat.count} Templates</p>
+              </div>
+            </Link>
+          </motion.div>
+        ))}
       </div>
 
-      {/* ── FEATURED ASSETS ────────────────────────────────────────── */}
-      <section className="space-y-10">
-         <div className="flex items-center justify-between px-2">
-            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-white">Popular Contracts</h2>
-            <Link href="#" className="text-[10px] font-black text-emerald uppercase tracking-widest flex items-center gap-3 group">
-               VIEW ALL <ArrowRight size={14} weight="bold" className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-         </div>
-
-          <div className="grid lg:grid-cols-3 gap-10">
-            {featured.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + (i * 0.1) }}
-              >
-                <Link 
-                  href="/contracts/new"
-                  className={cn(
-                    "p-10 rounded-[50px] bg-[#080808] border relative group overflow-hidden backdrop-blur-3xl transition-all duration-700 flex flex-col h-full",
-                    item.color === 'emerald' ? "border-emerald/20 hover:border-emerald/60 hover:shadow-[0_0_50px_rgba(0,255,209,0.1)]" :
-                    item.color === 'blue' ? "border-blue/20 hover:border-blue/60 hover:shadow-[0_0_50px_rgba(0,112,255,0.1)]" :
-                    "border-amber/20 hover:border-amber/60 hover:shadow-[0_0_50px_rgba(255,184,0,0.1)]"
-                  )}
-                >
-                   <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-60 group-hover:rotate-12 transition-all duration-700">
-                      <Signature size={80} weight="thin" className={cn(
-                        item.color === 'emerald' ? "text-emerald" : item.color === 'blue' ? "text-blue" : "text-amber"
-                      )} />
-                   </div>
-
-                   <div className="space-y-8 relative z-10 flex-1">
-                      <span className={cn(
-                        "text-[9px] font-black uppercase tracking-[0.4em] px-4 py-2 rounded-full border shadow-2xl inline-block",
-                        item.color === 'emerald' ? "text-emerald bg-emerald/10 border-emerald/20 shadow-emerald/10" :
-                        item.color === 'blue' ? "text-blue bg-blue/10 border-blue/20 shadow-blue/10" :
-                        "text-amber bg-amber/10 border-amber/20 shadow-amber/10"
-                      )}>{item.category}</span>
-                      <h3 className="text-4xl font-black text-white italic tracking-tighter uppercase leading-[0.9] group-hover:text-emerald transition-colors">{item.title}</h3>
-
-                      <div className="flex items-center justify-between pt-10 border-t border-white/5 mt-4">
-                         <div className="space-y-2">
-                            <p className="text-[9px] font-black text-text-3 uppercase tracking-widest">Ready In</p>
-                            <p className="text-lg font-black text-white">{item.time}</p>
-                         </div>
-                         <div className="space-y-2 text-right">
-                            <p className="text-[9px] font-black text-text-3 uppercase tracking-widest">Match Grade</p>
-                            <p className={cn(
-                              "text-lg font-black",
-                              item.color === 'emerald' ? "text-emerald" : item.color === 'blue' ? "text-blue" : "text-amber"
-                            )}>{item.grade}</p>
-                         </div>
-                      </div>
-                   </div>
-
-                   <div className="mt-10 flex justify-center relative z-10">
-                      <Magnetic>
-                         <div className={cn(
-                           "px-10 py-5 rounded-3xl text-[11px] font-black uppercase tracking-widest transition-all duration-500 shadow-2xl",
-                           item.color === 'emerald' ? "bg-emerald/10 text-emerald border border-emerald/20 group-hover:bg-emerald group-hover:text-[#010101] shadow-emerald/5" :
-                           item.color === 'blue' ? "bg-blue/10 text-blue border border-blue/20 group-hover:bg-blue group-hover:text-white shadow-blue/5" :
-                           "bg-amber/10 text-amber border border-amber/20 group-hover:bg-amber group-hover:text-[#010101] shadow-amber/5"
-                         )}>
-                            USE THIS STYLE
-                         </div>
-                      </Magnetic>
-                   </div>
-                </Link>
-              </motion.div>
-            ))}
+      {/* Quick AI Answer Box */}
+      <div className="relative z-10 p-5 rounded-3xl bg-emerald/[0.05] border border-emerald/20 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald/15 flex items-center justify-center text-emerald">
+            <Robot size={18} weight="bold" />
           </div>
-      </section>
+          <div>
+            <h3 className="text-sm font-black text-white uppercase tracking-tight">Ask a Legal Question</h3>
+            <p className="text-[10px] text-white/30 uppercase tracking-widest">AI-powered • Not legal advice</p>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <input
+            type="text"
+            value={aiQuestion}
+            onChange={e => setAiQuestion(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && askAI()}
+            placeholder="e.g. Can I sue if someone breaks a verbal agreement?"
+            className="flex-1 bg-white/[0.04] border border-emerald/20 rounded-xl py-3 px-4 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
+          />
+          <button
+            onClick={askAI}
+            disabled={!aiQuestion.trim() || aiLoading}
+            className="px-5 py-3 rounded-xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-all disabled:opacity-40 disabled:scale-100 flex-shrink-0"
+          >
+            {aiLoading ? <div className="w-4 h-4 border-2 border-[#010101]/20 border-t-[#010101] rounded-full animate-spin" /> : <PaperPlane size={14} weight="bold" />}
+          </button>
+        </div>
+        {aiAnswer && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkle size={11} weight="bold" className="text-emerald" />
+              <span className="text-[8px] font-black text-white/25 uppercase tracking-widest">AgreeMint AI</span>
+            </div>
+            <p className="text-sm text-white/70 leading-relaxed whitespace-pre-wrap">{aiAnswer}</p>
+          </motion.div>
+        )}
+      </div>
 
-      {/* ── RESOURCE BANNER ───────────────────────────────────────── */}
-      <motion.section 
-        className="rounded-[60px] bg-emerald p-16 md:p-24 text-[#010101] relative overflow-hidden group shadow-[0_0_120px_rgba(0,255,209,0.2)]"
-        initial={{ opacity: 0, y: 30 }}
+      {/* Legal Articles */}
+      <div className="relative z-10 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em]">Legal Basics</h2>
+          <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">{filteredArticles.length} articles</span>
+        </div>
+
+        <div className="space-y-3">
+          {filteredArticles.map((article, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.06 }}
+              className={cn(
+                'rounded-2xl border overflow-hidden transition-all duration-300',
+                article.color === 'emerald' ? 'border-emerald/15 bg-emerald/[0.03]' :
+                article.color === 'blue'    ? 'border-blue/15    bg-blue/[0.03]'    :
+                article.color === 'amber'   ? 'border-amber/15   bg-amber/[0.03]'   :
+                                              'border-rose/15    bg-rose/[0.03]',
+              )}
+            >
+              <button
+                onClick={() => setExpandedArticle(expandedArticle === i ? null : i)}
+                className="w-full p-5 flex items-center gap-4 text-left"
+              >
+                <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0',
+                  article.color === 'emerald' ? 'bg-emerald/15 text-emerald' :
+                  article.color === 'blue'    ? 'bg-blue/15    text-blue'    :
+                  article.color === 'amber'   ? 'bg-amber/15   text-amber'   :
+                                                'bg-rose/15    text-rose',
+                )}>
+                  <article.icon size={17} weight="bold" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className={cn('text-[8px] font-black uppercase tracking-widest',
+                      article.color === 'emerald' ? 'text-emerald' :
+                      article.color === 'blue'    ? 'text-blue'    :
+                      article.color === 'amber'   ? 'text-amber'   : 'text-rose'
+                    )}>{article.category}</span>
+                  </div>
+                  <h3 className="text-sm font-black text-white tracking-tight">{article.title}</h3>
+                </div>
+                <CaretRight size={14} weight="bold" className={cn('flex-shrink-0 transition-transform text-white/20', expandedArticle === i && 'rotate-90')} />
+              </button>
+
+              <AnimatePresence>
+                {expandedArticle === i && (
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: 'auto' }}
+                    exit={{ height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-5 pb-5 space-y-4 border-t border-white/[0.06]">
+                      <p className="text-sm text-white/50 leading-relaxed pt-4">{article.summary}</p>
+                      <div className="space-y-2">
+                        {article.points.map((point, j) => (
+                          <div key={j} className="flex items-start gap-3">
+                            <div className={cn('w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5',
+                              article.color === 'emerald' ? 'bg-emerald' :
+                              article.color === 'blue'    ? 'bg-blue'    :
+                              article.color === 'amber'   ? 'bg-amber'   : 'bg-rose'
+                            )} />
+                            <p className="text-[11px] text-white/40 leading-relaxed">{point}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Facts */}
+      <div className="relative z-10 space-y-4">
+        <h2 className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em]">Quick Facts</h2>
+        <div className="grid sm:grid-cols-2 gap-3">
+          {QUICK_FACTS.map((fact, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + i * 0.05 }}
+              className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.05]"
+            >
+              <fact.icon size={15} weight="bold" className={cn(fact.color, 'flex-shrink-0 mt-0.5')} />
+              <p className="text-[11px] text-white/45 leading-relaxed">{fact.text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA Banner */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
+        className="rounded-3xl bg-emerald p-8 md:p-12 text-[#010101] relative overflow-hidden shadow-[0_0_80px_rgba(0,255,209,0.15)] z-10"
       >
-         <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:opacity-30 group-hover:scale-110 transition-all duration-1000">
-            <Books size={240} weight="bold" />
-         </div>
-         <div className="max-w-xl space-y-12 relative z-10">
-            <h2 className="heading-display text-6xl md:text-8xl tracking-tighter uppercase italic leading-[0.85]">Need a <br /> Specific <br /> Style?</h2>
-            <p className="text-xl font-bold opacity-80 uppercase tracking-widest leading-relaxed">We can help you create a custom agreement based on your local requirements.</p>
-            <Magnetic>
-               <Link href="/verified-guidance" className="inline-flex items-center gap-6 bg-[#010101] text-emerald px-12 py-6 rounded-3xl text-[12px] font-black uppercase tracking-widest shadow-2xl hover:scale-110 transition-transform">
-                  GET A CUSTOM STYLE <ArrowRight size={24} weight="bold" />
-               </Link>
-            </Magnetic>
-         </div>
+        <div className="absolute top-0 right-0 p-8 opacity-10">
+          <Books size={160} weight="bold" />
+        </div>
+        <div className="max-w-lg space-y-6 relative z-10">
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase italic">Need a Custom Agreement?</h2>
+          <p className="text-sm font-bold opacity-70 uppercase tracking-widest leading-relaxed">Our AI generates jurisdiction-specific contracts in under 60 seconds.</p>
+          <div className="flex gap-3 flex-wrap">
+            <Link href="/contracts/new" className="flex items-center gap-2 bg-[#010101] text-emerald px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">
+              Create Agreement <ArrowRight size={16} weight="bold" />
+            </Link>
+            <Link href="/verified-guidance" className="flex items-center gap-2 bg-[#010101]/20 text-[#010101] px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#010101]/30 transition-colors">
+              Ask AI <Robot size={16} weight="bold" />
+            </Link>
+          </div>
+        </div>
       </motion.section>
     </div>
   );

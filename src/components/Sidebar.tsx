@@ -10,7 +10,8 @@ import {
   Layout,
   FolderSimple,
   FileText,
-  Bell
+  Bell,
+  MagicWand,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,11 +20,12 @@ import NotificationCenter from "@/components/NotificationCenter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAVIGATION = [
-  { name: 'Summary', href: '/dashboard', icon: Layout },
-  { name: 'Files', href: '/contracts', icon: FolderSimple },
-  { name: 'Library', href: '/templates', icon: FileText },
-  { name: 'Resolve', href: '/verified-guidance', icon: ShieldCheck },
-  { name: 'Settings', href: '/settings', icon: Gear },
+  { name: 'Summary',   href: '/dashboard',          icon: Layout      },
+  { name: 'Files',     href: '/contracts',           icon: FolderSimple },
+  { name: 'Library',   href: '/templates',           icon: FileText    },
+  { name: 'AI Tools',  href: '/tools',               icon: MagicWand   },
+  { name: 'Resolve',   href: '/verified-guidance',   icon: ShieldCheck },
+  { name: 'Settings',  href: '/settings',            icon: Gear        },
 ];
 
 interface SidebarProps {

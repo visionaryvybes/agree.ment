@@ -33,6 +33,7 @@ import MultiPartySigning from '@/components/MultiPartySigning';
 import DisputeResolution from '@/components/DisputeResolution';
 import PdfExport from '@/components/PdfExport';
 import AgreementEnhancer from '@/components/AgreementEnhancer';
+import ContractHealthScore from '@/components/ContractHealthScore';
 
 const Seal3D = dynamic(() => import('@/components/ui/seal-3d'), { ssr: false });
 
@@ -245,6 +246,9 @@ export default function ContractDetailPage() {
                     <div className="flex justify-between px-4"><span className="opacity-50">Integrity</span><span className="bg-[#010101] text-emerald px-3 py-0.5 rounded-full">Solid</span></div>
                   </div>
                 </div>
+
+                {/* Health Score */}
+                <ContractHealthScore contract={contract} />
 
                 {/* History Log */}
                 <div className="p-8 rounded-[32px] bg-[#0A0A0A] border border-white/10 space-y-6">
