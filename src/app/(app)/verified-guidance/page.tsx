@@ -2,13 +2,13 @@
 
 import {
   ShieldCheck, ChatTeardropText, Warning, Sparkle,
-  PaperPlaneRight, Fingerprint, CaretRight, Robot,
+  PaperPlaneRight, Robot, CaretRight,
 } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-type Message = { role: 'user' | 'assistant'; content: string };
+type Message = { id: string; role: 'user' | 'assistant'; content: string };
 
 const ESCALATION_STEPS = [
   { title: 'Friendly Reminder', desc: 'Soft outreach via app notification.',         active: true  },
@@ -18,37 +18,86 @@ const ESCALATION_STEPS = [
 ];
 
 const SUGGESTED = [
-  'What are my rights if someone doesn\'t pay?',
+  "What are my rights if someone doesn't pay?",
   'How do I send a formal notice?',
   'Is my contract enforceable internationally?',
 ];
 
 export default function VerifiedGuidancePage() {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hi! I'm here to help you navigate agreements and resolve disputes. What's going on?" },
-  ]);
-  const [input,   setInput]   = useState('');
-  const [typing,  setTyping]  = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 'init', role: 'assistant', content: "Hi! I'm here to help you navigate agreements and resolve disputes. What's going on?" },
+  ]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, typing]);
+  }, [messages, isLoading]);
 
-  const handleSend = (text = input) => {
-    if (!text.trim()) return;
-    setMessages(prev => [...prev, { role: 'user', content: text.trim() }]);
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || isLoading) return;
+
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text.trim() };
+    const assistantId = (Date.now() + 1).toString();
+
+    setMessages(prev => [...prev, userMsg]);
     setInput('');
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: "Based on your jurisdiction, I recommend starting with the Enforcement Path on the right. Begin with a Friendly Reminder before escalating to a Formal Notice — this preserves the relationship while establishing a paper trail.",
-      }]);
-    }, 1400);
+    setIsLoading(true);
+
+    // Add empty assistant message placeholder
+    setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '' }]);
+
+    try {
+      const res = await fetch('/api/system/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
+          jurisdiction: '',
+        }),
+      });
+
+      if (!res.ok) throw new Error('API error');
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error('No reader');
+
+      const decoder = new TextDecoder();
+      let accumulated = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        accumulated += chunk;
+        setMessages(prev => prev.map(m =>
+          m.id === assistantId ? { ...m, content: accumulated } : m
+        ));
+      }
+
+      // If nothing was accumulated (stream format issue), use a fallback
+      if (!accumulated) {
+        setMessages(prev => prev.map(m =>
+          m.id === assistantId ? { ...m, content: "I'm sorry, I couldn't process that. Please try again." } : m
+        ));
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      setMessages(prev => prev.map(m =>
+        m.id === assistantId ? { ...m, content: "Sorry, there was an error. Please check your connection and try again." } : m
+      ));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage(input);
   };
 
   return (
@@ -102,7 +151,7 @@ export default function VerifiedGuidancePage() {
             <AnimatePresence>
               {messages.map((m, i) => (
                 <motion.div
-                  key={i}
+                  key={m.id}
                   initial={{ opacity: 0, y: 12, scale: 0.97 }}
                   animate={{ opacity: 1, y: 0,  scale: 1    }}
                   transition={{ duration: 0.4 }}
@@ -120,15 +169,15 @@ export default function VerifiedGuidancePage() {
                         <span className="text-[8px] font-black text-white/25 uppercase tracking-widest">AgreeMint AI</span>
                       </div>
                     )}
-                    <p className={cn('text-sm leading-relaxed', m.role === 'user' ? 'text-[#010101]' : 'text-white/80')}>
-                      {m.content}
+                    <p className={cn('text-sm leading-relaxed whitespace-pre-wrap', m.role === 'user' ? 'text-[#010101]' : 'text-white/80')}>
+                      {m.content || (m.role === 'assistant' && isLoading ? '...' : '')}
                     </p>
                   </div>
                 </motion.div>
               ))}
 
-              {/* Typing indicator */}
-              {typing && (
+              {/* Typing indicator when loading but no content yet */}
+              {isLoading && messages[messages.length - 1]?.role === 'assistant' && !messages[messages.length - 1]?.content && (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -154,7 +203,7 @@ export default function VerifiedGuidancePage() {
               {SUGGESTED.map((s, i) => (
                 <button
                   key={i}
-                  onClick={() => handleSend(s)}
+                  onClick={() => sendMessage(s)}
                   className="text-[10px] font-bold text-white/40 border border-white/[0.08] px-3 py-1.5 rounded-xl hover:border-emerald/30 hover:text-emerald transition-all"
                 >
                   {s}
@@ -164,7 +213,7 @@ export default function VerifiedGuidancePage() {
           )}
 
           {/* Input */}
-          <div className="p-4 border-t border-white/[0.07] bg-white/[0.02] flex-shrink-0">
+          <form onSubmit={handleSubmit} className="p-4 border-t border-white/[0.07] bg-white/[0.02] flex-shrink-0">
             <div className="flex items-center gap-3">
               <div className="flex-1 relative group">
                 <ChatTeardropText
@@ -176,20 +225,19 @@ export default function VerifiedGuidancePage() {
                   type="text"
                   value={input}
                   onChange={e => setInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSend()}
                   placeholder="Ask a question about your agreement…"
                   className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl py-3 pl-10 pr-4 text-[12px] font-medium text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
                 />
               </div>
               <button
-                onClick={() => handleSend()}
-                disabled={!input.trim()}
+                type="submit"
+                disabled={!input.trim() || isLoading}
                 className="w-10 h-10 rounded-xl bg-emerald text-[#010101] flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-30 disabled:scale-100 flex-shrink-0"
               >
                 <PaperPlaneRight size={16} weight="bold" />
               </button>
             </div>
-          </div>
+          </form>
         </div>
 
         {/* Sidebar */}

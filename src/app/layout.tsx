@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CookieBanner } from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import { ThemeProvider } from "@/components/ThemeToggle";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -48,16 +49,18 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <AuthProvider>
-      <html lang="en" className="dark">
+      <html lang="en" suppressHydrationWarning>
         <body
           className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#050505] selection:bg-[#00F5D4] selection:text-[#050505]`}
         >
-          <TooltipProvider>
-            {children}
-            <Toaster />
-            <CookieBanner />
-            <ScrollToTop />
-          </TooltipProvider>
+          <ThemeProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster />
+              <CookieBanner />
+              <ScrollToTop />
+            </TooltipProvider>
+          </ThemeProvider>
         </body>
       </html>
     </AuthProvider>

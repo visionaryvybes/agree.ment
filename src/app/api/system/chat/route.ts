@@ -1,4 +1,4 @@
-import { MODEL, streamText, google } from '@/lib/ai';
+import { MODEL, streamText } from '@/lib/ai';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -9,13 +9,11 @@ export async function POST(req: NextRequest) {
       model: MODEL,
       system: `You are AgreeMint's AI Legal Advisor — a highly knowledgeable legal expert with deep knowledge of contract law, civil procedures, and legal frameworks.
 User is in: ${jurisdiction || 'an unspecified location'}. Prioritize laws from this jurisdiction.
-Provide general legal information about contracts and contracts.
+Provide general legal information about contracts and agreements.
 Focus on contract clauses, terms, and document structure.
+Keep responses concise and practical.
 ALWAYS end your responses with: "⚠️ This is general information, not legal advice. Consult a qualified lawyer for your specific situation."`,
       messages,
-      tools: {
-        googleSearch: google.tools.googleSearch({}),
-      },
     });
 
     return result.toTextStreamResponse();
