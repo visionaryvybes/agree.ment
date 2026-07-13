@@ -1,4 +1,5 @@
 import { MODEL, generateObject } from '@/lib/ai';
+import { hasAI, fallbackAnalysis } from '@/lib/fallback';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -25,13 +26,17 @@ const AnalysisSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const { text, jurisdiction } = await req.json();
+
+  if (!text?.trim()) {
+    return NextResponse.json({ error: 'Contract text is required' }, { status: 400 });
+  }
+
+  if (!hasAI()) {
+    return NextResponse.json({ analysis: fallbackAnalysis(text), engine: 'standard' });
+  }
+
   try {
-    const { text, jurisdiction } = await req.json();
-
-    if (!text?.trim()) {
-      return NextResponse.json({ error: 'Contract text is required' }, { status: 400 });
-    }
-
     const { object } = await generateObject({
       model: MODEL,
       schema: AnalysisSchema,
@@ -55,12 +60,9 @@ Evaluate:
 Be thorough but practical. Focus on real legal concerns and practical enforceability.`,
     });
 
-    return NextResponse.json({ analysis: object });
+    return NextResponse.json({ analysis: object, engine: 'ai' });
   } catch (err) {
-    console.error('Contract analysis error:', err);
-    return NextResponse.json(
-      { error: 'Analysis failed. Please try again.' },
-      { status: 500 }
-    );
+    console.error('Contract analysis error, using standard reading:', err);
+    return NextResponse.json({ analysis: fallbackAnalysis(text), engine: 'standard' });
   }
 }

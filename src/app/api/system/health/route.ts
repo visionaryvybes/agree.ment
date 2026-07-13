@@ -1,4 +1,5 @@
 import { MODEL, generateObject } from '@/lib/ai';
+import { hasAI } from '@/lib/fallback';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -15,9 +16,30 @@ const HealthSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  try {
-    const { contract } = await req.json();
+  const { contract } = await req.json();
 
+  if (!hasAI()) {
+    const n = contract?.clauses?.length || 0;
+    const hasParties = (contract?.parties?.length || 0) >= 2;
+    const hasAmount = Boolean(contract?.totalAmount);
+    const hasLaw = Boolean(contract?.governingLaw || contract?.jurisdiction);
+    const completeness = Math.min(100, n * 12 + (hasParties ? 16 : 0) + (hasLaw ? 12 : 0));
+    const clarity = n > 0 ? 78 : 40;
+    const enforceability = Math.min(95, completeness - 5 + (hasLaw ? 10 : 0));
+    const score = Math.round((completeness + clarity + Math.max(0, enforceability)) / 3);
+    const grade = score >= 88 ? 'A' : score >= 78 ? 'B+' : score >= 68 ? 'B' : score >= 55 ? 'C+' : score >= 45 ? 'C' : 'D';
+    return NextResponse.json({
+      health: {
+        score, grade,
+        breakdown: { clarity, enforceability: Math.max(0, enforceability), completeness },
+        topIssue: !hasParties ? 'Both parties should be named.' : !hasAmount ? 'No amount is stated — add exact figures.' : n < 5 ? 'Consider adding termination and dispute clauses.' : undefined,
+        recommendation: 'Fill in exact amounts and dates, then have both parties sign. Connect an AI engine for a clause-by-clause review.',
+      },
+      engine: 'standard',
+    });
+  }
+
+  try {
     const clauseList = (contract.clauses || [])
       .map((c: any) => `- ${c.title}: ${c.content?.slice(0, 200)}`)
       .join('\n');

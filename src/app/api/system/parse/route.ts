@@ -1,4 +1,5 @@
 import { MODEL, generateObject } from '@/lib/ai';
+import { hasAI, fallbackParse } from '@/lib/fallback';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -28,9 +29,13 @@ const ContractSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  try {
-    const { conversation, party1, party2, jurisdiction } = await req.json();
+  const { conversation, party1, party2, jurisdiction } = await req.json();
 
+  if (!hasAI()) {
+    return NextResponse.json({ parsed: fallbackParse(conversation ?? '', party1, party2), engine: 'standard' });
+  }
+
+  try {
     const { object } = await generateObject({
       model: MODEL,
       schema: ContractSchema,
@@ -45,9 +50,9 @@ Jurisdiction: ${jurisdiction || 'Not specified'}
 Set unclear fields to null. Clauses must include a title, full content, and the sourceQuote.`
     });
 
-    return NextResponse.json({ parsed: object });
+    return NextResponse.json({ parsed: object, engine: 'ai' });
   } catch (err) {
-    console.error('Parse error:', err);
-    return NextResponse.json({ error: 'Failed to parse conversation.' }, { status: 500 });
+    console.error('Parse error, using standard extraction:', err);
+    return NextResponse.json({ parsed: fallbackParse(conversation ?? '', party1, party2), engine: 'standard' });
   }
 }

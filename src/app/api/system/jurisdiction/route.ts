@@ -1,4 +1,5 @@
 import { MODEL, generateObject } from '@/lib/ai';
+import { hasAI, fallbackJurisdiction } from '@/lib/fallback';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -17,6 +18,10 @@ export async function POST(req: NextRequest) {
 
     if (!country) {
       return NextResponse.json({ error: 'Country is required' }, { status: 400 });
+    }
+
+    if (!hasAI()) {
+      return NextResponse.json(fallbackJurisdiction(country));
     }
 
     const { object } = await generateObject({

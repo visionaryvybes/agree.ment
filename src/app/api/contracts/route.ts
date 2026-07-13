@@ -12,9 +12,9 @@ export async function GET() {
 
     const contracts = await redis.mget(...keys);
     return NextResponse.json({ contracts: contracts.filter(Boolean) });
-  } catch (err) {
-    console.error('Failed to fetch contracts', err);
-    return NextResponse.json({ error: 'Failed to fetch contracts' }, { status: 500 });
+  } catch {
+    // No Redis configured — client keeps its local copies.
+    return NextResponse.json({ contracts: null, synced: false });
   }
 }
 
@@ -28,8 +28,7 @@ export async function POST(req: NextRequest) {
 
     await redis.set(`contract:${userId}:${contract.id}`, contract);
     return NextResponse.json({ success: true, contract });
-  } catch (err) {
-    console.error('Failed to create contract', err);
-    return NextResponse.json({ error: 'Failed to create contract' }, { status: 500 });
+  } catch {
+    return NextResponse.json({ success: false, synced: false });
   }
 }

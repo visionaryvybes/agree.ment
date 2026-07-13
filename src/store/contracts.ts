@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { Contract, ContractTemplate, DashboardStats, PaymentStatus, EscalationLevel } from '@/lib/types';
 import { v4 as uuid } from 'uuid';
 import { sampleContracts } from '@/data/sample-contracts';
@@ -28,7 +29,7 @@ interface ContractsState {
   fetchContracts: () => Promise<void>;
 }
 
-export const useContracts = create<ContractsState>((set, get) => ({
+export const useContracts = create<ContractsState>()(persist((set, get) => ({
   contracts: sampleContracts,
   templates: contractTemplates,
   selectedContract: null,
@@ -186,6 +187,10 @@ export const useContracts = create<ContractsState>((set, get) => ({
       totalValue: contracts.reduce((sum, c) => sum + (c.totalAmount || 0), 0),
     };
   },
+}), {
+  name: 'agreemint-contracts',
+  storage: createJSONStorage(() => localStorage),
+  partialize: (state) => ({ contracts: state.contracts }),
 }));
 
 export const useTemplates = () => {

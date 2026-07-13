@@ -1,4 +1,5 @@
 import { MODEL, generateObject } from '@/lib/ai';
+import { hasAI, fallbackContract } from '@/lib/fallback';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -30,9 +31,14 @@ const ContractSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  try {
-    const { prompt, party1, party2, jurisdiction, category } = await req.json();
+  const body = await req.json();
+  const { prompt, party1, party2, jurisdiction, category } = body;
 
+  if (!hasAI()) {
+    return NextResponse.json({ contract: fallbackContract(body), engine: 'standard' });
+  }
+
+  try {
     const { object } = await generateObject({
       model: MODEL,
       schema: ContractSchema,
@@ -44,12 +50,9 @@ Always include clauses: Contract Overview, Payment Terms (if financial), Default
 Use clear, professional language. Provide a summary, recommended steps, and any jurisdiction-specific legal warnings.`,
     });
 
-    return NextResponse.json({ contract: object });
+    return NextResponse.json({ contract: object, engine: 'ai' });
   } catch (err) {
-    console.error('Contract generation error:', err);
-    return NextResponse.json(
-      { error: 'Failed to generate contract. Please try again.' },
-      { status: 500 }
-    );
+    console.error('Contract generation error, using standard clauses:', err);
+    return NextResponse.json({ contract: fallbackContract(body), engine: 'standard' });
   }
 }
