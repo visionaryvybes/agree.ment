@@ -51,7 +51,6 @@ const CAT_ACCENT: Record<string, string> = {
 };
 
 function TemplateCard({ template, index }: { template: any; index: number }) {
-  const [imgError, setImgError] = useState(false);
   const gradient = CAT_GRADIENT[template.category] || CAT_GRADIENT.default;
   const accent = CAT_ACCENT[template.category] || CAT_ACCENT.default;
 
@@ -71,16 +70,6 @@ function TemplateCard({ template, index }: { template: any; index: number }) {
         <div className="relative h-36 overflow-hidden flex-shrink-0">
           {/* Gradient background */}
           <div className={cn('absolute inset-0 bg-gradient-to-br', gradient)} />
-
-          {/* Try Gemini-generated image */}
-          {!imgError && template.image && (
-            <img
-              src={`/api/images/template?id=${template.id}`}
-              alt={template.name}
-              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500"
-              onError={() => setImgError(true)}
-            />
-          )}
 
           {/* Document mockup overlay */}
           <div className="absolute inset-0 flex items-center justify-center">

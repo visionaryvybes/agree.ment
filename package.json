@@ -9,11 +9,10 @@
     "lint": "./node_modules/.bin/next lint"
   },
   "dependencies": {
-    "@ai-sdk/google": "^3.0.43",
+    "@ai-sdk/openai-compatible": "^2.0.0",
     "@ai-sdk/react": "^3.0.136",
     "@clerk/nextjs": "^7.0.4",
     "@eslint/eslintrc": "^3.3.5",
-    "@google/generative-ai": "^0.24.1",
     "@gsap/react": "2.1.2",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.12",
