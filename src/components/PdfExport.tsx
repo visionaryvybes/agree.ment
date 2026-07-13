@@ -73,7 +73,7 @@ This document is for reference purposes. Consult a legal professional for bindin
               onClick={() => setFormat(f.id as any)}
               className={cn(
                 "p-4 rounded-xl border text-center transition-all",
-                format === f.id ? "bg-emerald/10 border-emerald/30 text-emerald" : "bg-white/[0.03] border-white/10 text-text-3"
+                format === f.id ? "bg-emerald/10 border-emerald/30 text-emerald" : "bg-ink/[0.03] border-line text-text-3"
               )}
             >
               <p className="text-[10px] font-black uppercase tracking-widest">{f.label}</p>
@@ -84,11 +84,11 @@ This document is for reference purposes. Consult a legal professional for bindin
       </div>
 
       {/* Preview */}
-      <div className="p-8 rounded-2xl bg-white/[0.03] border border-white/10 space-y-4">
+      <div className="p-8 rounded-2xl bg-ink/[0.03] border border-line space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <FileText size={20} className="text-emerald" weight="bold" />
-            <p className="text-sm font-black text-white">{contract.title}</p>
+            <p className="text-sm font-black text-ink">{contract.title}</p>
           </div>
           <span className="text-[9px] font-black text-text-3 uppercase tracking-widest">{format}</span>
         </div>
@@ -111,7 +111,7 @@ This document is for reference purposes. Consult a legal professional for bindin
         <button
           onClick={handleGenerate}
           disabled={generating}
-          className="w-full py-5 rounded-2xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3 disabled:opacity-50 shadow-[0_0_30px_rgba(0,255,209,0.2)] hover:shadow-[0_0_40px_rgba(0,255,209,0.4)] transition-all"
+          className="w-full py-5 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3 disabled:opacity-50 shadow-[0_0_30px_rgba(16,119,94,0.2)] hover:shadow-[0_0_40px_rgba(16,119,94,0.4)] transition-all"
         >
           {generating ? (
             <><SpinnerGap size={20} className="animate-spin" weight="bold" /> Generating PDF...</>
@@ -127,7 +127,7 @@ This document is for reference purposes. Consult a legal professional for bindin
           </div>
           <button
             onClick={handleDownload}
-            className="w-full py-5 rounded-2xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0,255,209,0.2)]"
+            className="w-full py-5 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(16,119,94,0.2)]"
           >
             <Download size={20} weight="bold" /> Download
           </button>

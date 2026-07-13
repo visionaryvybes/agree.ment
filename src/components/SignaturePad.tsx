@@ -27,7 +27,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
     canvas.width = canvas.offsetWidth * 2;
     canvas.height = canvas.offsetHeight * 2;
     ctx.scale(2, 2);
-    ctx.strokeStyle = '#00FFD1';
+    ctx.strokeStyle = '#10775e';
     ctx.lineWidth = 3;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -90,11 +90,11 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-[#080808] border border-white/10 rounded-[40px] p-10 space-y-8 max-w-lg w-full"
+      className="bg-card border border-line rounded-[40px] p-10 space-y-8 max-w-lg w-full"
     >
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter">Sign Here</h3>
+          <h3 className="text-2xl font-semibold text-ink tracking-tighter">Sign Here</h3>
           <p className="text-[9px] font-black text-text-3 uppercase tracking-[0.3em] mt-1">Legally binding • Timestamped</p>
         </div>
         <Fingerprint size={32} className="text-emerald animate-pulse" weight="bold" />
@@ -106,7 +106,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
           onClick={() => setMode('draw')}
           className={cn(
             "flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-2",
-            mode === 'draw' ? "bg-emerald text-[#010101] border-emerald" : "bg-white/5 text-text-3 border-white/10"
+            mode === 'draw' ? "bg-emerald text-paper border-emerald" : "bg-ink/5 text-text-3 border-line"
           )}
         >
           <PenNib size={16} weight="bold" /> Draw
@@ -115,7 +115,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
           onClick={() => setMode('type')}
           className={cn(
             "flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-2",
-            mode === 'type' ? "bg-emerald text-[#010101] border-emerald" : "bg-white/5 text-text-3 border-white/10"
+            mode === 'type' ? "bg-emerald text-paper border-emerald" : "bg-ink/5 text-text-3 border-line"
           )}
         >
           <TextT size={16} weight="bold" /> Type
@@ -128,7 +128,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
             <div className="relative">
               <canvas
                 ref={canvasRef}
-                className="w-full h-40 bg-white/[0.03] rounded-2xl border border-white/10 cursor-crosshair touch-none"
+                className="w-full h-40 bg-ink/[0.03] rounded-2xl border border-line cursor-crosshair touch-none"
                 onMouseDown={startDrawing}
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
@@ -143,7 +143,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
                 </p>
               )}
             </div>
-            <button onClick={clearCanvas} className="mt-3 flex items-center gap-2 text-[9px] font-black text-rose uppercase tracking-widest hover:text-white transition-colors">
+            <button onClick={clearCanvas} className="mt-3 flex items-center gap-2 text-[9px] font-black text-rose uppercase tracking-widest hover:text-ink transition-colors">
               <Eraser size={14} weight="bold" /> Clear
             </button>
           </motion.div>
@@ -154,7 +154,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
               value={typedName}
               onChange={(e) => setTypedName(e.target.value)}
               placeholder="Type your full legal name"
-              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-5 px-6 text-3xl font-black italic text-emerald placeholder:text-white/10 focus:outline-none focus:border-emerald/50 tracking-tighter"
+              className="w-full bg-ink/[0.03] border border-line rounded-2xl py-5 px-6 text-3xl font-black italic text-emerald placeholder:text-ink/10 focus:outline-none focus:border-emerald/50 tracking-tighter"
             />
             <p className="mt-3 text-[9px] font-black text-text-3 uppercase tracking-widest opacity-50">
               By typing your name, you agree this constitutes your electronic signature.
@@ -172,14 +172,14 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
       {/* Actions */}
       <div className="flex gap-4">
         {onCancel && (
-          <button onClick={onCancel} className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 text-[11px] font-black text-text-3 uppercase tracking-widest hover:text-white transition-colors">
+          <button onClick={onCancel} className="flex-1 py-4 rounded-2xl bg-ink/5 border border-line text-[11px] font-black text-text-3 uppercase tracking-widest hover:text-ink transition-colors">
             Cancel
           </button>
         )}
         <button
           onClick={handleConfirm}
           disabled={mode === 'draw' ? !hasDrawn : !typedName.trim()}
-          className="flex-1 py-4 rounded-2xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_30px_rgba(0,255,209,0.2)] hover:shadow-[0_0_40px_rgba(0,255,209,0.4)] transition-all"
+          className="flex-1 py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_30px_rgba(16,119,94,0.2)] hover:shadow-[0_0_40px_rgba(16,119,94,0.4)] transition-all"
         >
           <Check size={18} weight="bold" /> Confirm Signature
         </button>

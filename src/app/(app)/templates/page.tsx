@@ -33,7 +33,7 @@ const CAT_GRADIENT: Record<string, string> = {
   rental:      'from-rose/15 via-rose/5 to-transparent',
   event:       'from-rose/20 via-rose/5 to-transparent',
   legal:       'from-amber/15 via-amber/5 to-transparent',
-  default:     'from-white/10 via-white/5 to-transparent',
+  default:     'from-ink/10 via-ink/5 to-transparent',
 };
 
 const CAT_ACCENT: Record<string, string> = {
@@ -47,7 +47,7 @@ const CAT_ACCENT: Record<string, string> = {
   rental:      'text-rose',
   event:       'text-rose',
   legal:       'text-amber',
-  default:     'text-white/50',
+  default:     'text-ink/50',
 };
 
 function TemplateCard({ template, index }: { template: any; index: number }) {
@@ -64,7 +64,7 @@ function TemplateCard({ template, index }: { template: any; index: number }) {
     >
       <Link
         href={`/templates/${template.id}`}
-        className="group flex flex-col h-full bg-[#080808] border border-white/[0.06] rounded-2xl overflow-hidden transition-all duration-400 hover:border-emerald/25 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(0,255,209,0.06)]"
+        className="group flex flex-col h-full bg-card border border-line rounded-2xl overflow-hidden transition-all duration-400 hover:border-emerald/25 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(16,119,94,0.06)]"
       >
         {/* Visual Preview Area */}
         <div className="relative h-36 overflow-hidden flex-shrink-0">
@@ -73,22 +73,22 @@ function TemplateCard({ template, index }: { template: any; index: number }) {
 
           {/* Document mockup overlay */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-20 h-24 bg-white/[0.04] border border-white/[0.08] rounded-lg shadow-xl flex flex-col gap-1.5 p-2.5 group-hover:scale-105 transition-transform duration-500">
+            <div className="w-20 h-24 bg-ink/[0.04] border border-line rounded-lg shadow-xl flex flex-col gap-1.5 p-2.5 group-hover:scale-105 transition-transform duration-500">
               {/* Mock doc lines */}
               <div className={cn('h-0.5 rounded-full w-full', accent, 'opacity-80')} style={{ background: 'currentColor' }} />
               {[0.5, 0.7, 0.6, 0.8, 0.4, 0.7].map((w, i) => (
-                <div key={i} className="h-px bg-white/15 rounded-full" style={{ width: `${w * 100}%` }} />
+                <div key={i} className="h-px bg-ink/15 rounded-full" style={{ width: `${w * 100}%` }} />
               ))}
-              <div className="mt-1 h-px bg-white/10 rounded-full w-full" />
+              <div className="mt-1 h-px bg-ink/10 rounded-full w-full" />
               {[0.6, 0.5].map((w, i) => (
-                <div key={i} className="h-px bg-white/10 rounded-full" style={{ width: `${w * 100}%` }} />
+                <div key={i} className="h-px bg-ink/10 rounded-full" style={{ width: `${w * 100}%` }} />
               ))}
             </div>
           </div>
 
           {/* Icon + emoji badge */}
           <div className="absolute top-3 left-3">
-            <div className="w-8 h-8 rounded-lg bg-[#010101]/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-lg bg-ground/60 backdrop-blur-sm border border-line flex items-center justify-center text-base">
               {template.icon}
             </div>
           </div>
@@ -110,7 +110,7 @@ function TemplateCard({ template, index }: { template: any; index: number }) {
               template.category === 'personal' ? 'bg-emerald/5 border-emerald/15' :
               template.category === 'business' ? 'bg-blue/5 border-blue/15' :
               template.category === 'creative' ? 'bg-rose/5 border-rose/15' :
-              'bg-white/[0.04] border-white/[0.06]'
+              'bg-ink/[0.04] border-line'
             )}>
               {template.category}
             </span>
@@ -118,17 +118,17 @@ function TemplateCard({ template, index }: { template: any; index: number }) {
 
           {/* Name + Description */}
           <div className="flex-1 space-y-1.5">
-            <h3 className="text-[13px] font-black text-white tracking-tight italic uppercase group-hover:text-emerald transition-colors leading-snug">
+            <h3 className="text-[13px] font-semibold text-ink tracking-tight group-hover:text-emerald transition-colors leading-snug">
               {template.name}
             </h3>
-            <p className="text-[11px] text-white/30 leading-relaxed line-clamp-2">
+            <p className="text-[11px] text-ink/30 leading-relaxed line-clamp-2">
               {template.description}
             </p>
           </div>
 
           {/* Preview text snippet */}
           {template.preview && (
-            <p className="text-[9px] text-white/15 font-mono leading-relaxed line-clamp-2 border-t border-white/[0.05] pt-2">
+            <p className="text-[9px] text-ink/15 font-mono leading-relaxed line-clamp-2 border-t border-line pt-2">
               {template.preview.slice(0, 80)}...
             </p>
           )}
@@ -137,9 +137,9 @@ function TemplateCard({ template, index }: { template: any; index: number }) {
           <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
-              <span className="text-[9px] font-black text-white/30 uppercase tracking-widest">AI Ready</span>
+              <span className="text-[9px] font-black text-ink/30 uppercase tracking-widest">AI Ready</span>
             </div>
-            <div className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/25 group-hover:bg-emerald group-hover:text-[#010101] group-hover:translate-x-0.5 transition-all duration-400">
+            <div className="w-7 h-7 rounded-lg bg-ink/[0.04] border border-line flex items-center justify-center text-ink/25 group-hover:bg-emerald group-hover:text-paper group-hover:translate-x-0.5 transition-all duration-400">
               <ArrowRight size={12} weight="bold" />
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function TemplatesPage() {
     return matchSearch && matchCat;
   });
 
-  if (!mounted) return <div className="min-h-screen bg-[#010101]" />;
+  if (!mounted) return <div className="min-h-screen bg-ground" />;
 
   return (
     <div className="space-y-7 pb-24 max-w-6xl mx-auto relative">
@@ -174,18 +174,18 @@ export default function TemplatesPage() {
       <div className="vibrant-glow bottom-0 right-1/4 w-[320px] h-[320px] bg-blue/[0.05]" />
 
       {/* ── HEADER ─────────────────────────────────────────────────── */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.07] relative z-10">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-line relative z-10">
         <motion.div initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
           <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-1">Template Library</span>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight italic uppercase">Styles.</h1>
-          <p className="text-sm text-white/30 mt-1">{templates.length} ready-to-use templates — AI generates full clauses</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight ">Styles.</h1>
+          <p className="text-sm text-ink/30 mt-1">{templates.length} ready-to-use templates — AI generates full clauses</p>
         </motion.div>
 
         <div className="flex items-center gap-3 flex-wrap">
           {/* Search */}
           <div className="relative group flex-1 min-w-[180px]">
             <MagnifyingGlass
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/25 group-focus-within:text-emerald transition-colors"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/25 group-focus-within:text-emerald transition-colors"
               size={13} weight="bold"
             />
             <input
@@ -193,13 +193,13 @@ export default function TemplatesPage() {
               placeholder="Search templates…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl py-2.5 pl-9 pr-4 text-[11px] font-medium tracking-wide text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
+              className="w-full bg-ink/[0.03] border border-line rounded-xl py-2.5 pl-9 pr-4 text-[11px] font-medium tracking-wide text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
             />
           </div>
 
           <Link
             href="/templates/new"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-wider hover:scale-105 transition-transform shadow-[0_0_16px_rgba(0,255,209,0.2)] flex-shrink-0"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald text-paper text-[11px] font-black uppercase tracking-wider hover:scale-105 transition-transform shadow-[0_0_16px_rgba(16,119,94,0.2)] flex-shrink-0"
           >
             <PlusCircle size={14} weight="bold" />
             Create
@@ -216,8 +216,8 @@ export default function TemplatesPage() {
             className={cn(
               'flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all duration-300',
               category === cat.id
-                ? 'bg-emerald text-[#010101] border-emerald shadow-[0_0_14px_rgba(0,255,209,0.2)]'
-                : 'bg-white/[0.03] text-white/35 border-white/[0.07] hover:border-white/20 hover:text-white',
+                ? 'bg-emerald text-paper border-emerald shadow-[0_0_14px_rgba(16,119,94,0.2)]'
+                : 'bg-ink/[0.03] text-ink/35 border-line hover:border-line-strong hover:text-ink',
             )}
           >
             <cat.icon size={13} weight={category === cat.id ? 'fill' : 'bold'} />
@@ -238,14 +238,14 @@ export default function TemplatesPage() {
       {/* Empty state */}
       {filtered.length === 0 && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-24 text-center flex flex-col items-center gap-4">
-          <div className="w-16 h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center border border-white/[0.06]">
-            <Books size={24} weight="bold" className="text-white/20" />
+          <div className="w-16 h-16 bg-ink/[0.03] rounded-2xl flex items-center justify-center border border-line">
+            <Books size={24} weight="bold" className="text-ink/20" />
           </div>
           <div>
-            <p className="text-sm font-black text-white/20 uppercase tracking-widest">
+            <p className="text-sm font-black text-ink/20 uppercase tracking-widest">
               {search ? 'No templates match' : 'Library empty'}
             </p>
-            <p className="text-xs text-white/15 mt-1">
+            <p className="text-xs text-ink/15 mt-1">
               {search ? 'Try a different search term.' : 'Create your first template to get started.'}
             </p>
           </div>

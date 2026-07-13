@@ -59,10 +59,10 @@ export function UserButton({ appearance }: { appearance?: any }) {
     <div
       className={
         appearance?.elements?.avatarBox ??
-        "w-10 h-10 rounded-2xl border border-white/10"
+        "w-10 h-10 rounded-2xl border border-line"
       }
       style={{
-        background: "linear-gradient(135deg,#00FFD1,#0070FF)",
+        background: "linear-gradient(135deg,#10775e,#2a4db0)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

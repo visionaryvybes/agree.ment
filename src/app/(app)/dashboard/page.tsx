@@ -27,9 +27,9 @@ const AREA_DATA = [
 ];
 
 const HEALTH_DATA = [
-  { name: 'Stability',  value: 92, fill: '#00FFD1' },
-  { name: 'Usage',      value: 85, fill: '#0070FF' },
-  { name: 'Protection', value: 78, fill: '#FFB800' },
+  { name: 'Stability',  value: 92, fill: '#10775e' },
+  { name: 'Usage',      value: 85, fill: '#2a4db0' },
+  { name: 'Protection', value: 78, fill: '#b45309' },
 ];
 
 const POPULAR_TEMPLATES = [
@@ -90,21 +90,21 @@ export default function DashboardPage() {
       <div className="vibrant-glow bottom-0 -right-24 w-[400px] h-[400px] bg-blue/[0.06]" />
 
       {/* ── HEADER ─────────────────────────────────────────────────── */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-white/[0.07] relative z-10">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-line relative z-10">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
           <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-1">Overview</span>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight italic uppercase">Summary.</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight ">Summary.</h1>
         </motion.div>
 
         <div className="flex items-center gap-3">
           {/* Period toggle */}
-          <div className="flex bg-white/[0.04] p-1 rounded-xl border border-white/[0.07]">
+          <div className="flex bg-ink/[0.04] p-1 rounded-xl border border-line">
             {['7D', '30D', 'ALL'].map(p => (
               <button
                 key={p} onClick={() => setPeriod(p)}
                 className={cn(
                   'px-3.5 py-1.5 rounded-lg text-[10px] font-black tracking-widest transition-all duration-300',
-                  period === p ? 'bg-emerald text-[#010101] shadow-[0_0_20px_rgba(0,255,209,0.3)]' : 'text-white/40 hover:text-white',
+                  period === p ? 'bg-emerald text-paper shadow-[0_0_20px_rgba(16,119,94,0.3)]' : 'text-ink/40 hover:text-ink',
                 )}
               >{p}</button>
             ))}
@@ -112,7 +112,7 @@ export default function DashboardPage() {
 
           <Link
             href="/contracts/new"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-wider hover:scale-105 transition-transform shadow-[0_0_16px_rgba(0,255,209,0.25)]"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald text-paper text-[11px] font-black uppercase tracking-wider hover:scale-105 transition-transform shadow-[0_0_16px_rgba(16,119,94,0.25)]"
           >
             <PlusCircle size={15} weight="bold" />
             New
@@ -131,26 +131,17 @@ export default function DashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08, duration: 0.6 }}
               className={cn(
-                'p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/[0.07] hover:border-opacity-60 transition-all duration-500 relative overflow-hidden group',
+                'p-4 sm:p-5 rounded-2xl bg-ink/[0.03] border border-line hover:border-opacity-60 transition-all duration-500 relative overflow-hidden group',
                 `hover:${cm.border.replace('group-hover:', '')}`,
               )}
             >
               <div className="flex items-center justify-between mb-4">
                 <p className={cn('text-[10px] font-black uppercase tracking-[0.25em]', cm.text)}>{stat.label}</p>
-                <div className="w-9 h-9 flex-shrink-0 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
-                  <img
-                    src={
-                      stat.label === 'Active Deals'  ? '/assets/3d/document_simple.png' :
-                      stat.label === 'Awaiting Sign' ? '/assets/3d/lock_simple.png' :
-                      stat.label === 'Total Value'   ? '/assets/3d/document_simple.png' :
-                      '/assets/3d/help_simple.png'
-                    }
-                    className="w-full h-full object-contain"
-                    alt={stat.label}
-                  />
+                <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500', cm.text)}>
+                  <stat.icon size={22} weight="duotone" />
                 </div>
               </div>
-              <p className="text-2xl sm:text-3xl font-black text-white tracking-tight">{stat.value}</p>
+              <p className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">{stat.value}</p>
             </motion.div>
           );
         })}
@@ -163,10 +154,10 @@ export default function DashboardPage() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="lg:col-span-2 p-5 sm:p-6 rounded-3xl bg-white/[0.03] border border-white/[0.07] relative overflow-hidden"
+          className="lg:col-span-2 p-5 sm:p-6 rounded-3xl bg-ink/[0.03] border border-line relative overflow-hidden"
         >
           <div className="flex items-center justify-between mb-5">
-            <p className="text-sm font-black text-white italic uppercase tracking-tight">Activity</p>
+            <p className="text-sm font-semibold text-ink tracking-tight">Activity</p>
             <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald/10 rounded-xl border border-emerald/20">
               <TrendUp size={13} weight="bold" className="text-emerald" />
               <span className="text-[10px] font-black text-emerald tracking-wider">+24% Volume</span>
@@ -176,19 +167,19 @@ export default function DashboardPage() {
             <AreaChart data={AREA_DATA} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#00FFD1" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#00FFD1" stopOpacity={0} />
+                  <stop offset="5%"  stopColor="#10775e" stopOpacity={0.25} />
+                  <stop offset="95%" stopColor="#10775e" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff06" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(28,25,23,0.06)" vertical={false} />
               <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#555', fontSize: 10, fontWeight: 700 }} dy={8} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: '#555', fontSize: 10, fontWeight: 700 }} />
               <Tooltip
-                contentStyle={{ background: '#080808', border: '1px solid #00FFD120', borderRadius: 14, boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}
-                itemStyle={{ color: '#00FFD1', fontWeight: 700, fontSize: 11 }}
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14, boxShadow: 'var(--shadow-lift)' }}
+                itemStyle={{ color: '#10775e', fontWeight: 700, fontSize: 11 }}
                 labelStyle={{ color: '#666', fontSize: 10 }}
               />
-              <Area type="monotone" dataKey="volume" stroke="#00FFD1" strokeWidth={2.5} fill="url(#chartGrad)" animationDuration={1800} />
+              <Area type="monotone" dataKey="volume" stroke="#10775e" strokeWidth={2.5} fill="url(#chartGrad)" animationDuration={1800} />
             </AreaChart>
           </ResponsiveContainer>
         </motion.div>
@@ -198,7 +189,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="p-5 sm:p-6 rounded-3xl bg-[#080808] border border-white/[0.07] flex flex-col relative overflow-hidden"
+          className="p-5 sm:p-6 rounded-3xl bg-card border border-line flex flex-col relative overflow-hidden"
         >
           <div className="absolute -top-16 -right-16 w-56 h-56 bg-blue/[0.1] blur-[80px] rounded-full" />
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue mb-4">Protection Grade</p>
@@ -210,17 +201,17 @@ export default function DashboardPage() {
               </RadialBarChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <p className="text-3xl font-black text-white italic tracking-tight">A+</p>
+              <p className="text-3xl font-black text-ink italic tracking-tight">A+</p>
               <p className="text-[9px] font-black text-blue uppercase tracking-[0.25em] mt-0.5">Exceptional</p>
             </div>
           </div>
 
-          <div className="space-y-2.5 mt-auto pt-3 border-t border-white/[0.05]">
+          <div className="space-y-2.5 mt-auto pt-3 border-t border-line">
             {HEALTH_DATA.map(item => (
-              <div key={item.name} className="flex items-center justify-between py-1 px-2 rounded-xl hover:bg-white/[0.03] transition-colors">
+              <div key={item.name} className="flex items-center justify-between py-1 px-2 rounded-xl hover:bg-ink/[0.03] transition-colors">
                 <div className="flex items-center gap-2.5">
                   <div className="w-2 h-2 rounded-full" style={{ background: item.fill }} />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white/40">{item.name}</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-ink/40">{item.name}</span>
                 </div>
                 <span className={cn('text-sm font-black',
                   item.name === 'Stability' ? 'text-emerald' :
@@ -235,7 +226,7 @@ export default function DashboardPage() {
       {/* ── POPULAR TEMPLATES ──────────────────────────────────────── */}
       <section className="space-y-5 relative z-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-white/60">Quick Templates</h2>
+          <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-ink/60">Quick Templates</h2>
           <Link href="/templates" className="text-[10px] font-black text-emerald uppercase tracking-widest flex items-center gap-1.5 group hover:opacity-80 transition-opacity">
             View All <ArrowRight size={12} weight="bold" className="group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -251,15 +242,15 @@ export default function DashboardPage() {
             >
               <Link
                 href="/contracts/new"
-                className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex flex-col h-full group hover:border-emerald/30 hover:-translate-y-1 transition-all duration-400 relative overflow-hidden"
+                className="p-5 rounded-2xl bg-ink/[0.03] border border-line flex flex-col h-full group hover:border-emerald/30 hover:-translate-y-1 transition-all duration-400 relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 p-4 opacity-[0.04] group-hover:opacity-20 group-hover:rotate-6 transition-all duration-500">
                   <Signature size={48} weight="thin" className="text-emerald" />
                 </div>
                 <span className="text-[9px] font-black text-emerald uppercase tracking-[0.3em] bg-emerald/10 px-2.5 py-1 rounded-full border border-emerald/20 inline-block mb-4 self-start">{item.category}</span>
-                <h3 className="text-sm font-black text-white italic tracking-tight uppercase group-hover:text-emerald transition-colors flex-1">{item.title}</h3>
-                <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/[0.05] text-[9px] font-black uppercase tracking-widest">
-                  <span className="text-white/30">Ready in <span className="text-white/60">{item.time}</span></span>
+                <h3 className="text-sm font-black text-ink italic tracking-tight uppercase group-hover:text-emerald transition-colors flex-1">{item.title}</h3>
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-line text-[9px] font-black uppercase tracking-widest">
+                  <span className="text-ink/30">Ready in <span className="text-ink/60">{item.time}</span></span>
                   <span className="text-emerald">{item.grade}</span>
                 </div>
               </Link>
@@ -271,7 +262,7 @@ export default function DashboardPage() {
       {/* ── RECENT DEALS ───────────────────────────────────────────── */}
       <section className="space-y-5 relative z-10">
         <div className="flex items-center justify-between">
-          <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-white/60">Recent Deals</h2>
+          <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-ink/60">Recent Deals</h2>
           <Link href="/contracts" className="text-[10px] font-black text-amber uppercase tracking-widest flex items-center gap-1.5 group hover:opacity-80 transition-opacity">
             See All <ArrowRight size={12} weight="bold" className="group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -292,22 +283,22 @@ export default function DashboardPage() {
                   <Link
                     href={`/contracts/${contract.id}`}
                     className={cn(
-                      'group flex items-center justify-between gap-4 p-4 sm:p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl transition-all duration-400 relative overflow-hidden',
+                      'group flex items-center justify-between gap-4 p-4 sm:p-5 bg-ink/[0.03] border border-line rounded-2xl transition-all duration-400 relative overflow-hidden',
                       cm.border,
                     )}
                   >
                     {/* Icon */}
-                    <div className={cn('w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-white/30 flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-400', cm.bg, 'group-hover:text-[#010101]')}>
+                    <div className={cn('w-10 h-10 rounded-xl bg-ink/[0.04] border border-line flex items-center justify-center text-ink/30 flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all duration-400', cm.bg, 'group-hover:text-paper')}>
                       <Files size={16} weight="bold" />
                     </div>
 
                     {/* Title + meta */}
                     <div className="flex-1 min-w-0">
-                      <h4 className={cn('text-sm font-black text-white truncate tracking-tight transition-colors', cm.text.replace('text-', 'group-hover:text-'))}>{contract.title}</h4>
+                      <h4 className={cn('text-sm font-black text-ink truncate tracking-tight transition-colors', cm.text.replace('text-', 'group-hover:text-'))}>{contract.title}</h4>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className={cn('text-[9px] font-black uppercase tracking-[0.2em]', cm.text, 'opacity-60')}>{contract.category}</span>
-                        <span className="text-white/10 text-xs">·</span>
-                        <span className="text-[9px] text-white/20 font-mono">{contract.id.slice(0, 8).toUpperCase()}</span>
+                        <span className="text-ink/10 text-xs">·</span>
+                        <span className="text-[9px] text-ink/20 font-mono">{contract.id.slice(0, 8).toUpperCase()}</span>
                       </div>
                     </div>
 
@@ -319,8 +310,8 @@ export default function DashboardPage() {
                       )}>
                         {contract.status.replace('_', ' ')}
                       </span>
-                      <div className={cn('w-8 h-8 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:translate-x-1 transition-all duration-400', cm.bg, 'group-hover:border-transparent')}>
-                        <CaretRight size={14} weight="bold" className={cn('text-white/30 transition-colors', cm.arrowLight ? 'group-hover:text-white' : 'group-hover:text-[#010101]')} />
+                      <div className={cn('w-8 h-8 rounded-xl bg-ink/[0.04] border border-line flex items-center justify-center group-hover:translate-x-1 transition-all duration-400', cm.bg, 'group-hover:border-transparent')}>
+                        <CaretRight size={14} weight="bold" className={cn('text-ink/30 transition-colors', cm.arrowLight ? 'group-hover:text-ink' : 'group-hover:text-paper')} />
                       </div>
                     </div>
                   </Link>
@@ -331,7 +322,7 @@ export default function DashboardPage() {
 
           {contracts.length === 0 && (
             <div className="py-16 text-center">
-              <p className="text-sm font-black text-white/20 uppercase tracking-widest">No deals yet.</p>
+              <p className="text-sm font-black text-ink/20 uppercase tracking-widest">No deals yet.</p>
               <Link href="/contracts/new" className="mt-4 inline-flex items-center gap-2 text-emerald text-xs font-black uppercase tracking-widest hover:opacity-75 transition-opacity">
                 Create your first deal <ArrowRight size={12} weight="bold" />
               </Link>

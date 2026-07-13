@@ -32,19 +32,19 @@ export default function NewTemplatePage() {
   return (
     <div className="max-w-xl mx-auto pb-24 px-4 pt-6">
       <header className="mb-8 flex items-center gap-4">
-        <Link href="/templates" className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-emerald/50 transition-all">
+        <Link href="/templates" className="w-10 h-10 rounded-xl bg-ink/[0.03] border border-line flex items-center justify-center text-ink/40 hover:text-ink hover:border-emerald/50 transition-all">
           <ArrowLeft size={18} weight="bold" />
         </Link>
         <div>
           <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em]">New Template</span>
-          <h1 className="text-xl font-black text-white tracking-tight italic uppercase">Create Template.</h1>
+          <h1 className="text-xl font-semibold text-ink tracking-tight ">Create Template.</h1>
         </div>
       </header>
 
       <div className="space-y-5">
         {/* Icon picker */}
         <div className="space-y-2">
-          <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Icon</p>
+          <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Icon</p>
           <div className="flex flex-wrap gap-2">
             {ICONS.map(ic => (
               <button
@@ -53,7 +53,7 @@ export default function NewTemplatePage() {
                 className={`w-10 h-10 rounded-xl border flex items-center justify-center text-xl transition-all ${
                   icon === ic
                     ? 'bg-emerald/10 border-emerald/30'
-                    : 'bg-white/[0.03] border-white/10 hover:border-white/20'
+                    : 'bg-ink/[0.03] border-line hover:border-line-strong'
                 }`}
               >
                 {ic}
@@ -63,30 +63,30 @@ export default function NewTemplatePage() {
         </div>
 
         <div className="space-y-2">
-          <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Template Name *</p>
+          <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Template Name *</p>
           <input
             autoFocus
             type="text"
             placeholder="e.g. Freelance Design Agreement"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm font-black text-white placeholder:text-white/15 focus:outline-none focus:border-emerald/40 transition-all uppercase tracking-tight"
+            className="w-full bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm font-black text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all uppercase tracking-tight"
           />
         </div>
 
         <div className="space-y-2">
-          <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Description</p>
+          <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Description</p>
           <textarea
             rows={3}
             placeholder="What is this template for?"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-emerald/40 transition-all resize-none"
+            className="w-full bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all resize-none"
           />
         </div>
 
         <div className="space-y-2">
-          <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Category</p>
+          <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Category</p>
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map(cat => (
               <button
@@ -94,8 +94,8 @@ export default function NewTemplatePage() {
                 onClick={() => setCategory(cat)}
                 className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
                   category === cat
-                    ? 'bg-emerald text-[#010101] border-emerald'
-                    : 'bg-white/[0.03] text-white/35 border-white/[0.07] hover:text-white hover:border-white/20'
+                    ? 'bg-emerald text-paper border-emerald'
+                    : 'bg-ink/[0.03] text-ink/35 border-line hover:text-ink hover:border-line-strong'
                 }`}
               >
                 {cat}
@@ -108,10 +108,10 @@ export default function NewTemplatePage() {
           <button
             onClick={handleSave}
             disabled={!name.trim() || saving}
-            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_24px_rgba(0,255,209,0.2)] disabled:opacity-40 disabled:scale-100"
+            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_24px_rgba(16,119,94,0.2)] disabled:opacity-40 disabled:scale-100"
           >
             {saving ? (
-              <><div className="w-4 h-4 border-2 border-[#010101]/20 border-t-[#010101] rounded-full animate-spin" /> Saving...</>
+              <><div className="w-4 h-4 border-2 border-paper/20 border-t-[#010101] rounded-full animate-spin" /> Saving...</>
             ) : (
               <><Plus size={16} weight="bold" /> Create Template</>
             )}

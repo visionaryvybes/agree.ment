@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#010101]/60 backdrop-blur-md">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/60 backdrop-blur-md">
       {/* Background Glows */}
       <div className="vibrant-glow top-1/4 left-1/4 w-[400px] h-[400px] bg-emerald/10 blur-[100px] animate-glow-pulse" />
       
@@ -24,7 +24,7 @@ export default function Loading() {
         >
           <img 
             src="/logo_verified.png" 
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_20px_rgba(0,255,209,0.4)]" 
+            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_20px_rgba(16,119,94,0.4)]" 
             alt="Loading..." 
           />
         </motion.div>

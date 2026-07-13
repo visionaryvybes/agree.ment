@@ -70,7 +70,7 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[150] bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-[150] bg-ink/40 backdrop-blur-sm"
           />
 
           {/* Panel */}
@@ -79,15 +79,15 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 300 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-md z-[200] bg-[#080808] border-l border-white/10 flex flex-col shadow-2xl"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-md z-[200] bg-card border-l border-line flex flex-col shadow-2xl"
           >
             {/* Header */}
-            <div className="p-8 border-b border-white/10 flex items-center justify-between">
+            <div className="p-8 border-b border-line flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Bell size={24} className="text-emerald" weight="bold" />
-                <h3 className="text-lg font-black text-white tracking-tighter">Notifications</h3>
+                <h3 className="text-lg font-semibold text-ink tracking-tighter">Notifications</h3>
                 {unreadCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-emerald text-[#010101] text-[9px] font-black">{unreadCount}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald text-paper text-[9px] font-black">{unreadCount}</span>
                 )}
               </div>
               <div className="flex items-center gap-3">
@@ -96,7 +96,7 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
                     Mark All Read
                   </button>
                 )}
-                <button onClick={onClose} className="p-2 rounded-lg bg-white/5 text-text-3 hover:text-white transition-colors">
+                <button onClick={onClose} className="p-2 rounded-lg bg-ink/5 text-text-3 hover:text-ink transition-colors">
                   <X size={18} weight="bold" />
                 </button>
               </div>
@@ -119,15 +119,15 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
                       onClick={() => markRead(notification.id)}
                       className={cn(
                         "p-5 rounded-2xl border flex gap-4 cursor-pointer transition-all group",
-                        notification.read ? "bg-white/[0.02] border-white/5" : "bg-white/[0.05] border-white/10"
+                        notification.read ? "bg-ink/[0.02] border-line" : "bg-ink/[0.05] border-line"
                       )}
                     >
-                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0", notification.read ? "bg-white/5" : "bg-white/10")}>
+                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0", notification.read ? "bg-ink/5" : "bg-ink/10")}>
                         <Icon size={20} weight="bold" className={color} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className={cn("text-sm font-black", notification.read ? "text-text-3" : "text-white")}>{notification.title}</p>
+                          <p className={cn("text-sm font-black", notification.read ? "text-text-3" : "text-ink")}>{notification.title}</p>
                           {!notification.read && <div className="w-2 h-2 rounded-full bg-emerald flex-shrink-0" />}
                         </div>
                         <p className="text-[10px] text-text-3 font-bold mt-1 leading-relaxed">{notification.message}</p>
@@ -135,7 +135,7 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
                       </div>
                       <button
                         onClick={(e) => { e.stopPropagation(); dismiss(notification.id); }}
-                        className="p-1 rounded-lg text-text-3 opacity-0 group-hover:opacity-100 hover:text-white transition-all self-start"
+                        className="p-1 rounded-lg text-text-3 opacity-0 group-hover:opacity-100 hover:text-ink transition-all self-start"
                       >
                         <X size={14} weight="bold" />
                       </button>

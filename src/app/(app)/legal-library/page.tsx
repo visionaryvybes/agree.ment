@@ -112,20 +112,20 @@ export default function LegalLibraryPage() {
       <div className="vibrant-glow bottom-0 left-0 w-[400px] h-[400px] bg-blue/8" />
 
       {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/[0.07] relative z-10">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-line relative z-10">
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
           <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-1">Knowledge Base</span>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight italic uppercase">Library.</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight ">Library.</h1>
         </motion.div>
 
         <div className="flex-1 max-w-xs relative group">
-          <MagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/25 group-focus-within:text-emerald transition-colors" size={14} weight="bold" />
+          <MagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/25 group-focus-within:text-emerald transition-colors" size={14} weight="bold" />
           <input
             type="text"
             placeholder="Search articles…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl py-2.5 pl-9 pr-4 text-[11px] font-medium text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
+            className="w-full bg-ink/[0.03] border border-line rounded-xl py-2.5 pl-9 pr-4 text-[11px] font-medium text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
           />
         </div>
       </header>
@@ -142,7 +142,7 @@ export default function LegalLibraryPage() {
             <Link
               href={cat.href}
               className={cn(
-                'p-5 rounded-2xl bg-white/[0.02] border flex flex-col items-center text-center gap-3 cursor-pointer transition-all duration-500 group relative overflow-hidden',
+                'p-5 rounded-2xl bg-ink/[0.02] border flex flex-col items-center text-center gap-3 cursor-pointer transition-all duration-500 group relative overflow-hidden',
                 cat.color === 'emerald' ? 'border-emerald/15 hover:border-emerald/40 hover:bg-emerald/5' :
                 cat.color === 'blue'    ? 'border-blue/15    hover:border-blue/40    hover:bg-blue/5'    :
                 cat.color === 'amber'   ? 'border-amber/15   hover:border-amber/40   hover:bg-amber/5'   :
@@ -158,8 +158,8 @@ export default function LegalLibraryPage() {
                 <cat.icon size={20} weight="bold" />
               </div>
               <div>
-                <h3 className="text-[11px] font-black text-white uppercase tracking-tight">{cat.name}</h3>
-                <p className="text-[9px] text-white/30 uppercase tracking-widest mt-0.5">{cat.count} Templates</p>
+                <h3 className="text-[11px] font-black text-ink uppercase tracking-tight">{cat.name}</h3>
+                <p className="text-[9px] text-ink/30 uppercase tracking-widest mt-0.5">{cat.count} Templates</p>
               </div>
             </Link>
           </motion.div>
@@ -173,8 +173,8 @@ export default function LegalLibraryPage() {
             <Robot size={18} weight="bold" />
           </div>
           <div>
-            <h3 className="text-sm font-black text-white uppercase tracking-tight">Ask a Legal Question</h3>
-            <p className="text-[10px] text-white/30 uppercase tracking-widest">AI-powered • Not legal advice</p>
+            <h3 className="text-sm font-black text-ink uppercase tracking-tight">Ask a Legal Question</h3>
+            <p className="text-[10px] text-ink/30 uppercase tracking-widest">AI-powered • Not legal advice</p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -184,23 +184,23 @@ export default function LegalLibraryPage() {
             onChange={e => setAiQuestion(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && askAI()}
             placeholder="e.g. Can I sue if someone breaks a verbal agreement?"
-            className="flex-1 bg-white/[0.04] border border-emerald/20 rounded-xl py-3 px-4 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
+            className="flex-1 bg-ink/[0.04] border border-emerald/20 rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
           />
           <button
             onClick={askAI}
             disabled={!aiQuestion.trim() || aiLoading}
-            className="px-5 py-3 rounded-xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-all disabled:opacity-40 disabled:scale-100 flex-shrink-0"
+            className="px-5 py-3 rounded-xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-all disabled:opacity-40 disabled:scale-100 flex-shrink-0"
           >
-            {aiLoading ? <div className="w-4 h-4 border-2 border-[#010101]/20 border-t-[#010101] rounded-full animate-spin" /> : <PaperPlane size={14} weight="bold" />}
+            {aiLoading ? <div className="w-4 h-4 border-2 border-paper/20 border-t-[#010101] rounded-full animate-spin" /> : <PaperPlane size={14} weight="bold" />}
           </button>
         </div>
         {aiAnswer && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-xl bg-ink/[0.04] border border-line">
             <div className="flex items-center gap-2 mb-2">
               <Sparkle size={11} weight="bold" className="text-emerald" />
-              <span className="text-[8px] font-black text-white/25 uppercase tracking-widest">AgreeMint AI</span>
+              <span className="text-[8px] font-black text-ink/25 uppercase tracking-widest">AgreeMint AI</span>
             </div>
-            <p className="text-sm text-white/70 leading-relaxed whitespace-pre-wrap">{aiAnswer}</p>
+            <p className="text-sm text-ink/70 leading-relaxed whitespace-pre-wrap">{aiAnswer}</p>
           </motion.div>
         )}
       </div>
@@ -208,8 +208,8 @@ export default function LegalLibraryPage() {
       {/* Legal Articles */}
       <div className="relative z-10 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em]">Legal Basics</h2>
-          <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">{filteredArticles.length} articles</span>
+          <h2 className="text-[11px] font-black text-ink/40 uppercase tracking-[0.4em]">Legal Basics</h2>
+          <span className="text-[9px] font-black text-ink/20 uppercase tracking-widest">{filteredArticles.length} articles</span>
         </div>
 
         <div className="space-y-3">
@@ -247,9 +247,9 @@ export default function LegalLibraryPage() {
                       article.color === 'amber'   ? 'text-amber'   : 'text-rose'
                     )}>{article.category}</span>
                   </div>
-                  <h3 className="text-sm font-black text-white tracking-tight">{article.title}</h3>
+                  <h3 className="text-sm font-semibold text-ink tracking-tight">{article.title}</h3>
                 </div>
-                <CaretRight size={14} weight="bold" className={cn('flex-shrink-0 transition-transform text-white/20', expandedArticle === i && 'rotate-90')} />
+                <CaretRight size={14} weight="bold" className={cn('flex-shrink-0 transition-transform text-ink/20', expandedArticle === i && 'rotate-90')} />
               </button>
 
               <AnimatePresence>
@@ -260,8 +260,8 @@ export default function LegalLibraryPage() {
                     exit={{ height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-5 pb-5 space-y-4 border-t border-white/[0.06]">
-                      <p className="text-sm text-white/50 leading-relaxed pt-4">{article.summary}</p>
+                    <div className="px-5 pb-5 space-y-4 border-t border-line">
+                      <p className="text-sm text-ink/50 leading-relaxed pt-4">{article.summary}</p>
                       <div className="space-y-2">
                         {article.points.map((point, j) => (
                           <div key={j} className="flex items-start gap-3">
@@ -270,7 +270,7 @@ export default function LegalLibraryPage() {
                               article.color === 'blue'    ? 'bg-blue'    :
                               article.color === 'amber'   ? 'bg-amber'   : 'bg-rose'
                             )} />
-                            <p className="text-[11px] text-white/40 leading-relaxed">{point}</p>
+                            <p className="text-[11px] text-ink/40 leading-relaxed">{point}</p>
                           </div>
                         ))}
                       </div>
@@ -285,7 +285,7 @@ export default function LegalLibraryPage() {
 
       {/* Quick Facts */}
       <div className="relative z-10 space-y-4">
-        <h2 className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em]">Quick Facts</h2>
+        <h2 className="text-[11px] font-black text-ink/40 uppercase tracking-[0.4em]">Quick Facts</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {QUICK_FACTS.map((fact, i) => (
             <motion.div
@@ -293,10 +293,10 @@ export default function LegalLibraryPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.05 }}
-              className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.05]"
+              className="flex items-start gap-3 p-4 rounded-xl bg-ink/[0.02] border border-line"
             >
               <fact.icon size={15} weight="bold" className={cn(fact.color, 'flex-shrink-0 mt-0.5')} />
-              <p className="text-[11px] text-white/45 leading-relaxed">{fact.text}</p>
+              <p className="text-[11px] text-ink/45 leading-relaxed">{fact.text}</p>
             </motion.div>
           ))}
         </div>
@@ -307,19 +307,19 @@ export default function LegalLibraryPage() {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="rounded-3xl bg-emerald p-8 md:p-12 text-[#010101] relative overflow-hidden shadow-[0_0_80px_rgba(0,255,209,0.15)] z-10"
+        className="rounded-3xl bg-emerald p-8 md:p-12 text-paper relative overflow-hidden shadow-[0_0_80px_rgba(16,119,94,0.15)] z-10"
       >
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <Books size={160} weight="bold" />
         </div>
         <div className="max-w-lg space-y-6 relative z-10">
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase italic">Need a Custom Agreement?</h2>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tighter ">Need a Custom Agreement?</h2>
           <p className="text-sm font-bold opacity-70 uppercase tracking-widest leading-relaxed">Our AI generates jurisdiction-specific contracts in under 60 seconds.</p>
           <div className="flex gap-3 flex-wrap">
-            <Link href="/contracts/new" className="flex items-center gap-2 bg-[#010101] text-emerald px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">
+            <Link href="/contracts/new" className="flex items-center gap-2 bg-ground text-emerald px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">
               Create Agreement <ArrowRight size={16} weight="bold" />
             </Link>
-            <Link href="/verified-guidance" className="flex items-center gap-2 bg-[#010101]/20 text-[#010101] px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#010101]/30 transition-colors">
+            <Link href="/verified-guidance" className="flex items-center gap-2 bg-ground/20 text-paper px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-ground/30 transition-colors">
               Ask AI <Robot size={16} weight="bold" />
             </Link>
           </div>

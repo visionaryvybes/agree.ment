@@ -42,10 +42,10 @@ export default function ScrollToTop() {
             <button
               onClick={scrollToTop}
               className={cn(
-                "w-16 h-16 rounded-full bg-emerald text-[#010101] flex items-center justify-center shadow-[0_0_40px_rgba(0,255,209,0.5)] border-4 border-black hover:scale-110 transition-all group overflow-hidden relative"
+                "w-16 h-16 rounded-full bg-emerald text-paper flex items-center justify-center shadow-[0_0_40px_rgba(16,119,94,0.5)] border-4 border-black hover:scale-110 transition-all group overflow-hidden relative"
               )}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <ArrowUp size={32} weight="bold" className="relative z-10 group-hover:-translate-y-1 transition-transform duration-500" />
             </button>
           </Magnetic>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,33 +8,37 @@ import { CookieBanner } from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import { ThemeProvider } from "@/components/ThemeToggle";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  axes: ["opsz", "SOFT", "WONK"],
+});
+const instrument = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-instrument",
+});
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["500", "700"],
+  variable: "--font-jetbrains",
+});
 
 export const metadata: Metadata = {
-  title: "AgreeMint | Instant, Secure Agreements",
+  title: "AgreeMint — Put it in writing",
   description:
-    "Secure your future with professional, legally-binding agreements. Generate, sign, and manage contracts in 60 seconds. Mobile-first and globally-compliant.",
-  keywords: [
-    "legal tech",
-    "contracts",
-    "agreements",
-    "legal automation",
-    "secure signatures",
-  ],
+    "Turn everyday deals into clear, signed agreements. Describe the deal in plain words — or paste the chat — and get a proper document both sides can sign in minutes.",
+  keywords: ["contracts", "agreements", "e-signature", "loan agreement", "freelance contract"],
   openGraph: {
-    title: "AgreeMint | Instant, Secure Agreements",
-    description:
-      "Secure your future with professional, legally-binding agreements.",
+    title: "AgreeMint — Put it in writing",
+    description: "Turn everyday deals into clear, signed agreements in minutes.",
     type: "website",
     locale: "en_US",
     siteName: "AgreeMint",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AgreeMint | Instant, Secure Agreements",
-    description:
-      "Secure your future with professional, legally-binding agreements.",
+    title: "AgreeMint — Put it in writing",
+    description: "Turn everyday deals into clear, signed agreements in minutes.",
   },
 };
 
@@ -51,7 +55,7 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#050505] selection:bg-[#00F5D4] selection:text-[#050505]`}
+          className={`${fraunces.variable} ${instrument.variable} ${mono.variable} font-sans antialiased bg-paper text-ink selection:bg-mint selection:text-paper`}
         >
           <ThemeProvider>
             <TooltipProvider>

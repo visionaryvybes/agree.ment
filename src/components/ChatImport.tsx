@@ -48,16 +48,16 @@ export default function ChatImport({ onImport, onCancel }: ChatImportProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl bg-[#0A0A0A] border border-white/10 rounded-[48px] overflow-hidden shadow-2xl relative">
+    <div className="w-full max-w-2xl bg-elevated border border-line rounded-[48px] overflow-hidden shadow-2xl relative">
       {/* Header */}
-      <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+      <div className="p-8 border-b border-line flex items-center justify-between bg-ink/[0.02]">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 bg-emerald/10 rounded-xl flex items-center justify-center text-emerald">
             <MagnifyingGlass size={24} weight="bold" />
           </div>
-          <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">Review Chat</h3>
+          <h3 className="text-xl font-semibold text-ink tracking-tighter">Review Chat</h3>
         </div>
-        <button onClick={onCancel} className="p-2 hover:bg-white/5 rounded-full transition-colors">
+        <button onClick={onCancel} className="p-2 hover:bg-ink/5 rounded-full transition-colors">
           <X size={20} className="text-text-3" />
         </button>
       </div>
@@ -79,10 +79,10 @@ export default function ChatImport({ onImport, onCancel }: ChatImportProps) {
                     <button
                       key={s.id}
                       onClick={() => { setSource(s.id); setStep(2); }}
-                      className="p-6 rounded-3xl bg-white/[0.03] border border-white/5 hover:border-emerald/30 transition-all flex flex-col items-center gap-4 group"
+                      className="p-6 rounded-3xl bg-ink/[0.03] border border-line hover:border-emerald/30 transition-all flex flex-col items-center gap-4 group"
                     >
                       <s.icon size={32} weight="bold" className={cn("transition-transform group-hover:scale-110", s.color)} />
-                      <span className="text-[10px] font-black text-white uppercase tracking-widest">{s.label}</span>
+                      <span className="text-[10px] font-black text-ink uppercase tracking-widest">{s.label}</span>
                     </button>
                   ))}
                 </div>
@@ -103,12 +103,12 @@ export default function ChatImport({ onImport, onCancel }: ChatImportProps) {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Paste the agreement details or specific terms from your chat..."
-                  className="w-full h-48 p-8 bg-white/[0.02] border border-white/10 rounded-[32px] text-white text-lg font-medium placeholder:text-text-3/20 focus:border-emerald transition-all outline-none"
+                  className="w-full h-48 p-8 bg-ink/[0.02] border border-line rounded-[32px] text-ink text-lg font-medium placeholder:text-text-3/20 focus:border-emerald transition-all outline-none"
                 />
               </div>
 
               <div className="flex justify-between items-center pt-4">
-                <button onClick={() => setStep(1)} className="text-[10px] font-black text-text-3 uppercase tracking-widest hover:text-white transition-colors">Back</button>
+                <button onClick={() => setStep(1)} className="text-[10px] font-black text-text-3 uppercase tracking-widest hover:text-ink transition-colors">Back</button>
                 <Magnetic>
                   <button
                     disabled={!text || isParsing}
@@ -139,7 +139,7 @@ export default function ChatImport({ onImport, onCancel }: ChatImportProps) {
                 <div className="space-y-4 text-left">
                    <div className="space-y-1">
                       <p className="text-[9px] font-black text-text-3 uppercase">Detected Summary</p>
-                      <p className="text-white font-bold leading-relaxed">{text.slice(0, 100)}...</p>
+                      <p className="text-ink font-bold leading-relaxed">{text.slice(0, 100)}...</p>
                    </div>
                 </div>
               </div>
@@ -153,7 +153,7 @@ export default function ChatImport({ onImport, onCancel }: ChatImportProps) {
                     Create Agreement
                   </button>
                 </Magnetic>
-                <button onClick={() => setStep(2)} className="text-[10px] font-black text-text-3 uppercase tracking-widest hover:text-white transition-colors">Edit Text</button>
+                <button onClick={() => setStep(2)} className="text-[10px] font-black text-text-3 uppercase tracking-widest hover:text-ink transition-colors">Edit Text</button>
               </div>
             </motion.div>
           )}

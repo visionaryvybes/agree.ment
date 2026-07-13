@@ -34,13 +34,13 @@ export default function TemplateDetailPage() {
     }
   }, [template]);
 
-  if (!mounted) return <div className="min-h-screen bg-[#010101]" />;
+  if (!mounted) return <div className="min-h-screen bg-ground" />;
 
   if (!template) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <Warning size={48} className="text-white/20" />
-      <p className="text-sm font-black text-white/20 uppercase tracking-widest">Template not found</p>
-      <Link href="/templates" className="px-6 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[11px] font-black text-white uppercase tracking-widest hover:border-emerald/30 transition-colors">
+      <Warning size={48} className="text-ink/20" />
+      <p className="text-sm font-black text-ink/20 uppercase tracking-widest">Template not found</p>
+      <Link href="/templates" className="px-6 py-3 rounded-xl bg-ink/[0.03] border border-line text-[11px] font-black text-ink uppercase tracking-widest hover:border-emerald/30 transition-colors">
         Back to Library
       </Link>
     </div>
@@ -128,22 +128,22 @@ export default function TemplateDetailPage() {
 
       {/* Header */}
       <header className="mb-8 flex items-center gap-4 pt-6 relative z-10">
-        <Link href="/templates" className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-emerald/50 transition-all group">
+        <Link href="/templates" className="w-10 h-10 rounded-xl bg-ink/[0.03] border border-line flex items-center justify-center text-ink/40 hover:text-ink hover:border-emerald/50 transition-all group">
           <ArrowLeft size={18} weight="bold" />
         </Link>
         <div>
           <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em]">Template</span>
-          <h1 className="text-xl font-black text-white tracking-tight italic uppercase">{template.name}</h1>
+          <h1 className="text-xl font-semibold text-ink tracking-tight ">{template.name}</h1>
         </div>
       </header>
 
       <div className="space-y-6 relative z-10">
         {/* Template Info */}
-        <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/[0.07] flex items-start gap-4">
+        <div className="p-5 rounded-3xl bg-ink/[0.02] border border-line flex items-start gap-4">
           <div className="text-3xl flex-shrink-0">{template.icon}</div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[8px] font-black text-white/25 uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06]">
+              <span className="text-[8px] font-black text-ink/25 uppercase tracking-widest px-2 py-0.5 rounded-full bg-ink/[0.04] border border-line">
                 {template.category}
               </span>
               {template.popular && (
@@ -152,17 +152,17 @@ export default function TemplateDetailPage() {
                 </span>
               )}
             </div>
-            <p className="text-sm text-white/50 leading-relaxed">{template.description}</p>
+            <p className="text-sm text-ink/50 leading-relaxed">{template.description}</p>
           </div>
         </div>
 
         {/* Fields */}
         {template.fields && template.fields.length > 0 && (
           <div className="space-y-4">
-            <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Fill in Details</p>
+            <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Fill in Details</p>
             {template.fields.map((field: any) => (
               <div key={field.id} className="space-y-1.5">
-                <label className="text-[10px] font-black text-white/40 uppercase tracking-widest flex items-center gap-1">
+                <label className="text-[10px] font-black text-ink/40 uppercase tracking-widest flex items-center gap-1">
                   {field.label}
                   {field.required && <span className="text-rose">*</span>}
                 </label>
@@ -172,13 +172,13 @@ export default function TemplateDetailPage() {
                     placeholder={field.placeholder}
                     value={fieldValue(field.id)}
                     onChange={e => setField(field.id, e.target.value)}
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-emerald/40 transition-all resize-none"
+                    className="w-full bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all resize-none"
                   />
                 ) : field.type === 'select' ? (
                   <select
                     value={fieldValue(field.id)}
                     onChange={e => setField(field.id, e.target.value)}
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-emerald/40 transition-all appearance-none cursor-pointer"
+                    className="w-full bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm text-ink focus:outline-none focus:border-emerald/40 transition-all appearance-none cursor-pointer"
                   >
                     <option value="">Select...</option>
                     {field.options?.map((opt: string) => (
@@ -191,7 +191,7 @@ export default function TemplateDetailPage() {
                     placeholder={field.placeholder}
                     value={fieldValue(field.id)}
                     onChange={e => setField(field.id, e.target.value)}
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-emerald/40 transition-all"
+                    className="w-full bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all"
                   />
                 )}
               </div>
@@ -202,12 +202,12 @@ export default function TemplateDetailPage() {
         {/* Clauses preview */}
         {template.clauses && template.clauses.length > 0 && (
           <div className="space-y-3">
-            <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Included Clauses</p>
+            <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Included Clauses</p>
             <div className="space-y-2">
               {template.clauses.map((clause: any, i: number) => (
-                <div key={i} className="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                <div key={i} className="flex items-center gap-3 p-3.5 rounded-xl bg-ink/[0.02] border border-line">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald flex-shrink-0" />
-                  <span className="text-[11px] font-black text-white/60 uppercase tracking-widest">{clause.title}</span>
+                  <span className="text-[11px] font-black text-ink/60 uppercase tracking-widest">{clause.title}</span>
                 </div>
               ))}
             </div>
@@ -223,11 +223,11 @@ export default function TemplateDetailPage() {
           <button
             onClick={handleUseTemplate}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl bg-emerald text-[#010101] text-sm font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(0,255,209,0.25)] disabled:opacity-50 disabled:scale-100"
+            className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl bg-emerald text-paper text-sm font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(16,119,94,0.25)] disabled:opacity-50 disabled:scale-100"
           >
             {loading ? (
               <>
-                <div className="w-4 h-4 border-2 border-[#010101]/20 border-t-[#010101] rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-paper/20 border-t-[#010101] rounded-full animate-spin" />
                 Generating...
               </>
             ) : (
@@ -238,7 +238,7 @@ export default function TemplateDetailPage() {
               </>
             )}
           </button>
-          <p className="text-center text-[9px] font-black text-white/20 uppercase tracking-widest mt-3">
+          <p className="text-center text-[9px] font-black text-ink/20 uppercase tracking-widest mt-3">
             AI will generate full clauses from this template
           </p>
         </div>

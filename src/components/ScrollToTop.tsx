@@ -40,7 +40,7 @@ export default function ScrollToTop() {
           <Magnetic>
             <button
               onClick={scrollToTop}
-              className="w-20 h-20 rounded-[32px] bg-emerald text-[#010101] flex items-center justify-center shadow-[0_20px_50px_rgba(0,255,209,0.4)] border-4 border-[#010101] hover:scale-110 transition-transform group"
+              className="w-20 h-20 rounded-[32px] bg-emerald text-paper flex items-center justify-center shadow-[0_20px_50px_rgba(16,119,94,0.4)] border-4 border-paper hover:scale-110 transition-transform group"
             >
               <ArrowUp size={32} weight="bold" className="group-hover:-translate-y-2 transition-transform" />
             </button>

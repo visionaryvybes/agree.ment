@@ -7,14 +7,14 @@ import { cn } from '@/lib/utils';
 type Theme = 'dark' | 'light';
 
 const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void }>({
-  theme: 'dark',
+  theme: 'light',
   toggleTheme: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
     const saved = localStorage.getItem('agreemint-theme') as Theme;
@@ -44,7 +44,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       className={cn(
         "relative w-14 h-7 rounded-full transition-all duration-500 border flex items-center px-1",
         theme === 'dark'
-          ? "bg-white/5 border-white/10"
+          ? "bg-ink/5 border-line"
           : "bg-amber/20 border-amber/30",
         className
       )}
@@ -52,13 +52,13 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       <div className={cn(
         "w-5 h-5 rounded-full transition-all duration-500 flex items-center justify-center",
         theme === 'dark'
-          ? "translate-x-0 bg-emerald shadow-[0_0_10px_rgba(0,255,209,0.3)]"
+          ? "translate-x-0 bg-emerald shadow-[0_0_10px_rgba(16,119,94,0.3)]"
           : "translate-x-7 bg-amber shadow-[0_0_10px_rgba(255,184,0,0.3)]"
       )}>
         {theme === 'dark' ? (
-          <Moon size={12} weight="bold" className="text-[#010101]" />
+          <Moon size={12} weight="bold" className="text-paper" />
         ) : (
-          <Sun size={12} weight="bold" className="text-[#010101]" />
+          <Sun size={12} weight="bold" className="text-paper" />
         )}
       </div>
     </button>

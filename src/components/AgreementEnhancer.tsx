@@ -50,14 +50,14 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
   };
 
   return (
-    <div className="w-full max-w-2xl p-10 rounded-[48px] bg-[#0A0A0A] border border-white/10 shadow-2xl relative overflow-hidden">
+    <div className="w-full max-w-2xl p-10 rounded-[48px] bg-elevated border border-line shadow-2xl relative overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-6 mb-12">
-        <div className="w-14 h-14 bg-emerald/10 rounded-2xl flex items-center justify-center text-emerald shadow-[0_0_20px_rgba(0,255,209,0.2)]">
+        <div className="w-14 h-14 bg-emerald/10 rounded-2xl flex items-center justify-center text-emerald shadow-[0_0_20px_rgba(16,119,94,0.2)]">
           <Sparkle size={28} weight="bold" />
         </div>
         <div>
-          <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter">Agreement Visuals</h3>
+          <h3 className="text-2xl font-semibold text-ink tracking-tighter">Agreement Visuals</h3>
           <p className="text-[10px] font-black text-text-3 uppercase tracking-widest mt-1">Enhance readability and presentation</p>
         </div>
       </div>
@@ -79,8 +79,8 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
                   className={cn(
                     "p-6 rounded-3xl border text-left transition-all duration-500 group",
                     selectedStyle === style.id 
-                      ? "bg-emerald text-[#010101] border-emerald" 
-                      : "bg-white/[0.03] border-white/5 hover:border-white/20 text-text-3 hover:text-white"
+                      ? "bg-emerald text-paper border-emerald" 
+                      : "bg-ink/[0.03] border-line hover:border-line-strong text-text-3 hover:text-ink"
                   )}
                 >
                   <style.icon size={24} weight="bold" className="mb-4" />
@@ -90,7 +90,7 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
               ))}
             </div>
 
-            <div className="pt-6 border-t border-white/5 flex justify-center">
+            <div className="pt-6 border-t border-line flex justify-center">
               <Magnetic>
                 <button
                   onClick={startEnhancement}
@@ -108,16 +108,16 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
             animate={{ opacity: 1, scale: 1 }}
             className="py-12 flex flex-col items-center text-center space-y-8"
           >
-            <div className="w-24 h-24 bg-emerald rounded-full flex items-center justify-center text-[#010101] shadow-[0_0_50px_rgba(0,255,209,0.4)]">
+            <div className="w-24 h-24 bg-emerald rounded-full flex items-center justify-center text-paper shadow-[0_0_50px_rgba(16,119,94,0.4)]">
               <CheckCircle size={48} weight="bold" />
             </div>
             <div>
-              <h4 className="text-3xl font-black text-white italic uppercase tracking-tighter">Styles Applied</h4>
+              <h4 className="text-3xl font-semibold text-ink tracking-tighter">Styles Applied</h4>
               <p className="text-[11px] font-black text-emerald uppercase tracking-widest mt-2">{selectedStyle} format is ready</p>
             </div>
             <button
               onClick={() => setPhase('idle')}
-              className="text-[10px] font-black text-text-3 uppercase tracking-[0.2em] hover:text-white transition-colors"
+              className="text-[10px] font-black text-text-3 uppercase tracking-[0.2em] hover:text-ink transition-colors"
             >
               Change Style
             </button>
@@ -137,17 +137,17 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
             </div>
             
             <div className="text-center space-y-4">
-              <p className="text-[14px] font-black text-white uppercase tracking-[0.4em] italic leading-none">
+              <p className="text-[14px] font-black text-ink uppercase tracking-[0.4em] italic leading-none">
                 {phase === 'scanning' ? 'Reviewing Context...' : 
                  phase === 'refining' ? 'Polishing Layout...' : 
                  'Applying Final Touches...'}
               </p>
-              <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden mx-auto">
+              <div className="w-48 h-1 bg-ink/5 rounded-full overflow-hidden mx-auto">
                 <motion.div
                   initial={{ x: '-100%' }}
                   animate={{ x: '100%' }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                  className="w-full h-full bg-emerald shadow-[0_0_10px_#00FFD1]"
+                  className="w-full h-full bg-emerald shadow-[0_0_10px_#10775e]"
                 />
               </div>
             </div>

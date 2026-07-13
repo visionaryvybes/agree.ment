@@ -52,7 +52,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
       initial={false}
       animate={{ width: isHovered ? 280 : 100 }}
       transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-      className="flex-shrink-0 bg-[#010101]/40 backdrop-blur-2xl border-r border-white/5 flex flex-col h-screen overflow-hidden relative shadow-[20px_0_60px_rgba(0,0,0,0.4)] z-50"
+      className="flex-shrink-0 bg-ground/40 backdrop-blur-2xl border-r border-line flex flex-col h-screen overflow-hidden relative shadow-[20px_0_60px_rgba(0,0,0,0.4)] z-50"
     >
       
       {/* Background Glows — Subtler */}
@@ -60,7 +60,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
       <div className="vibrant-glow bottom-0 left-0 w-32 h-32 bg-blue/5 blur-[80px]" />
 
       {/* Brand */}
-      <div className="p-6 flex items-center h-[100px] border-b border-white/10 overflow-hidden px-7">
+      <div className="p-6 flex items-center h-[100px] border-b border-line overflow-hidden px-7">
         <Link href="/" prefetch={true} className="flex items-center gap-4 no-underline group min-w-0">
           <div className="w-11 h-11 relative flex-shrink-0 group-hover:scale-110 transition-all duration-700">
              <img src="/logo_verified.png" className="w-full h-full object-contain" alt="Logo" />
@@ -71,7 +71,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
               animate={{ opacity: 1, x: 0 }}
               className="min-w-0"
             >
-               <h1 className="flex items-center text-xl tracking-tighter leading-none font-black italic uppercase">
+               <h1 className="flex items-center text-xl tracking-tighter leading-none font-black ">
                  <span className="brand-agree">AGREE</span>
                  <span className="brand-mint">MINT</span>
               </h1>
@@ -82,7 +82,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
         {onClose && (
           <button 
             onClick={onClose}
-            className="lg:hidden p-3 rounded-2xl bg-white/5 hover:bg-emerald hover:text-[#010101] transition-all ml-auto"
+            className="lg:hidden p-3 rounded-2xl bg-ink/5 hover:bg-emerald hover:text-paper transition-all ml-auto"
           >
             <X size={20} weight="bold" />
           </button>
@@ -105,7 +105,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
         </AnimatePresence>
 
         <p className={cn(
-          "px-4 mb-4 text-[9px] font-black uppercase tracking-[0.4em] text-white/20 transition-opacity",
+          "px-4 mb-4 text-[9px] font-black uppercase tracking-[0.4em] text-ink/20 transition-opacity",
           !isHovered ? "opacity-0" : "opacity-100"
         )}>
           Menu
@@ -120,15 +120,15 @@ export default function Sidebar({ onClose }: SidebarProps) {
               className={cn(
                 "group relative flex items-center gap-4 px-5 py-4 text-[12px] font-black uppercase tracking-[0.15em] transition-all duration-500 rounded-2xl border border-transparent overflow-hidden",
                 active(href)
-                  ? "bg-emerald text-[#010101] shadow-[0_10px_30px_rgba(0,255,209,0.2)] border-emerald/5"
-                  : "text-text-3 hover:text-white hover:bg-white/[0.03]"
+                  ? "bg-emerald text-paper shadow-[0_10px_30px_rgba(16,119,94,0.2)] border-emerald/5"
+                  : "text-text-3 hover:text-ink hover:bg-ink/[0.03]"
               )}
             >
               {/* Active Indicator Line */}
               {active(href) && (
                 <motion.div 
                   layoutId="active-line"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-black rounded-r-full z-20"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-ink rounded-r-full z-20"
                 />
               )}
 
@@ -158,25 +158,25 @@ export default function Sidebar({ onClose }: SidebarProps) {
       </nav>
 
       {/* Footer / Account */}
-      <div className="mt-auto p-4 border-t border-white/5 bg-[#050505]/20 backdrop-blur-2xl space-y-3">
+      <div className="mt-auto p-4 border-t border-line bg-wash/20 backdrop-blur-2xl space-y-3">
         {/* Notification Bell + Theme Toggle Row */}
         <div className={cn("flex items-center gap-2", isHovered ? "justify-between px-3" : "justify-center")}>
           <button
             onClick={() => setNotificationsOpen(true)}
-            className="relative p-2 rounded-xl bg-white/[0.03] border border-white/5 text-text-3 hover:text-emerald hover:border-emerald/20 transition-all"
+            className="relative p-2 rounded-xl bg-ink/[0.03] border border-line text-text-3 hover:text-emerald hover:border-emerald/20 transition-all"
           >
             <Bell size={18} weight="bold" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald rounded-full border-2 border-[#010101] shadow-[0_0_8px_rgba(0,255,209,0.4)]" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald rounded-full border-2 border-paper shadow-[0_0_8px_rgba(16,119,94,0.4)]" />
           </button>
           {isHovered && <ThemeToggle />}
         </div>
 
         {/* User Info */}
         <div className={cn(
-          "flex items-center gap-3 p-3 bg-white/[0.02] rounded-2xl border border-white/5 group transition-all",
+          "flex items-center gap-3 p-3 bg-ink/[0.02] rounded-2xl border border-line group transition-all",
           !isHovered ? "justify-center" : "justify-start"
         )}>
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-black text-[#010101] overflow-hidden shadow-xl group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(135deg,#00FFD1,#0070FF)' }}>
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-xs font-black text-paper overflow-hidden shadow-xl group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(135deg,#10775e,#2a4db0)' }}>
             {user?.firstName?.charAt(0) ?? "G"}
           </div>
           {isHovered && (
@@ -185,7 +185,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
               animate={{ opacity: 1, x: 0 }}
               className="flex-1 min-w-0"
             >
-              <p className="text-[11px] font-black text-white truncate leading-none tracking-tighter">{user?.firstName || "Account"}</p>
+              <p className="text-[11px] font-black text-ink truncate leading-none tracking-tighter">{user?.firstName || "Account"}</p>
               <p className="text-[8px] text-emerald font-black mt-2 truncate tracking-[0.2em] uppercase opacity-60">Verified</p>
             </motion.div>
           )}

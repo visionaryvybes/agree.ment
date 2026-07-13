@@ -2,402 +2,265 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Suspense } from 'react';
 import {
-  ArrowRight, ShieldCheck, Clock, Globe, FileText,
-  Lock, CaretRight, CheckCircle, Lightning, Handshake,
-  Scales, CurrencyDollar, Briefcase, ArrowUpRight,
-  Sparkle, Seal, GlobeHemisphereWest, UserCheck,
-} from "@phosphor-icons/react";
-import HandSigningScene from '@/components/ui/hand-signing-scene';
+  ArrowRight, ChatCircleText, PenNib, Seal, CurrencyDollar,
+  Briefcase, Handshake, House, PawPrint, Wrench,
+} from '@phosphor-icons/react';
 
-// ── Data ──────────────────────────────────────────────────────────────────
+// ── Content ───────────────────────────────────────────────────────────────
 
-const FEATURES = [
-  { icon: Lightning,     color: 'emerald', title: 'Draft in 60 Seconds',     desc: 'Describe your deal in plain language. AI builds the full legal contract instantly.' },
-  { icon: ShieldCheck,   color: 'blue',    title: 'Legally Admissible',       desc: 'Contracts reference real jurisdiction frameworks. Court-ready from day one.' },
-  { icon: UserCheck,     color: 'amber',   title: 'One-Click Digital Sign',   desc: 'Both parties sign securely from any device via a shared link.' },
-  { icon: Lock,          color: 'emerald', title: '256-Bit Encrypted',        desc: 'End-to-end encryption. Your documents stay private and tamper-proof.' },
-  { icon: GlobeHemisphereWest, color: 'blue', title: '180+ Jurisdictions',   desc: 'Auto-selects the right legal framework for your location every time.' },
-  { icon: Scales,        color: 'amber',   title: 'Built-In Dispute Path',    desc: 'Escalation tools from friendly reminders to formal legal guidance.' },
+const STEPS = [
+  {
+    n: '01',
+    icon: ChatCircleText,
+    title: 'Say what you agreed',
+    desc: 'Type it in plain words — or paste the WhatsApp chat where you hashed it out. No legal vocabulary required.',
+  },
+  {
+    n: '02',
+    icon: PenNib,
+    title: 'Get a proper document',
+    desc: 'AgreeMint drafts clear, complete terms: who, what, how much, by when, and what happens if things go sideways.',
+  },
+  {
+    n: '03',
+    icon: Seal,
+    title: 'Both of you sign',
+    desc: 'Share a link. Each party reviews and signs from any device. Everyone keeps a copy, nobody "remembers it differently."',
+  },
+];
+
+const CLAUSES = [
+  { n: '1.1', title: 'Plain language first', desc: 'Every agreement reads like a human wrote it. The legal structure is there; the jargon is not.' },
+  { n: '1.2', title: 'Chat-to-contract', desc: 'Paste the conversation where you made the deal. We pull out the terms and quote the source messages.' },
+  { n: '1.3', title: 'Jurisdiction aware', desc: 'Tell us where you are and the draft references your local legal framework, with warnings where rules differ.' },
+  { n: '2.1', title: 'Signatures that stick', desc: 'Draw or type a signature, timestamped, with both parties on record. Export the signed PDF anytime.' },
+  { n: '2.2', title: 'Payment tracking', desc: 'Milestones, due dates, and amounts live inside the agreement — so "did they pay yet?" has an answer.' },
+  { n: '2.3', title: 'If things go wrong', desc: 'A step-by-step path from friendly reminder to formal demand letter, so a bad deal never catches you unprepared.' },
 ];
 
 const USE_CASES = [
-  { icon: CurrencyDollar, title: 'Personal Loans',    desc: 'Lent money to a friend? Document it so nobody\'s feelings — or finances — get hurt.',  tag: 'PERSONAL', color: 'emerald' },
-  { icon: Briefcase,      title: 'Freelance Work',    desc: 'Lock in scope, rate, and deadlines before you start. Get paid what you agreed.',        tag: 'BUSINESS', color: 'blue' },
-  { icon: Handshake,      title: 'Private Sales',     desc: 'Selling your car or electronics? A proper bill of sale protects both buyer and seller.', tag: 'SALES',    color: 'amber' },
+  { icon: CurrencyDollar, title: 'The loan to a friend', desc: '"I\'ll pay you back next month." Get it on paper before it costs you a friendship.' },
+  { icon: Briefcase, title: 'The freelance gig', desc: 'Scope, rate, deadline, revisions. Agreed before the work starts — paid after it ends.' },
+  { icon: Handshake, title: 'The private sale', desc: 'Car, laptop, camera. A bill of sale that protects both sides of the handshake.' },
+  { icon: House, title: 'The roommate deal', desc: 'Rent split, bills, guests, moving out. The talk everyone avoids, written down once.' },
+  { icon: Wrench, title: 'The borrowed gear', desc: 'Lending tools, cameras, or your car? Say what happens if it comes back broken.' },
+  { icon: PawPrint, title: 'The pet sitter', desc: 'Feeding, vet emergencies, house keys. Everything the group chat forgot to cover.' },
 ];
 
-const STATS = [
-  { value: '50K+',  label: 'Agreements Created' },
-  { value: '180+',  label: 'Countries Supported' },
-  { value: '99.9%', label: 'Uptime SLA' },
-  { value: '< 60s', label: 'Time to Contract' },
-];
+// ── Motion helper ─────────────────────────────────────────────────────────
 
-// ── Shared animation helper ───────────────────────────────────────────────
-
-function fadeUp(delay = 0) {
+function rise(delay = 0) {
   return {
-    initial: { opacity: 0, y: 20 },
+    initial: { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] as any },
+    viewport: { once: true, margin: '-60px' },
+    transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
   };
 }
 
-// ── Inline accent helpers ─────────────────────────────────────────────────
-
-const accentMap: Record<string, { text: string; border: string; bg: string }> = {
-  emerald: { text: 'text-emerald', border: 'border-emerald/20',  bg: 'bg-emerald/[0.08]' },
-  blue:    { text: 'text-blue',    border: 'border-blue/20',     bg: 'bg-blue/[0.08]' },
-  amber:   { text: 'text-amber',   border: 'border-amber/20',    bg: 'bg-amber/[0.08]' },
-};
-
-// ── Component ─────────────────────────────────────────────────────────────
+// ── Page ──────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
   return (
-    <div className="bg-[#010101] text-white min-h-screen font-sans overflow-x-hidden">
+    <main className="min-h-screen bg-ground text-ink">
 
-      {/* SEO */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        '@context': 'https://schema.org', '@type': 'SoftwareApplication',
-        name: 'AgreeMint', operatingSystem: 'Web', applicationCategory: 'LegalApplication',
-        description: 'Create legally-binding agreements in under 60 seconds.',
-      })}} />
-
-      {/* ─── NAV ─────────────────────────────────────────────────────── */}
+      {/* ── Nav ── */}
       <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
-        <nav className="max-w-5xl mx-auto flex items-center justify-between bg-white/[0.03] backdrop-blur-2xl border border-white/[0.07] rounded-2xl px-5 py-3">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo_verified.png" className="w-7 h-7 object-contain" alt="AgreeMint" />
-            <span className="text-sm font-black italic uppercase tracking-tight">
-              <span className="brand-agree">Agree</span><span className="brand-mint">Mint</span>
-            </span>
+        <nav className="max-w-5xl mx-auto flex items-center justify-between liquid-gloss rounded-2xl px-5 py-3 shadow-[var(--shadow-sheet)]">
+          <Link href="/" className="text-xl">
+            <span className="brand-agree">Agree</span>
+            <span className="brand-mint">Mint</span>
           </Link>
-
-          <div className="hidden md:flex items-center gap-6">
-            {[['Features', '#features'], ['Use Cases', '#usecases'], ['Map', '#global']].map(([l, h]) => (
-              <a key={l} href={h} className="text-[11px] font-bold uppercase tracking-widest text-white/35 hover:text-white transition-colors">{l}</a>
-            ))}
+          <div className="hidden sm:flex items-center gap-7 text-sm text-ink-2">
+            <a href="#how" className="hover:text-ink transition-colors">How it works</a>
+            <a href="#terms-of-us" className="hover:text-ink transition-colors">What you get</a>
+            <a href="#uses" className="hover:text-ink transition-colors">Use cases</a>
           </div>
-
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="hidden md:block text-[11px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors px-3">
-              Sign In
-            </Link>
-            <Link href="/onboarding" className="btn-vibrant btn-vibrant-emerald !text-[10px] !py-2 !px-5 !rounded-xl">
-              Get Started <ArrowRight size={12} weight="bold" />
-            </Link>
-          </div>
+          <Link href="/dashboard" className="btn-vibrant btn-vibrant-emerald">
+            Open the app <ArrowRight size={15} weight="bold" />
+          </Link>
         </nav>
       </header>
 
-      {/* ─── HERO ────────────────────────────────────────────────────── */}
-      <section className="relative pt-24 pb-16 px-4 min-h-[100svh] flex flex-col justify-center overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald/[0.07] blur-[130px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue/[0.05] blur-[110px] rounded-full pointer-events-none" />
+      {/* ── Hero ── */}
+      <section className="relative pt-40 pb-24 px-4 overflow-hidden">
+        <div className="vibrant-glow w-[600px] h-[400px] bg-mint top-0 left-1/2 -translate-x-1/2" />
+        <div className="max-w-5xl mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
 
-        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-14">
-          {/* Copy */}
-          <div className="space-y-7">
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald/25 bg-emerald/[0.07] text-emerald text-[10px] font-black uppercase tracking-[0.3em]"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
-              Professional Agreements Platform
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-[56px] font-black tracking-[-0.03em] leading-[1.0] italic uppercase"
-            >
-              Handshake<br />
-              <span className="text-emerald not-italic">to Handled.</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-[15px] text-white/45 leading-relaxed max-w-sm font-medium"
-            >
-              Turn any informal deal into a documented, signed, legally-binding contract in under 60 seconds. No lawyers needed.
+          <div>
+            <motion.p {...rise(0)} className="font-mono text-[11px] tracking-[0.25em] uppercase text-mint mb-6">
+              Agreements for everyday deals
             </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="flex flex-wrap items-center gap-3"
-            >
-              <Link href="/onboarding" className="btn-vibrant btn-vibrant-emerald group !px-7 !py-3.5 !text-xs !rounded-xl">
-                Start for Free
-                <ArrowRight size={14} weight="bold" className="group-hover:translate-x-0.5 transition-transform" />
+            <motion.h1 {...rise(0.08)} className="heading-display text-[clamp(2.6rem,6vw,4.3rem)] text-ink">
+              A handshake is a memory.
+              <br />
+              <em className="text-mint">Paper is a fact.</em>
+            </motion.h1>
+            <motion.p {...rise(0.16)} className="mt-6 text-lg text-ink-2 leading-relaxed max-w-md">
+              Describe the deal in your own words — or paste the chat where you
+              made it — and get a clear, signable agreement both of you can
+              live with. Minutes, not lawyers.
+            </motion.p>
+            <motion.div {...rise(0.24)} className="mt-9 flex flex-wrap items-center gap-4">
+              <Link href="/contracts/new" className="btn-vibrant btn-vibrant-emerald !px-6 !py-3.5 !text-base">
+                Draft your first agreement
               </Link>
-              <Link href="/dashboard" className="flex items-center gap-1.5 text-sm font-bold text-white/40 hover:text-white transition-colors group">
-                Open Dashboard
-                <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </Link>
+              <a href="#how" className="btn-secondary px-6 py-3.5 text-base">
+                See how it works
+              </a>
             </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="flex items-center gap-5 pt-1"
-            >
-              {['No credit card', 'Cancel anytime', 'GDPR compliant'].map((t, i) => (
-                <div key={i} className="flex items-center gap-1.5 text-[10px] text-white/25 font-medium">
-                  <CheckCircle size={11} weight="fill" className="text-emerald/50 flex-shrink-0" />
-                  {t}
-                </div>
-              ))}
-            </motion.div>
+            <motion.p {...rise(0.3)} className="mt-5 text-xs text-ink-3">
+              Free to start. No card required. Not a law firm — see the fine print below (we actually want you to read it).
+            </motion.p>
           </div>
 
-          {/* Scene */}
+          {/* Typeset contract sheet */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.93 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-            className="h-[380px] sm:h-[460px] lg:h-[520px] w-full"
+            initial={{ opacity: 0, y: 30, rotate: 2 }}
+            animate={{ opacity: 1, y: 0, rotate: 1.2 }}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="relative hidden md:block"
           >
-            <Suspense fallback={<div className="w-full h-full bg-white/[0.03] rounded-3xl animate-pulse" />}>
-              <HandSigningScene />
-            </Suspense>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ─── STATS BAR ───────────────────────────────────────────────── */}
-      <section className="py-10 px-4 border-y border-white/[0.05] bg-white/[0.012]">
-        <div className="max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          {STATS.map((s, i) => (
-            <motion.div key={i} {...fadeUp(i * 0.07)} className="text-center">
-              <p className="text-xl sm:text-2xl font-black text-white tracking-tight">{s.value}</p>
-              <p className="text-[10px] font-bold text-white/25 uppercase tracking-widest mt-0.5">{s.label}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── HOW IT WORKS ────────────────────────────────────────────── */}
-      <section className="py-20 sm:py-28 px-4 relative overflow-hidden">
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
-
-        <div className="max-w-5xl mx-auto">
-          <motion.div {...fadeUp()} className="text-center mb-14">
-            <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-3">The Process</span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight uppercase italic">Three Simple Steps</h2>
-            <p className="text-white/35 mt-3 text-sm max-w-md mx-auto leading-relaxed">From conversation to fully-signed contract.</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6 relative">
-            <div className="hidden md:block absolute top-14 left-[24%] right-[24%] h-px bg-gradient-to-r from-emerald/20 via-blue/20 to-amber/20" />
-
-            {[
-              { img: 'document_simple.png', num: '01', title: 'Capture', desc: 'Describe your deal or paste a chat — AI extracts all terms automatically.', accent: 'emerald' },
-              { img: 'lock_simple.png',     num: '02', title: 'Mint',    desc: 'Review, customize, then get both parties to sign digitally in seconds.',  accent: 'blue' },
-              { img: 'help_simple.png',     num: '03', title: 'Enforce', desc: 'Track compliance and access escalation tools if things go sideways.',      accent: 'amber' },
-            ].map((step, i) => {
-              const a = accentMap[step.accent];
-              return (
-                <motion.div key={i} {...fadeUp(i * 0.12)} className="flex flex-col items-center text-center gap-5 group">
-                  <div className={`relative w-24 h-24 rounded-2xl ${a.bg} border ${a.border} flex items-center justify-center transition-all duration-500 group-hover:scale-105`}>
-                    <img src={`/assets/3d/${step.img}`} className="w-16 h-16 object-contain" alt={step.title} />
-                    <span className={`absolute -top-2.5 -right-2.5 w-6 h-6 rounded-lg bg-[#010101] border border-white/10 flex items-center justify-center text-[8px] font-black ${a.text}`}>{step.num}</span>
-                  </div>
-                  <div>
-                    <h3 className={`text-lg font-black uppercase italic tracking-tight ${a.text}`}>{step.title}</h3>
-                    <p className="text-[13px] text-white/35 leading-relaxed mt-1.5 max-w-[220px] mx-auto">{step.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── FEATURES ────────────────────────────────────────────────── */}
-      <section id="features" className="py-20 sm:py-28 px-4 bg-white/[0.012] border-y border-white/[0.05]">
-        <div className="max-w-5xl mx-auto">
-          <motion.div {...fadeUp()} className="text-center mb-12">
-            <span className="text-[10px] font-black text-blue uppercase tracking-[0.4em] block mb-3">Why AgreeMint</span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight uppercase italic">Built for the Real World</h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FEATURES.map((f, i) => {
-              const a = accentMap[f.color];
-              return (
-                <motion.div
-                  key={i}
-                  {...fadeUp(i * 0.07)}
-                  className={`p-5 rounded-2xl border ${a.border} ${a.bg} group hover:scale-[1.02] transition-all duration-300`}
-                >
-                  <div className={`w-9 h-9 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center mb-3 ${a.text} flex-shrink-0`}>
-                    <f.icon size={17} weight="bold" />
-                  </div>
-                  <h3 className={`text-[13px] font-black uppercase tracking-wide ${a.text} mb-1.5`}>{f.title}</h3>
-                  <p className="text-xs text-white/35 leading-relaxed">{f.desc}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── USE CASES ───────────────────────────────────────────────── */}
-      <section id="usecases" className="py-20 sm:py-28 px-4 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-80 h-80 bg-blue/[0.04] blur-[110px] rounded-full pointer-events-none" />
-
-        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          {/* Image card */}
-          <motion.div {...fadeUp()} className="order-2 lg:order-1">
-            <div className="relative rounded-3xl overflow-hidden bg-white/[0.02] border border-white/[0.06] p-6 sm:p-8 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue/[0.04] to-transparent pointer-events-none rounded-3xl" />
-              <img
-                src="/assets/3d/vault_blue.png"
-                className="w-full max-h-60 sm:max-h-72 object-contain transition-transform duration-700 group-hover:scale-[1.04]"
-                alt="Secure document vault"
-              />
+            <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-md bg-ink/[0.06]" />
+            <div className="relative bg-card border border-line rounded-md p-8 shadow-[var(--shadow-lift)]">
+              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink-3">Loan Agreement · No. 0001</p>
+              <h3 className="heading-display text-2xl mt-3">Maya lends Jonas $600</h3>
+              <div className="mt-5 space-y-4 text-[13px] leading-relaxed text-ink-2">
+                <p><span className="font-mono text-mint mr-2">1.</span>Jonas repays $200 on the first of each month, starting August 1st.</p>
+                <p><span className="font-mono text-mint mr-2">2.</span>No interest — this is between friends. Late by 14 days? They talk first.</p>
+                <p><span className="font-mono text-mint mr-2">3.</span>Fully repaid by October 1st, and this agreement ends with dinner on Jonas.</p>
+              </div>
+              <div className="mt-7 pt-5 border-t border-dashed border-line-strong grid grid-cols-2 gap-6">
+                <div>
+                  <p className="font-display italic text-xl text-ink">Maya K.</p>
+                  <p className="mt-1 h-px bg-line-strong" />
+                  <p className="mt-1.5 font-mono text-[9px] uppercase tracking-widest text-ink-3">Lender</p>
+                </div>
+                <div>
+                  <p className="font-display italic text-xl text-ink">Jonas T.</p>
+                  <p className="mt-1 h-px bg-line-strong" />
+                  <p className="mt-1.5 font-mono text-[9px] uppercase tracking-widest text-ink-3">Borrower</p>
+                </div>
+              </div>
+              {/* Mint seal */}
+              <div className="absolute -right-5 -bottom-5 w-20 h-20 rounded-full bg-mint text-paper flex items-center justify-center rotate-[-12deg] shadow-[var(--shadow-lift)]">
+                <div className="text-center leading-tight">
+                  <Seal size={22} weight="fill" className="mx-auto" />
+                  <p className="font-mono text-[8px] tracking-[0.15em] mt-0.5">AGREED</p>
+                </div>
+              </div>
             </div>
           </motion.div>
-
-          {/* Content */}
-          <div className="order-1 lg:order-2 space-y-8">
-            <motion.div {...fadeUp()}>
-              <span className="text-[10px] font-black text-blue uppercase tracking-[0.4em] block mb-3">Real Use Cases</span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight uppercase italic leading-tight">
-                Made for<br />Real Life.
-              </h2>
-              <p className="text-white/35 mt-3 text-sm leading-relaxed max-w-sm">
-                Don't let a lost friendship or a missed payment be the price of an informal deal.
-              </p>
-            </motion.div>
-
-            <div className="space-y-4">
-              {USE_CASES.map((uc, i) => {
-                const a = accentMap[uc.color];
-                return (
-                  <motion.div key={i} {...fadeUp(i * 0.1 + 0.1)} className="flex items-start gap-4 group">
-                    <div className={`w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center ${a.text} flex-shrink-0 group-hover:scale-110 transition-transform`}>
-                      <uc.icon size={18} weight="bold" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <h4 className="text-[13px] font-black uppercase tracking-wide text-white">{uc.title}</h4>
-                        <span className={`text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-white/[0.05] border ${a.border} ${a.text}`}>{uc.tag}</span>
-                      </div>
-                      <p className="text-xs text-white/35 leading-relaxed">{uc.desc}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* ─── GLOBAL REACH ────────────────────────────────────────────── */}
-      <section id="global" className="py-20 sm:py-28 px-4 bg-white/[0.01] border-y border-white/[0.05] relative overflow-hidden">
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber/[0.04] blur-[120px] rounded-full pointer-events-none" />
-
-        <div className="max-w-5xl mx-auto flex flex-col items-center gap-10 text-center">
-          <motion.div {...fadeUp()} className="max-w-xl">
-            <span className="text-[10px] font-black text-amber uppercase tracking-[0.4em] block mb-3">Global Network</span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight uppercase italic">Agreements Everywhere.</h2>
-            <p className="text-white/35 mt-3 text-sm leading-relaxed">
-              Jurisdiction-aware contracts recognized across 180+ countries. We handle the legal nuance so you don't have to.
-            </p>
-          </motion.div>
-
-          <motion.div {...fadeUp(0.15)} className="w-full max-w-3xl relative">
-            <div className="absolute inset-0 bg-amber/[0.05] blur-[50px] rounded-full pointer-events-none" />
-            <img
-              src="/assets/3d/map_gold.png"
-              className="w-full max-h-[320px] sm:max-h-[380px] object-contain relative z-10"
-              alt="Global coverage map"
-            />
-          </motion.div>
-
-          <motion.div {...fadeUp(0.25)} className="flex flex-wrap justify-center gap-4 sm:gap-6">
-            {['New York', 'London', 'Lagos', 'Dubai', 'Singapore', 'Nairobi'].map(city => (
-              <span key={city} className="text-[10px] font-black uppercase tracking-[0.3em] text-amber/40 hover:text-amber transition-colors cursor-default">{city}</span>
+      {/* ── How it works ── */}
+      <section id="how" className="py-24 px-4 border-t border-line bg-wash/60">
+        <div className="max-w-5xl mx-auto">
+          <motion.h2 {...rise()} className="heading-display text-3xl sm:text-4xl">
+            Three steps. <em className="text-mint">No homework.</em>
+          </motion.h2>
+          <div className="mt-14 grid md:grid-cols-3 gap-10">
+            {STEPS.map((s, i) => (
+              <motion.div key={s.n} {...rise(i * 0.1)} className="relative">
+                <p className="font-display italic text-[64px] leading-none text-ink/[0.08] select-none">{s.n}</p>
+                <s.icon size={26} className="text-mint -mt-6" weight="duotone" />
+                <h3 className="mt-4 font-semibold text-lg">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-2">{s.desc}</p>
+              </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── What you get, written as clauses ── */}
+      <section id="terms-of-us" className="py-24 px-4 border-t border-line">
+        <div className="max-w-5xl mx-auto">
+          <motion.div {...rise()}>
+            <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-mint">Our terms, to you</p>
+            <h2 className="heading-display text-3xl sm:text-4xl mt-3">
+              What AgreeMint agrees to do
+            </h2>
+          </motion.div>
+          <div className="mt-12 grid sm:grid-cols-2 gap-x-14 gap-y-9">
+            {CLAUSES.map((c, i) => (
+              <motion.div key={c.n} {...rise(i * 0.06)} className="flex gap-4 border-b border-dashed border-line pb-7">
+                <span className="font-mono text-sm text-mint pt-0.5">{c.n}</span>
+                <div>
+                  <h3 className="font-semibold">{c.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{c.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Use cases ── */}
+      <section id="uses" className="py-24 px-4 border-t border-line bg-wash/60">
+        <div className="max-w-5xl mx-auto">
+          <motion.h2 {...rise()} className="heading-display text-3xl sm:text-4xl">
+            Deals people <em className="text-mint">actually make</em>
+          </motion.h2>
+          <p className="mt-4 text-ink-2 max-w-lg">
+            Not mergers. Not IPOs. The everyday promises between real people that
+            deserve more protection than a text message.
+          </p>
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {USE_CASES.map((u, i) => (
+              <motion.div
+                key={u.title}
+                {...rise(i * 0.06)}
+                className="group bg-card border border-line rounded-lg p-6 shadow-[var(--shadow-sheet)] hover:shadow-[var(--shadow-lift)] hover:-translate-y-1 transition-all duration-300"
+              >
+                <u.icon size={24} weight="duotone" className="text-mint" />
+                <h3 className="mt-4 font-semibold">{u.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-2">{u.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Final CTA ── */}
+      <section className="py-28 px-4 border-t border-line relative overflow-hidden">
+        <div className="vibrant-glow w-[500px] h-[300px] bg-mint bottom-0 left-1/2 -translate-x-1/2" />
+        <div className="max-w-2xl mx-auto text-center">
+          <motion.h2 {...rise()} className="heading-display text-4xl sm:text-5xl">
+            Shake on it.
+            <br />
+            <em className="text-mint">Then sign it.</em>
+          </motion.h2>
+          <motion.div {...rise(0.12)} className="mt-9">
+            <Link href="/contracts/new" className="btn-vibrant btn-vibrant-emerald !px-8 !py-4 !text-base">
+              Start your agreement <ArrowRight size={17} weight="bold" />
+            </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── TRUST STRIP ─────────────────────────────────────────────── */}
-      <section className="py-12 px-4 bg-white/[0.012] border-b border-white/[0.05]">
+      {/* ── Footer ── */}
+      <footer className="py-12 px-4 border-t border-line bg-wash/60">
         <div className="max-w-5xl mx-auto">
-          <div className="grid sm:grid-cols-3 gap-6">
-            {[
-              { icon: ShieldCheck, color: 'emerald', title: 'Court Admissible', desc: 'Every document meets evidentiary standards in 50+ legal systems.' },
-              { icon: Lock,        color: 'blue',    title: 'Bank-Grade Security', desc: 'AES-256 encryption. Zero-knowledge architecture. Your data is yours.' },
-              { icon: Seal,        color: 'amber',   title: 'Tamper-Proof',     desc: 'Blockchain-anchored audit trail. Every signature is verifiable forever.' },
-            ].map((item, i) => {
-              const a = accentMap[item.color];
-              return (
-                <motion.div key={i} {...fadeUp(i * 0.1)} className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center flex-shrink-0 ${a.text}`}>
-                    <item.icon size={18} weight="bold" />
-                  </div>
-                  <div>
-                    <h4 className={`text-[13px] font-black uppercase ${a.text} mb-1`}>{item.title}</h4>
-                    <p className="text-xs text-white/30 leading-relaxed">{item.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <Link href="/" className="text-lg">
+              <span className="brand-agree">Agree</span>
+              <span className="brand-mint">Mint</span>
+            </Link>
+            <div className="flex gap-6 text-sm text-ink-2">
+              <Link href="/terms" className="hover:text-ink transition-colors">Terms</Link>
+              <Link href="/privacy" className="hover:text-ink transition-colors">Privacy</Link>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* ─── CTA ─────────────────────────────────────────────────────── */}
-      <section className="py-20 px-4">
-        <motion.div
-          {...fadeUp()}
-          className="max-w-2xl mx-auto rounded-3xl bg-emerald px-8 py-14 sm:py-16 text-[#010101] flex flex-col items-center text-center gap-7 relative overflow-hidden"
-          style={{ boxShadow: '0 0 60px rgba(0,255,209,0.2)' }}
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.15),transparent_60%)] pointer-events-none" />
-          <Sparkle size={28} weight="fill" className="text-[#010101]/40" />
-          <div className="relative z-10">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight uppercase italic">Ready to Start?</h2>
-            <p className="text-[#010101]/50 mt-2 text-sm font-medium">Create your first agreement free. No credit card needed.</p>
-          </div>
-          <Link href="/onboarding" className="bg-[#010101] text-emerald px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_30px_rgba(0,0,0,0.4)] relative z-10">
-            Get Started Free →
-          </Link>
-        </motion.div>
-      </section>
-
-      {/* ─── FOOTER ──────────────────────────────────────────────────── */}
-      <footer className="py-12 px-4 border-t border-white/[0.05]">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-white/25">
-          <div className="flex items-center gap-2.5">
-            <img src="/logo_verified.png" className="w-6 h-6 object-contain opacity-60" alt="Logo" />
-            <span className="text-xs font-black italic uppercase tracking-tight text-white/50">
-              <span className="brand-agree">Agree</span><span className="brand-mint">Mint</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest">
-            <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/dashboard" className="hover:text-white transition-colors">App</Link>
-          </div>
-          <p className="text-[10px] font-bold uppercase tracking-widest">© 2026 AgreeMint Inc.</p>
+          <p className="mt-8 text-xs leading-relaxed text-ink-3 max-w-2xl">
+            The fine print, in plain sight: AgreeMint is a self-help document tool,
+            not a law firm, and nothing here is legal advice. Drafts are AI-assisted —
+            read every agreement before you sign it, and talk to a qualified lawyer
+            for anything high-stakes. © {new Date().getFullYear()} AgreeMint.
+          </p>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

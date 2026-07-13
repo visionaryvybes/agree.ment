@@ -108,10 +108,10 @@ export default function VerifiedGuidancePage() {
       <div className="vibrant-glow bottom-0 right-1/4 w-[280px] h-[280px] bg-blue/[0.05]" />
 
       {/* ── HEADER ─────────────────────────────────────────────────── */}
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/[0.07] relative z-10 flex-shrink-0">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-line relative z-10 flex-shrink-0">
         <div>
           <span className="text-[10px] font-black text-emerald uppercase tracking-[0.4em] block mb-1">Secure Support</span>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight italic uppercase">Guidance.</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight ">Guidance.</h1>
         </div>
 
         {/* Escalation progress */}
@@ -127,12 +127,12 @@ export default function VerifiedGuidancePage() {
                 'w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black border',
                 step.active
                   ? 'bg-emerald/15 border-emerald/30 text-emerald'
-                  : 'bg-white/[0.03] border-white/[0.07] text-white/20',
+                  : 'bg-ink/[0.03] border-line text-ink/20',
               )}>{i + 1}</div>
-              <span className={cn('text-[9px] font-black uppercase tracking-wider hidden sm:block', step.active ? step.color : 'text-white/20')}>
+              <span className={cn('text-[9px] font-black uppercase tracking-wider hidden sm:block', step.active ? step.color : 'text-ink/20')}>
                 {step.label}
               </span>
-              {i < 3 && <CaretRight size={10} className="text-white/10" />}
+              {i < 3 && <CaretRight size={10} className="text-ink/10" />}
             </div>
           ))}
         </div>
@@ -142,7 +142,7 @@ export default function VerifiedGuidancePage() {
       <div className="flex flex-col lg:flex-row gap-5 flex-1 min-h-0">
 
         {/* Chat */}
-        <div className="flex-1 flex flex-col bg-white/[0.02] border border-white/[0.07] rounded-3xl overflow-hidden relative z-10">
+        <div className="flex-1 flex flex-col bg-ink/[0.02] border border-line rounded-3xl overflow-hidden relative z-10">
           {/* Top fade */}
           <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#010101]/60 to-transparent z-10 pointer-events-none rounded-t-3xl" />
 
@@ -160,16 +160,16 @@ export default function VerifiedGuidancePage() {
                   <div className={cn(
                     'max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-2xl relative',
                     m.role === 'user'
-                      ? 'bg-emerald text-[#010101] font-black rounded-br-md'
-                      : 'bg-white/[0.05] border border-white/[0.08] text-white rounded-bl-md',
+                      ? 'bg-emerald text-paper font-black rounded-br-md'
+                      : 'bg-ink/[0.05] border border-line text-ink rounded-bl-md',
                   )}>
                     {m.role === 'assistant' && (
                       <div className="flex items-center gap-2 mb-2">
                         <Robot size={12} weight="bold" className="text-emerald opacity-60" />
-                        <span className="text-[8px] font-black text-white/25 uppercase tracking-widest">AgreeMint AI</span>
+                        <span className="text-[8px] font-black text-ink/25 uppercase tracking-widest">AgreeMint AI</span>
                       </div>
                     )}
-                    <p className={cn('text-sm leading-relaxed whitespace-pre-wrap', m.role === 'user' ? 'text-[#010101]' : 'text-white/80')}>
+                    <p className={cn('text-sm leading-relaxed whitespace-pre-wrap', m.role === 'user' ? 'text-paper' : 'text-ink/80')}>
                       {m.content || (m.role === 'assistant' && isLoading ? '...' : '')}
                     </p>
                   </div>
@@ -184,7 +184,7 @@ export default function VerifiedGuidancePage() {
                   exit={{ opacity: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-white/[0.05] border border-white/[0.08] rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
+                  <div className="bg-ink/[0.05] border border-line rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
                     {[0, 0.15, 0.3].map(d => (
                       <motion.div key={d} className="w-1.5 h-1.5 rounded-full bg-emerald/60"
                         animate={{ opacity: [0.3, 1, 0.3] }}
@@ -204,7 +204,7 @@ export default function VerifiedGuidancePage() {
                 <button
                   key={i}
                   onClick={() => sendMessage(s)}
-                  className="text-[10px] font-bold text-white/40 border border-white/[0.08] px-3 py-1.5 rounded-xl hover:border-emerald/30 hover:text-emerald transition-all"
+                  className="text-[10px] font-bold text-ink/40 border border-line px-3 py-1.5 rounded-xl hover:border-emerald/30 hover:text-emerald transition-all"
                 >
                   {s}
                 </button>
@@ -213,12 +213,12 @@ export default function VerifiedGuidancePage() {
           )}
 
           {/* Input */}
-          <form onSubmit={handleSubmit} className="p-4 border-t border-white/[0.07] bg-white/[0.02] flex-shrink-0">
+          <form onSubmit={handleSubmit} className="p-4 border-t border-line bg-ink/[0.02] flex-shrink-0">
             <div className="flex items-center gap-3">
               <div className="flex-1 relative group">
                 <ChatTeardropText
                   size={14}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-emerald transition-colors"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/20 group-focus-within:text-emerald transition-colors"
                   weight="bold"
                 />
                 <input
@@ -226,13 +226,13 @@ export default function VerifiedGuidancePage() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   placeholder="Ask a question about your agreement…"
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl py-3 pl-10 pr-4 text-[12px] font-medium text-white placeholder:text-white/20 focus:outline-none focus:border-emerald/40 transition-all"
+                  className="w-full bg-ink/[0.04] border border-line rounded-xl py-3 pl-10 pr-4 text-[12px] font-medium text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
                 />
               </div>
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="w-10 h-10 rounded-xl bg-emerald text-[#010101] flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-30 disabled:scale-100 flex-shrink-0"
+                className="w-10 h-10 rounded-xl bg-emerald text-paper flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-30 disabled:scale-100 flex-shrink-0"
               >
                 <PaperPlaneRight size={16} weight="bold" />
               </button>
@@ -243,20 +243,20 @@ export default function VerifiedGuidancePage() {
         {/* Sidebar */}
         <aside className="hidden lg:flex flex-col gap-4 w-72 flex-shrink-0">
           {/* Enforcement path */}
-          <div className="p-5 rounded-3xl bg-white/[0.02] border border-white/[0.07] space-y-3 flex-1">
+          <div className="p-5 rounded-3xl bg-ink/[0.02] border border-line space-y-3 flex-1">
             <h4 className="text-[10px] font-black text-amber uppercase tracking-[0.35em] mb-4">Enforcement Path</h4>
             {ESCALATION_STEPS.map((step, i) => (
               <div key={i} className={cn(
                 'p-3.5 rounded-xl border transition-all',
-                step.active ? 'bg-amber/[0.08] border-amber/25' : 'bg-white/[0.02] border-white/[0.05] opacity-40',
+                step.active ? 'bg-amber/[0.08] border-amber/25' : 'bg-ink/[0.02] border-line opacity-40',
               )}>
                 <div className="flex items-center gap-2 mb-1">
                   <span className={cn('w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-black border flex-shrink-0',
-                    step.active ? 'bg-amber/20 border-amber/30 text-amber' : 'bg-white/[0.04] border-white/10 text-white/30',
+                    step.active ? 'bg-amber/20 border-amber/30 text-amber' : 'bg-ink/[0.04] border-line text-ink/30',
                   )}>{i + 1}</span>
-                  <p className="text-[10px] font-black text-white uppercase tracking-wide">{step.title}</p>
+                  <p className="text-[10px] font-black text-ink uppercase tracking-wide">{step.title}</p>
                 </div>
-                <p className="text-[9px] text-white/30 leading-relaxed pl-7">{step.desc}</p>
+                <p className="text-[9px] text-ink/30 leading-relaxed pl-7">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -264,10 +264,10 @@ export default function VerifiedGuidancePage() {
           {/* Global sync card */}
           <div className="p-5 rounded-3xl bg-emerald/[0.07] border border-emerald/20 group hover:bg-emerald transition-all duration-400 cursor-pointer">
             <div className="flex items-center gap-3 mb-2">
-              <ShieldCheck size={18} weight="bold" className="text-emerald group-hover:text-[#010101] transition-colors" />
-              <h4 className="text-[11px] font-black text-white group-hover:text-[#010101] uppercase tracking-wide transition-colors">Global Sync</h4>
+              <ShieldCheck size={18} weight="bold" className="text-emerald group-hover:text-paper transition-colors" />
+              <h4 className="text-[11px] font-black text-ink group-hover:text-paper uppercase tracking-wide transition-colors">Global Sync</h4>
             </div>
-            <p className="text-[10px] text-white/30 group-hover:text-[#010101]/60 leading-relaxed transition-colors">
+            <p className="text-[10px] text-ink/30 group-hover:text-paper/60 leading-relaxed transition-colors">
               Your agreement is verified against local laws in 180+ countries including Lagos, London, and Dubai.
             </p>
           </div>
@@ -276,11 +276,11 @@ export default function VerifiedGuidancePage() {
 
       {/* Footer disclaimer */}
       <div className="flex items-center justify-center gap-8 flex-shrink-0">
-        <div className="flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-[10px] font-bold text-ink/20 uppercase tracking-widest">
           <Warning size={12} className="text-amber/50" weight="bold" />
           Not Legal Advice
         </div>
-        <div className="flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-[10px] font-bold text-ink/20 uppercase tracking-widest">
           <Sparkle size={12} className="text-emerald/50" weight="bold" />
           AgreeMint Secure
         </div>

@@ -49,10 +49,10 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="p-8 rounded-[32px] bg-white/[0.03] border border-white/5 space-y-4">
+      <div className="p-8 rounded-[32px] bg-ink/[0.03] border border-line space-y-4">
         <div className="flex items-center gap-3">
           <Warning size={24} className="text-amber" weight="bold" />
-          <h3 className="text-xl font-black text-white tracking-tighter">Resolve a Dispute</h3>
+          <h3 className="text-xl font-semibold text-ink tracking-tighter">Resolve a Dispute</h3>
         </div>
         <p className="text-[10px] font-black text-text-3 uppercase tracking-widest leading-relaxed">
           Follow the steps below to resolve your dispute. Start with a friendly approach and only escalate when needed.
@@ -82,9 +82,9 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
                 className={cn(
                   "w-full p-6 rounded-2xl border flex items-center gap-6 transition-all text-left group",
                   isCompleted ? `bg-${config.color}/5 border-${config.color}/20` :
-                  isCurrent ? `bg-${config.color}/10 border-${config.color}/40 shadow-[0_0_30px_rgba(0,255,209,0.05)]` :
-                  isNext ? "bg-white/[0.03] border-white/10 hover:border-white/20" :
-                  "bg-white/[0.02] border-white/5 opacity-40 cursor-not-allowed",
+                  isCurrent ? `bg-${config.color}/10 border-${config.color}/40 shadow-[0_0_30px_rgba(16,119,94,0.05)]` :
+                  isNext ? "bg-ink/[0.03] border-line hover:border-line-strong" :
+                  "bg-ink/[0.02] border-line opacity-40 cursor-not-allowed",
                   selectedLevel === config.level && "ring-2 ring-emerald/40"
                 )}
               >
@@ -106,7 +106,7 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
                     <span className="text-[9px] font-black uppercase tracking-widest text-text-3">Step {i + 1}</span>
                     {isCompleted && <span className="text-[8px] font-black text-emerald uppercase tracking-widest bg-emerald/10 px-2 py-0.5 rounded-full">Done</span>}
                   </div>
-                  <p className="text-sm font-black text-white mt-1">{config.label}</p>
+                  <p className="text-sm font-black text-ink mt-1">{config.label}</p>
                   <p className="text-[9px] text-text-3 uppercase tracking-widest opacity-60 mt-1">{config.description}</p>
                   {stepData?.triggeredAt && (
                     <p className="text-[8px] text-text-3 uppercase tracking-widest opacity-40 mt-2">
@@ -117,7 +117,7 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
 
                 {/* Arrow */}
                 {!isLocked && !isCompleted && (
-                  <CaretRight size={20} className="text-text-3 group-hover:text-white transition-colors flex-shrink-0" weight="bold" />
+                  <CaretRight size={20} className="text-text-3 group-hover:text-ink transition-colors flex-shrink-0" weight="bold" />
                 )}
               </button>
             </motion.div>
@@ -130,21 +130,21 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 space-y-6"
+          className="p-8 rounded-[32px] bg-ink/[0.03] border border-line space-y-6"
         >
-          <h4 className="text-sm font-black text-white uppercase tracking-widest">
+          <h4 className="text-sm font-black text-ink uppercase tracking-widest">
             Send {ESCALATION_CONFIG.find(e => e.level === selectedLevel)?.label}
           </h4>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Describe the issue and what you'd like resolved..."
-            className="w-full h-32 bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-sm text-white placeholder:text-white/15 focus:outline-none focus:border-emerald/50 resize-none"
+            className="w-full h-32 bg-ink/[0.03] border border-line rounded-2xl p-5 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/50 resize-none"
           />
           <button
             onClick={handleSend}
             disabled={!message.trim() || sending}
-            className="w-full py-4 rounded-2xl bg-emerald text-[#010101] text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 shadow-[0_0_30px_rgba(0,255,209,0.2)]"
+            className="w-full py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 shadow-[0_0_30px_rgba(16,119,94,0.2)]"
           >
             {sending ? 'Sending...' : <><ArrowRight size={18} weight="bold" /> Send</>}
           </button>
