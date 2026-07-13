@@ -3,12 +3,11 @@
 import { useUser, UserButton } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
 import {
-  ShieldCheck,
   Plus,
   Stack,
-  PlusCircle,
   Browsers,
-  FileText
+  FileText,
+  MagnifyingGlass,
 } from "@phosphor-icons/react";
 import Sidebar from "@/components/Sidebar";
 import Link from 'next/link';
@@ -48,25 +47,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* ── MOBILE BOTTOM DOCK ────────────────────────────────────── */}
       {isMobile && (
         <div className="fixed bottom-8 left-6 right-6 z-[100]">
-          <nav className="liquid-gloss rounded-[32px] px-8 py-5 flex items-center justify-between shadow-[0_32px_64px_rgba(0,0,0,0.9)] border-line">
+          <nav className="liquid-gloss rounded-2xl px-6 py-4 flex items-center justify-between shadow-[var(--shadow-lift)]">
             {[
-              { name: 'Deals', icon: Browsers, href: '/dashboard' },
-              { name: 'Library', icon: FileText, href: '/contracts' },
+              { name: 'Ledger', icon: Browsers, href: '/dashboard' },
+              { name: 'Files', icon: FileText, href: '/contracts' },
               { name: 'Templates', icon: Stack, href: '/templates' },
-              { name: 'Resolve', icon: ShieldCheck, href: '/verified-guidance' },
+              { name: 'Explain', icon: MagnifyingGlass, href: '/explain' },
             ].map((item) => {
               const active = pathname === item.href;
               return (
-                <Link key={item.name} href={item.href} className={cn("relative p-2 transition-all duration-500", active ? "text-emerald scale-110" : "text-text-3")}>
-                  <item.icon size={28} weight={active ? 'fill' : 'bold'} />
+                <Link key={item.name} href={item.href} className={cn("relative p-2 transition-all duration-300", active ? "text-mint" : "text-text-3")}>
+                  <item.icon size={24} weight={active ? 'fill' : 'duotone'} />
                   {active && (
-                    <motion.div layoutId="mobile-nav-dot" className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-emerald rounded-full shadow-[0_0_15px_#10775e]" />
+                    <motion.div layoutId="mobile-nav-dot" className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-mint rounded-full" />
                   )}
                 </Link>
               );
             })}
-            <Link href="/contracts/new" className="w-14 h-14 bg-emerald rounded-[20px] flex items-center justify-center text-paper shadow-[0_0_30px_rgba(16,119,94,0.3)] active:scale-90 transition-transform">
-              <PlusCircle size={32} weight="bold" />
+            <Link href="/contracts/new" className="w-12 h-12 bg-ink text-paper rounded-xl flex items-center justify-center active:scale-90 transition-transform">
+              <Plus size={24} weight="bold" />
             </Link>
           </nav>
         </div>
@@ -78,14 +77,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Mobile Header Branding */}
           {isMobile && (
             <header className="mb-12 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(16,119,94,0.2)]">
-                  <Plus weight="bold" size={20} className="text-paper" />
-                </div>
-                <span className="font-display font-black text-xl tracking-tighter ">
-                  Agree<span className="text-emerald not-italic">Mint</span>
-                </span>
-              </div>
+              <span className="text-xl leading-none">
+                <span className="brand-agree">Agree</span>
+                <span className="brand-mint">Mint</span>
+              </span>
               <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 rounded-2xl border border-line" } }} />
             </header>
           )}
