@@ -11,19 +11,19 @@ import {
 
 const STEPS = [
   {
-    n: 'STEP/01',
+    n: 'STEP 1',
     icon: ChatCircleText,
     title: 'Say what you agreed',
     desc: 'Type it in plain words — or paste the WhatsApp chat where you hashed it out. No legal vocabulary required.',
   },
   {
-    n: 'STEP/02',
+    n: 'STEP 2',
     icon: PenNib,
     title: 'Get your document',
     desc: 'AgreeMint drafts clear, complete terms: who, what, how much, by when, and what happens if things go sideways.',
   },
   {
-    n: 'STEP/03',
+    n: 'STEP 3',
     icon: Seal,
     title: 'Both of you sign',
     desc: 'Share a link. Each party reviews and signs from any device. Everyone keeps a copy, nobody "remembers it differently."',
@@ -31,21 +31,21 @@ const STEPS = [
 ];
 
 const CLAUSES = [
-  { n: '§1.1', title: 'Plain language first', desc: 'Every agreement reads like a human wrote it. The legal structure is there; the jargon is not.' },
-  { n: '§1.2', title: 'Chat-to-contract', desc: 'Paste the conversation where you made the deal. We pull out the terms and quote the source messages.' },
-  { n: '§1.3', title: 'Jurisdiction aware', desc: 'Tell us where you are and the draft references your local legal framework, with warnings where rules differ.' },
-  { n: '§2.1', title: 'Signatures that stick', desc: 'Draw or type a signature, timestamped, with both parties on record. Export the signed PDF anytime.' },
-  { n: '§2.2', title: 'Payment tracking', desc: 'Milestones, due dates, and amounts live inside the agreement — so "did they pay yet?" has an answer.' },
-  { n: '§2.3', title: 'If things go wrong', desc: 'A step-by-step path from friendly reminder to formal demand letter, so a bad deal never catches you unprepared.' },
+  { n: '01', title: 'Plain language first', desc: 'Every agreement reads like a human wrote it. The legal structure is there; the jargon is not.' },
+  { n: '02', title: 'Chat-to-contract', desc: 'Paste the conversation where you made the deal. We pull out the terms and quote the source messages.' },
+  { n: '03', title: 'Knows your local rules', desc: "Tell us where you are and the draft follows your country's rules, with warnings where they differ." },
+  { n: '04', title: 'Signatures that stick', desc: 'Draw or type a signature, timestamped, with both parties on record. Export the signed PDF anytime.' },
+  { n: '05', title: 'Payment tracking', desc: 'Milestones, due dates, and amounts live inside the agreement — so "did they pay yet?" has an answer.' },
+  { n: '06', title: 'If things go wrong', desc: 'A step-by-step path from friendly reminder to formal demand letter, so a bad deal never catches you unprepared.' },
 ];
 
 const USE_CASES = [
-  { icon: CurrencyDollar, file: 'FILE/A-01', title: 'The loan to a friend', desc: '"I\'ll pay you back next month." Get it on paper before it costs you a friendship.' },
-  { icon: Briefcase, file: 'FILE/A-02', title: 'The freelance gig', desc: 'Scope, rate, deadline, revisions. Agreed before the work starts — paid after it ends.' },
-  { icon: Handshake, file: 'FILE/A-03', title: 'The private sale', desc: 'Car, laptop, camera. A bill of sale that protects both sides of the handshake.' },
-  { icon: House, file: 'FILE/A-04', title: 'The roommate deal', desc: 'Rent split, bills, guests, moving out. The talk everyone avoids, written down once.' },
-  { icon: Wrench, file: 'FILE/A-05', title: 'The borrowed gear', desc: 'Lending tools, cameras, or your car? Say what happens if it comes back broken.' },
-  { icon: PawPrint, file: 'FILE/A-06', title: 'The pet sitter', desc: 'Feeding, vet emergencies, house keys. Everything the group chat forgot to cover.' },
+  { icon: CurrencyDollar, file: '01', title: 'The loan to a friend', desc: '"I\'ll pay you back next month." Get it on paper before it costs you a friendship.' },
+  { icon: Briefcase, file: '02', title: 'The freelance gig', desc: 'Scope, rate, deadline, revisions. Agreed before the work starts — paid after it ends.' },
+  { icon: Handshake, file: '03', title: 'The private sale', desc: 'Car, laptop, camera. A bill of sale that protects both sides of the handshake.' },
+  { icon: House, file: '04', title: 'The roommate deal', desc: 'Rent split, bills, guests, moving out. The talk everyone avoids, written down once.' },
+  { icon: Wrench, file: '05', title: 'The borrowed gear', desc: 'Lending tools, cameras, or your car? Say what happens if it comes back broken.' },
+  { icon: PawPrint, file: '06', title: 'The pet sitter', desc: 'Feeding, vet emergencies, house keys. Everything the group chat forgot to cover.' },
 ];
 
 // ── Motion helper ─────────────────────────────────────────────────────────
@@ -73,9 +73,9 @@ export default function LandingPage() {
             <span className="brand-mint">Mint</span>
           </Link>
           <div className="hidden sm:flex items-center gap-7 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-2">
-            <a href="#how" className="hover:text-mint transition-colors">Procedure</a>
-            <a href="#terms-of-us" className="hover:text-mint transition-colors">Our terms</a>
-            <a href="#uses" className="hover:text-mint transition-colors">Case files</a>
+            <a href="#how" className="hover:text-mint transition-colors">How it works</a>
+            <a href="#terms-of-us" className="hover:text-mint transition-colors">What you get</a>
+            <a href="#uses" className="hover:text-mint transition-colors">Use cases</a>
           </div>
           <Link href="/dashboard" className="btn-vibrant btn-vibrant-emerald">
             Open the app <ArrowRight size={15} weight="bold" />
@@ -116,7 +116,7 @@ export default function LandingPage() {
                   Draft your first agreement
                 </Link>
                 <a href="#how" className="btn-secondary px-6 py-4 text-xs">
-                  See the procedure <ArrowDownRight size={14} weight="bold" className="ml-2" />
+                  See how it works <ArrowDownRight size={14} weight="bold" className="ml-2" />
                 </a>
               </motion.div>
               <motion.p {...rise(0.3)} className="mt-6 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
@@ -138,9 +138,9 @@ export default function LandingPage() {
                 </div>
                 <h3 className="heading-display text-2xl mt-4 uppercase">Maya lends Jonas $600</h3>
                 <div className="mt-4 space-y-3 text-[13px] leading-relaxed text-ink-2">
-                  <p><span className="font-mono text-mint mr-2">§1</span>Jonas repays $200 on the first of each month, starting August 1st.</p>
-                  <p><span className="font-mono text-mint mr-2">§2</span>No interest — this is between friends. Late by 14 days? They talk first.</p>
-                  <p><span className="font-mono text-mint mr-2">§3</span>Fully repaid by October 1st, and this agreement ends with dinner on Jonas.</p>
+                  <p><span className="font-mono text-mint mr-2">1.</span>Jonas repays $200 on the first of each month, starting August 1st.</p>
+                  <p><span className="font-mono text-mint mr-2">2.</span>No interest — this is between friends. Late by 14 days? They talk first.</p>
+                  <p><span className="font-mono text-mint mr-2">3.</span>Fully repaid by October 1st, and this agreement ends with dinner on Jonas.</p>
                 </div>
                 <div className="mt-6 pt-4 border-t-2 border-dashed border-line grid grid-cols-2 gap-6">
                   <div>
@@ -171,8 +171,8 @@ export default function LandingPage() {
       <section id="how" className="py-20 px-4 sm:px-6 border-t-2 border-line-strong bg-wash">
         <div className="max-w-6xl mx-auto">
           <motion.div {...rise()} className="flex flex-wrap items-baseline justify-between gap-4">
-            <h2 className="heading-display uppercase text-3xl sm:text-5xl">The procedure</h2>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-3">Three stamps · No homework</p>
+            <h2 className="heading-display uppercase text-3xl sm:text-5xl">How it works</h2>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-3">Three steps · No homework</p>
           </motion.div>
           <div className="mt-12 grid md:grid-cols-3 border-2 border-line-strong bg-card divide-y-2 md:divide-y-0 md:divide-x-2 divide-line-strong shadow-[5px_5px_0_var(--shadow-ink)]">
             {STEPS.map((s, i) => (
@@ -189,11 +189,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Our terms, to you ── */}
+      {/* ── What you get ── */}
       <section id="terms-of-us" className="py-20 px-4 sm:px-6 border-t-2 border-line-strong">
         <div className="max-w-6xl mx-auto">
           <motion.div {...rise()}>
-            <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-mint">Our terms, to you</p>
+            <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-mint">What you get</p>
             <h2 className="heading-display uppercase text-3xl sm:text-5xl mt-3">
               What AgreeMint<br />agrees to do
             </h2>
@@ -249,7 +249,7 @@ export default function LandingPage() {
             Shake on it.
             <br />
             <span className="inline-block bg-mint text-paper px-3 sm:px-4 rotate-1 shadow-[4px_4px_0_var(--shadow-ink)] mt-2">
-              Then stamp it.
+              Then sign it.
             </span>
           </motion.h2>
           <motion.div {...rise(0.1)} className="mt-10">

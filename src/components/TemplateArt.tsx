@@ -108,15 +108,15 @@ export function TemplateDocument({ t, className }: { t: any; className?: string 
       <header className="flex items-start justify-between pb-4 border-b-2 border-ink/70">
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-ink-3">
-            AgreeMint · Bureau of everyday agreements
+            AgreeMint · Everyday agreements, in writing
           </p>
           <h1 className="heading-display uppercase text-[26px] leading-[1.02] mt-2 max-w-[380px]">
             {t.name}
           </h1>
         </div>
         <div className={cn("text-right font-mono text-[9px] uppercase tracking-[0.2em] leading-relaxed", tone.text)}>
-          <p>Form {ref}</p>
-          <p className="text-ink-3">Rev. 4.0</p>
+          <p>Template {ref}</p>
+          
         </div>
       </header>
 
@@ -131,7 +131,7 @@ export function TemplateDocument({ t, className }: { t: any; className?: string 
       {fields.length > 0 && (
         <section className="mt-6">
           <h2 className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-ink-3">
-            Particulars
+            Your details
           </h2>
           <div className="mt-2 border border-ink/25 divide-y divide-ink/15">
             {fields.map((f) => (
@@ -159,7 +159,7 @@ export function TemplateDocument({ t, className }: { t: any; className?: string 
             {clauses.map((c, i) => (
               <li key={c.id ?? i} className="grid grid-cols-[34px_1fr] gap-2">
                 <span className={cn("font-mono text-[11px] font-bold pt-[1px]", tone.text)}>
-                  §{i + 1}
+                  {i + 1}.
                 </span>
                 <div>
                   <h3 className="font-bold text-[12.5px] uppercase tracking-wide">

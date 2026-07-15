@@ -291,7 +291,7 @@ export default function ExplainPage() {
                       <ul className="space-y-2">
                         {info.contractBasics.map((b, i) => (
                           <li key={i} className="flex gap-2.5 text-[13px] leading-relaxed text-ink-2">
-                            <span className="font-mono text-mint">§{i + 1}</span>{b}
+                            <span className="font-mono text-mint">{i + 1}.</span>{b}
                           </li>
                         ))}
                       </ul>

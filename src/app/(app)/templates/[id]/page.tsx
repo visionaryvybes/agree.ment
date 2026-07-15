@@ -230,7 +230,7 @@ export default function TemplateDetailPage() {
             <div className="border-[1.5px] border-line-strong bg-card shadow-[var(--shadow-sheet)]">
               {template.clauses.map((clause: any, i: number) => (
                 <div key={i} className="flex items-center gap-4 px-4 py-3 border-b border-dashed border-line last:border-b-0">
-                  <span className="font-mono text-[11px] font-bold text-mint">§{i + 1}</span>
+                  <span className="font-mono text-[11px] font-bold text-mint">{i + 1}.</span>
                   <span className="text-sm font-bold uppercase tracking-wide text-ink">{clause.title}</span>
                 </div>
               ))}

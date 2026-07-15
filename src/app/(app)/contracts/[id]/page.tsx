@@ -217,7 +217,7 @@ export default function ContractDetailPage() {
                       : [0, 1, 2].map(i => ({ key: i, title: `Term ${i + 1}`, n: i }))
                     ).map(({ key, title, n }: any) => (
                       <li key={key} className="group flex items-center gap-4 px-5 py-3.5 border-b border-dashed border-line last:border-b-0 hover:bg-wash transition-colors cursor-pointer">
-                         <span className="font-mono text-[11px] font-bold text-mint">§{n + 1}</span>
+                         <span className="font-mono text-[11px] font-bold text-mint">{n + 1}.</span>
                          <span className="text-sm font-bold uppercase tracking-wide text-ink">{title}</span>
                          <CaretRight size={15} weight="bold" className="ml-auto text-ink-3 group-hover:text-ink group-hover:translate-x-0.5 transition-all" />
                       </li>
