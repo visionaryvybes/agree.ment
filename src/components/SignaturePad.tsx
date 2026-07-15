@@ -90,7 +90,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-card border border-line rounded-[40px] p-10 space-y-8 max-w-lg w-full"
+      className="bg-card border border-line rounded-[3px] p-10 space-y-8 max-w-lg w-full"
     >
       <div className="flex items-center justify-between">
         <div>
@@ -105,7 +105,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
         <button 
           onClick={() => setMode('draw')}
           className={cn(
-            "flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-2",
+            "flex-1 py-3 rounded-[3px] text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-2",
             mode === 'draw' ? "bg-emerald text-paper border-emerald" : "bg-ink/5 text-text-3 border-line"
           )}
         >
@@ -114,7 +114,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
         <button 
           onClick={() => setMode('type')}
           className={cn(
-            "flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-2",
+            "flex-1 py-3 rounded-[3px] text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-2",
             mode === 'type' ? "bg-emerald text-paper border-emerald" : "bg-ink/5 text-text-3 border-line"
           )}
         >
@@ -128,7 +128,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
             <div className="relative">
               <canvas
                 ref={canvasRef}
-                className="w-full h-40 bg-ink/[0.03] rounded-2xl border border-line cursor-crosshair touch-none"
+                className="w-full h-40 bg-ink/[0.03] rounded-[3px] border border-line cursor-crosshair touch-none"
                 onMouseDown={startDrawing}
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
@@ -154,7 +154,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
               value={typedName}
               onChange={(e) => setTypedName(e.target.value)}
               placeholder="Type your full legal name"
-              className="w-full bg-ink/[0.03] border border-line rounded-2xl py-5 px-6 text-3xl font-black italic text-emerald placeholder:text-ink/10 focus:outline-none focus:border-emerald/50 tracking-tighter"
+              className="w-full bg-ink/[0.03] border border-line rounded-[3px] py-5 px-6 text-3xl font-black italic text-emerald placeholder:text-ink/10 focus:outline-none focus:border-emerald/50 tracking-tighter"
             />
             <p className="mt-3 text-[9px] font-black text-text-3 uppercase tracking-widest opacity-50">
               By typing your name, you agree this constitutes your electronic signature.
@@ -164,7 +164,7 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
       </AnimatePresence>
 
       {/* Timestamp & Seal */}
-      <div className="flex items-center gap-4 py-4 px-6 bg-emerald/5 border border-emerald/10 rounded-xl">
+      <div className="flex items-center gap-4 py-4 px-6 bg-emerald/5 border border-emerald/10 rounded-[3px]">
         <div className="w-2 h-2 rounded-full bg-emerald animate-pulse" />
         <p className="text-[9px] font-black text-emerald uppercase tracking-widest">{timestamp}</p>
       </div>
@@ -172,14 +172,14 @@ export default function SignaturePad({ onSign, onCancel, signerName }: Signature
       {/* Actions */}
       <div className="flex gap-4">
         {onCancel && (
-          <button onClick={onCancel} className="flex-1 py-4 rounded-2xl bg-ink/5 border border-line text-[11px] font-black text-text-3 uppercase tracking-widest hover:text-ink transition-colors">
+          <button onClick={onCancel} className="flex-1 py-4 rounded-[3px] bg-ink/5 border border-line text-[11px] font-black text-text-3 uppercase tracking-widest hover:text-ink transition-colors">
             Cancel
           </button>
         )}
         <button
           onClick={handleConfirm}
           disabled={mode === 'draw' ? !hasDrawn : !typedName.trim()}
-          className="flex-1 py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_30px_rgba(16,119,94,0.2)] hover:shadow-[0_0_40px_rgba(16,119,94,0.4)] transition-all"
+          className="flex-1 py-4 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed shadow-[var(--shadow-sheet)] hover:shadow-[var(--shadow-sheet)] transition-all"
         >
           <Check size={18} weight="bold" /> Confirm Signature
         </button>

@@ -76,7 +76,7 @@ export default function OnboardingPage() {
                     <button 
                       onClick={handleVerify}
                       disabled={verifying}
-                      className="px-8 py-3.5 rounded-2xl bg-emerald text-paper text-sm font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_24px_rgba(16,119,94,0.25)] flex items-center gap-3"
+                      className="px-8 py-3.5 rounded-[3px] bg-emerald text-paper text-sm font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[var(--shadow-sheet)] flex items-center gap-3"
                     >
                       {verifying ? (
                          <>
@@ -109,7 +109,7 @@ export default function OnboardingPage() {
             className="space-y-16 relative z-10"
           >
              <div className="text-center space-y-8">
-                <div className="w-24 h-24 bg-emerald rounded-3xl flex items-center justify-center mx-auto text-paper shadow-[0_0_80px_rgba(16,119,94,0.4)] mb-12 border-8 border-paper">
+                <div className="w-24 h-24 bg-emerald rounded-[3px] flex items-center justify-center mx-auto text-paper shadow-[var(--shadow-sheet)] mb-12 border-8 border-paper">
                    <SealCheck size={48} weight="bold" />
                 </div>
                   <h2 className="text-3xl sm:text-4xl font-black text-emerald tracking-tight">Ready.</h2>
@@ -119,33 +119,33 @@ export default function OnboardingPage() {
              <div className="grid md:grid-cols-2 gap-10">
                  <Link
                    href="/dashboard"
-                   className="group p-6 sm:p-8 bg-ink/[0.03] border border-line hover:border-emerald/40 rounded-3xl transition-all duration-500 flex flex-col gap-6 relative overflow-hidden hover:-translate-y-1"
+                   className="group p-6 sm:p-8 bg-ink/[0.03] border border-line hover:border-emerald/40 rounded-[3px] transition-all duration-500 flex flex-col gap-6 relative overflow-hidden hover:-translate-y-1"
                  >
-                    <div className="w-14 h-14 rounded-2xl bg-ink/[0.05] text-emerald flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <div className="w-14 h-14 rounded-[3px] bg-ink/[0.05] text-emerald flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                        <LockKey size={30} weight="duotone" />
                     </div>
                     <div className="flex-1">
                        <h3 className="text-lg font-black text-ink group-hover:text-emerald transition-colors tracking-tight">View Deals</h3>
                        <p className="text-sm text-ink/40 mt-1">Manage your secured files.</p>
                     </div>
-                    <div className="w-9 h-9 rounded-xl bg-ink/[0.05] flex items-center justify-center group-hover:bg-emerald group-hover:text-paper transition-all duration-400">
+                    <div className="w-9 h-9 rounded-[3px] bg-ink/[0.05] flex items-center justify-center group-hover:bg-emerald group-hover:text-paper transition-all duration-400">
                        <ArrowRight size={16} weight="bold" className="text-ink/30 group-hover:text-paper" />
                     </div>
                  </Link>
 
                  <Link
                    href="/contracts/new"
-                   className="group p-6 sm:p-8 bg-emerald text-paper rounded-3xl transition-all duration-400 shadow-[0_0_40px_rgba(16,119,94,0.2)] flex flex-col gap-6 hover:scale-[1.02] active:scale-[0.98]"
+                   className="group p-6 sm:p-8 bg-emerald text-paper rounded-[3px] transition-all duration-400 shadow-[var(--shadow-sheet)] flex flex-col gap-6 hover:scale-[1.02] active:scale-[0.98]"
                    
                  >
-                    <div className="w-14 h-14 rounded-2xl bg-paper/15 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
+                    <div className="w-14 h-14 rounded-[3px] bg-paper/15 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500">
                        <FileText size={30} weight="duotone" />
                     </div>
                     <div className="flex-1">
                        <h3 className="text-lg font-black tracking-tight">New Agreement</h3>
                        <p className="text-sm font-medium opacity-60 mt-1">Protect a new deal now.</p>
                     </div>
-                    <div className="w-9 h-9 rounded-xl bg-ground text-emerald flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-[3px] bg-ground text-emerald flex items-center justify-center">
                        <ArrowRight size={16} weight="bold" />
                     </div>
                  </Link>

@@ -109,30 +109,28 @@ export default function ContractDetailPage() {
 
   return (
     <div className="space-y-8 pb-32 max-w-7xl mx-auto px-4 relative">
-      <div className="vibrant-glow top-0 right-1/4 w-[600px] h-[600px] bg-emerald/10 animate-glow-pulse" />
-      <div className="vibrant-glow bottom-0 left-1/4 w-[500px] h-[500px] bg-blue/10" />
 
       {/* HEADER */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b border-line relative z-10">
-        <div className="flex items-center gap-6">
-           <Link href="/dashboard" prefetch={true} className="w-14 h-14 rounded-2xl bg-ink/5 border border-line flex items-center justify-center text-text-3 hover:bg-emerald hover:text-paper shadow-xl transition-all duration-500">
-              <ArrowLeft size={24} weight="bold" />
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b-2 border-line-strong relative z-10">
+        <div className="flex items-start gap-5">
+           <Link href="/dashboard" prefetch={true} className="w-11 h-11 flex-shrink-0 border-[1.5px] border-line-strong bg-card flex items-center justify-center text-ink-2 shadow-[var(--shadow-sheet)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] hover:text-ink active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-[transform,box-shadow,color] duration-150">
+              <ArrowLeft size={20} weight="bold" />
            </Link>
            <div>
-              <div className={cn("badge-vibrant mb-3 inline-flex items-center gap-2", 
-                contract.status === 'active' ? 'badge-active' : 
-                contract.status === 'pending_signature' ? 'badge-pending' : 
+              <div className={cn("badge-vibrant mb-3 inline-flex items-center gap-2 rotate-[-1.5deg]",
+                contract.status === 'active' ? 'badge-active' :
+                contract.status === 'pending_signature' ? 'badge-pending' :
                 'badge-disputed'
               )}>
                  <status.icon size={14} weight="bold" />
                  {status.label}
               </div>
-              <h1 className="heading-display text-4xl md:text-6xl text-ink tracking-tighter ">{contract.title}</h1>
+              <h1 className="heading-display uppercase text-4xl md:text-6xl text-ink">{contract.title}</h1>
            </div>
         </div>
       </header>
 
-      {/* TAB NAV */}
+      {/* TAB NAV — an index-card divider row */}
       <div className="flex flex-wrap gap-2 relative z-10">
         {TABS.map(tab => {
           const Icon = tab.icon;
@@ -140,14 +138,16 @@ export default function ContractDetailPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
+              aria-pressed={activeTab === tab.id}
               className={cn(
-                "px-5 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border flex items-center gap-2 transition-all",
+                "px-4 py-2.5 text-[10px] font-mono font-bold uppercase tracking-[0.15em] border-[1.5px] flex items-center gap-2",
+                "transition-[transform,box-shadow,background,color] duration-150",
                 activeTab === tab.id
-                  ? "bg-emerald text-paper border-emerald shadow-[0_0_20px_rgba(16,119,94,0.2)]"
-                  : "bg-ink/[0.03] text-text-3 border-line hover:text-ink hover:border-line-strong"
+                  ? "bg-mint text-paper border-line-strong shadow-[var(--shadow-sheet)]"
+                  : "bg-card text-ink-3 border-line hover:text-ink hover:border-line-strong hover:-translate-y-0.5 hover:shadow-[var(--shadow-sheet)] active:translate-y-0 active:shadow-none"
               )}
             >
-              <Icon size={16} weight="bold" /> {tab.label}
+              <Icon size={15} weight="bold" /> {tab.label}
             </button>
           );
         })}
@@ -167,103 +167,100 @@ export default function ContractDetailPage() {
           {activeTab === 'overview' && (
             <div className="grid lg:grid-cols-3 gap-10">
               <div className="lg:col-span-2 space-y-10">
-                {/* Summary Grid */}
-                <div className="grid sm:grid-cols-3 gap-6">
+                {/* Summary: three dockets in one filed strip */}
+                <div className="grid sm:grid-cols-3 border-[1.5px] border-line-strong bg-card divide-y sm:divide-y-0 sm:divide-x divide-line-strong shadow-[var(--shadow-sheet)]">
                   {[
-                    { label: 'Value', val: `$${(contract.totalAmount || 0).toLocaleString()}`, icon: CurrencyDollar, color: 'text-emerald' },
+                    { label: 'Value', val: `$${(contract.totalAmount || 0).toLocaleString()}`, icon: CurrencyDollar, color: 'text-mint' },
                     { label: 'Created', val: new Date(contract.createdAt).toLocaleDateString(), icon: Clock, color: 'text-blue' },
                     { label: 'Category', val: contract.category, icon: FileText, color: 'text-amber' },
                   ].map((stat) => (
-                    <div key={stat.label} className="p-8 rounded-[32px] bg-ink/[0.03] border border-line backdrop-blur-3xl space-y-6 group hover:border-emerald/30 transition-all duration-500">
-                       <div className="w-12 h-12 bg-ink/5 rounded-xl flex items-center justify-center text-text-3 group-hover:bg-ink group-hover:text-paper transition-all">
-                          <stat.icon size={24} weight="bold" />
+                    <div key={stat.label} className="p-5">
+                       <div className="flex items-center justify-between">
+                          <p className={cn("font-mono text-[9px] font-bold uppercase tracking-[0.25em]", stat.color)}>{stat.label}</p>
+                          <stat.icon size={15} weight="duotone" className="text-ink-3" />
                        </div>
-                       <div>
-                          <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] mb-1", stat.color)}>{stat.label}</p>
-                          <h4 className="text-2xl font-black text-ink italic tracking-tighter">{stat.val}</h4>
-                       </div>
+                       <h4 className="heading-display text-2xl mt-2 text-ink capitalize">{stat.val}</h4>
                     </div>
                   ))}
                 </div>
 
                 {/* Parties */}
-                <div className="space-y-6">
-                  <h3 className="text-[12px] font-black text-text-3 uppercase tracking-[0.4em] px-2">Parties</h3>
-                  <div className="grid sm:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h3 className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-3 pb-3 border-b border-line-strong">Parties</h3>
+                  <div className="grid sm:grid-cols-2 gap-4">
                     {(contract.parties || []).map((party: any, i: number) => (
-                      <div key={i} className="p-8 rounded-[32px] bg-ink/[0.03] border border-line flex items-center gap-6 group hover:border-emerald/30 transition-all">
-                         <div className="w-14 h-14 rounded-2xl bg-card border border-line flex items-center justify-center text-emerald">
-                            <User size={28} weight="bold" />
+                      <div key={i} className="p-5 bg-card border-[1.5px] border-line-strong flex items-center gap-4 shadow-[var(--shadow-sheet)]">
+                         <div className="w-11 h-11 flex-shrink-0 border-[1.5px] border-line-strong bg-wash flex items-center justify-center text-mint rotate-[-2deg]">
+                            <User size={22} weight="duotone" />
                          </div>
-                         <div>
-                            <p className="text-[9px] font-black text-text-3 uppercase tracking-widest">{party.role}</p>
-                            <h4 className="text-lg font-semibold text-ink tracking-tighter">{party.name || 'Anonymous'}</h4>
-                            {party.signedAt && <span className="text-[8px] font-black text-emerald uppercase tracking-widest">Signed ✓</span>}
+                         <div className="min-w-0">
+                            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-3">{party.role}</p>
+                            <h4 className="font-bold text-ink truncate">{party.name || 'Unnamed'}</h4>
+                            {party.signedAt && (
+                              <span className="font-mono text-[9px] font-bold text-mint uppercase tracking-[0.15em]">Signed</span>
+                            )}
                          </div>
+                         {party.signedAt && (
+                           <SealCheck size={20} weight="fill" className="ml-auto text-mint flex-shrink-0" />
+                         )}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Clauses */}
-                <div className="p-10 rounded-[40px] bg-elevated border border-line space-y-6">
-                  <h3 className="text-[12px] font-black text-text-3 uppercase tracking-[0.4em]">Agreement Terms</h3>
-                  <div className="space-y-4">
-                    {contract.clauses?.length > 0 ? contract.clauses.map((clause: any) => (
-                      <div key={clause.id} className="flex items-center justify-between p-6 rounded-2xl bg-ink/[0.03] border border-line group hover:bg-emerald hover:border-transparent transition-all cursor-pointer">
-                         <div className="flex items-center gap-4">
-                            <div className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_10px_#10775e] group-hover:bg-ground transition-colors" />
-                            <span className="text-[11px] font-black text-ink uppercase tracking-widest group-hover:text-paper">{clause.title}</span>
-                         </div>
-                         <CaretRight size={20} weight="bold" className="text-text-3 group-hover:text-paper transition-all" />
-                      </div>
-                    )) : [1, 2, 3].map(i => (
-                      <div key={i} className="flex items-center justify-between p-6 rounded-2xl bg-ink/[0.03] border border-line group hover:bg-emerald hover:border-transparent transition-all cursor-pointer">
-                         <div className="flex items-center gap-4">
-                            <div className="w-2 h-2 rounded-full bg-emerald shadow-[0_0_10px_#10775e] group-hover:bg-ground transition-colors" />
-                            <span className="text-[11px] font-black text-ink uppercase tracking-widest group-hover:text-paper">Point 0{i}</span>
-                         </div>
-                         <CaretRight size={20} weight="bold" className="text-text-3 group-hover:text-paper transition-all" />
-                      </div>
+                {/* Clauses — a numbered terms ledger */}
+                <div className="border-[1.5px] border-line-strong bg-card shadow-[var(--shadow-sheet)]">
+                  <h3 className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-3 px-5 py-3.5 border-b-[1.5px] border-line-strong">Agreement terms</h3>
+                  <ol>
+                    {(contract.clauses?.length > 0
+                      ? contract.clauses.map((c: any, i: number) => ({ key: c.id, title: c.title, n: i }))
+                      : [0, 1, 2].map(i => ({ key: i, title: `Term ${i + 1}`, n: i }))
+                    ).map(({ key, title, n }: any) => (
+                      <li key={key} className="group flex items-center gap-4 px-5 py-3.5 border-b border-dashed border-line last:border-b-0 hover:bg-wash transition-colors cursor-pointer">
+                         <span className="font-mono text-[11px] font-bold text-mint">§{n + 1}</span>
+                         <span className="text-sm font-bold uppercase tracking-wide text-ink">{title}</span>
+                         <CaretRight size={15} weight="bold" className="ml-auto text-ink-3 group-hover:text-ink group-hover:translate-x-0.5 transition-all" />
+                      </li>
                     ))}
-                  </div>
+                  </ol>
                 </div>
               </div>
 
-              {/* Sidebar: 3D Seal + Status */}
+              {/* Sidebar: seal of record + status */}
               <div className="lg:col-span-1 space-y-8">
-                <div className="p-10 rounded-[40px] bg-emerald text-paper flex flex-col items-center text-center gap-8 shadow-[0_0_80px_rgba(16,119,94,0.2)] border-4 border-paper relative overflow-hidden">
-                  <div className="w-28 h-28 rounded-full border-4 border-dashed border-paper/60 flex items-center justify-center rotate-[-10deg]">
-                    <SealCheck size={56} weight="duotone" />
+                <div className="p-8 bg-card border-[1.5px] border-line-strong text-center shadow-[var(--shadow-lift)] relative">
+                  <div className="mx-auto w-24 h-24 rounded-full border-[3px] border-mint text-mint bg-card flex items-center justify-center rotate-[-10deg] shadow-[3px_3px_0_var(--shadow-ink)]">
+                    <div className="leading-tight">
+                      <SealCheck size={32} weight="duotone" className="mx-auto" />
+                      <p className="font-mono text-[8px] font-bold tracking-[0.2em] mt-0.5">SAVED</p>
+                    </div>
                   </div>
-                  <div className="space-y-4 relative z-10">
-                    <h3 className="heading-display text-4xl ">Secured</h3>
-                    <p className="text-[9px] font-black opacity-60 uppercase tracking-[0.2em] break-all">ID: {contract.id?.slice(0, 16).toUpperCase()}</p>
-                  </div>
-                  <div className="w-full space-y-4 pt-6 border-t border-paper/15 text-[10px] font-black uppercase tracking-widest">
-                    <div className="flex justify-between px-4"><span className="opacity-50">Status</span><span>{status.label.split(' ')[0]}</span></div>
-                    <div className="flex justify-between px-4"><span className="opacity-50">Integrity</span><span className="bg-ground text-emerald px-3 py-0.5 rounded-full">Solid</span></div>
-                  </div>
+                  <h3 className="heading-display uppercase text-3xl mt-5">On record.</h3>
+                  <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-3 break-all">№ {contract.id?.slice(0, 16).toUpperCase()}</p>
+                  <dl className="mt-6 pt-4 border-t-2 border-dashed border-line space-y-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-left">
+                    <div className="flex justify-between"><dt className="text-ink-3">Status</dt><dd className="font-bold text-ink">{status.label.split(' ')[0]}</dd></div>
+                    <div className="flex justify-between items-center"><dt className="text-ink-3">Integrity</dt><dd className="font-bold text-mint border-[1.5px] border-mint px-1.5 py-[1px] rotate-[-2deg]">Solid</dd></div>
+                  </dl>
                 </div>
 
                 {/* Health Score */}
                 <ContractHealthScore contract={contract} />
 
                 {/* History Log */}
-                <div className="p-8 rounded-[32px] bg-elevated border border-line space-y-6">
-                  <h4 className="text-[10px] font-black text-text-3 uppercase tracking-[0.4em] text-center">History</h4>
-                  <div className="space-y-6">
+                <div className="border-[1.5px] border-line-strong bg-card shadow-[var(--shadow-sheet)]">
+                  <h4 className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-3 px-5 py-3.5 border-b-[1.5px] border-line-strong">History</h4>
+                  <ol>
                     {[
-                      { t: '11:04', msg: 'Verified by Network' },
-                      { t: '10:42', msg: 'Digital Seal Applied' },
-                      { t: '09:12', msg: 'Agreement Created' }
+                      { t: '11:04', msg: 'Both parties notified' },
+                      { t: '10:42', msg: 'Signature link created' },
+                      { t: '09:12', msg: 'Agreement created' }
                     ].map((log, i) => (
-                      <div key={i} className="flex gap-4 group">
-                        <div className="text-[9px] font-black text-emerald opacity-50 whitespace-nowrap mt-0.5">{log.t}</div>
-                        <p className="text-[10px] font-black text-text-3 uppercase tracking-widest group-hover:text-ink transition-colors">{log.msg}</p>
-                      </div>
+                      <li key={i} className="flex gap-4 items-baseline px-5 py-3 border-b border-dashed border-line last:border-b-0">
+                        <span className="font-mono text-[10px] text-mint tabular-nums">{log.t}</span>
+                        <p className="text-[13px] text-ink-2">{log.msg}</p>
+                      </li>
                     ))}
-                  </div>
+                  </ol>
                 </div>
               </div>
             </div>

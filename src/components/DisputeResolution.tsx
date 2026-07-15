@@ -49,7 +49,7 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="p-8 rounded-[32px] bg-ink/[0.03] border border-line space-y-4">
+      <div className="p-8 rounded-[3px] bg-ink/[0.03] border border-line space-y-4">
         <div className="flex items-center gap-3">
           <Warning size={24} className="text-amber" weight="bold" />
           <h3 className="text-xl font-semibold text-ink tracking-tighter">Resolve a Dispute</h3>
@@ -80,9 +80,9 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
                 onClick={() => !isLocked && setSelectedLevel(config.level)}
                 disabled={isLocked}
                 className={cn(
-                  "w-full p-6 rounded-2xl border flex items-center gap-6 transition-all text-left group",
+                  "w-full p-6 rounded-[3px] border flex items-center gap-6 transition-all text-left group",
                   isCompleted ? `bg-${config.color}/5 border-${config.color}/20` :
-                  isCurrent ? `bg-${config.color}/10 border-${config.color}/40 shadow-[0_0_30px_rgba(16,119,94,0.05)]` :
+                  isCurrent ? `bg-${config.color}/10 border-${config.color}/40 shadow-[var(--shadow-sheet)]` :
                   isNext ? "bg-ink/[0.03] border-line hover:border-line-strong" :
                   "bg-ink/[0.02] border-line opacity-40 cursor-not-allowed",
                   selectedLevel === config.level && "ring-2 ring-emerald/40"
@@ -90,7 +90,7 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
               >
                 {/* Icon */}
                 <div className={cn(
-                  "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
+                  "w-12 h-12 rounded-[3px] flex items-center justify-center flex-shrink-0 transition-all",
                   isCompleted ? `bg-${config.color}/20 text-${config.color}` :
                   config.color === 'emerald' ? "bg-emerald/10 text-emerald" :
                   config.color === 'blue' ? "bg-blue/10 text-blue" :
@@ -130,7 +130,7 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-8 rounded-[32px] bg-ink/[0.03] border border-line space-y-6"
+          className="p-8 rounded-[3px] bg-ink/[0.03] border border-line space-y-6"
         >
           <h4 className="text-sm font-black text-ink uppercase tracking-widest">
             Send {ESCALATION_CONFIG.find(e => e.level === selectedLevel)?.label}
@@ -139,12 +139,12 @@ export default function DisputeResolution({ steps, currentLevel, onEscalate, con
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Describe the issue and what you'd like resolved..."
-            className="w-full h-32 bg-ink/[0.03] border border-line rounded-2xl p-5 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/50 resize-none"
+            className="w-full h-32 bg-ink/[0.03] border border-line rounded-[3px] p-5 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/50 resize-none"
           />
           <button
             onClick={handleSend}
             disabled={!message.trim() || sending}
-            className="w-full py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 shadow-[0_0_30px_rgba(16,119,94,0.2)]"
+            className="w-full py-4 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 shadow-[var(--shadow-sheet)]"
           >
             {sending ? 'Sending...' : <><ArrowRight size={18} weight="bold" /> Send</>}
           </button>

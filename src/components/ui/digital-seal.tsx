@@ -54,8 +54,8 @@ export default function DigitalSeal() {
       {/* Outer Glow Ring */}
       <div
         ref={ring2Ref}
-        className="absolute inset-0 rounded-full blur-xl animate-pulse"
-        style={{ border: '1px solid rgba(16,119,94,0.1)' }}
+        className="absolute inset-0 rounded-full"
+        style={{ border: '1px solid hsla(var(--emerald), 0.15)' }}
       />
 
       {/* Middle Orbit Ring */}
@@ -68,11 +68,10 @@ export default function DigitalSeal() {
       {/* The Central Seal */}
       <div
         ref={sealRef}
-        className="relative z-10 w-24 h-24 bg-gradient-to-br from-emerald to-emerald/40 rounded-3xl flex items-center justify-center shadow-[0_0_50px_rgba(16,119,94,0.3)]"
+        className="relative z-10 w-24 h-24 bg-card rounded-full border-[3px] border-mint flex items-center justify-center shadow-[4px_4px_0_var(--shadow-ink)] rotate-[-8deg]"
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <div className="absolute inset-1 bg-ground rounded-[22px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-emerald/10 to-transparent" />
+        <div className="absolute inset-1.5 bg-card rounded-full border border-dashed border-mint/50 flex items-center justify-center overflow-hidden">
           <SealCheck size={40} weight="duotone" className="text-emerald relative z-20" />
         </div>
       </div>

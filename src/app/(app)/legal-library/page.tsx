@@ -125,7 +125,7 @@ export default function LegalLibraryPage() {
             placeholder="Search articles…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-ink/[0.03] border border-line rounded-xl py-2.5 pl-9 pr-4 text-[11px] font-medium text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
+            className="w-full bg-ink/[0.03] border border-line rounded-[3px] py-2.5 pl-9 pr-4 text-[11px] font-medium text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
           />
         </div>
       </header>
@@ -142,14 +142,14 @@ export default function LegalLibraryPage() {
             <Link
               href={cat.href}
               className={cn(
-                'p-5 rounded-2xl bg-ink/[0.02] border flex flex-col items-center text-center gap-3 cursor-pointer transition-all duration-500 group relative overflow-hidden',
+                'p-5 rounded-[3px] bg-ink/[0.02] border flex flex-col items-center text-center gap-3 cursor-pointer transition-all duration-500 group relative overflow-hidden',
                 cat.color === 'emerald' ? 'border-emerald/15 hover:border-emerald/40 hover:bg-emerald/5' :
                 cat.color === 'blue'    ? 'border-blue/15    hover:border-blue/40    hover:bg-blue/5'    :
                 cat.color === 'amber'   ? 'border-amber/15   hover:border-amber/40   hover:bg-amber/5'   :
                                           'border-rose/15    hover:border-rose/40    hover:bg-rose/5',
               )}
             >
-              <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500',
+              <div className={cn('w-10 h-10 rounded-[3px] flex items-center justify-center group-hover:scale-110 transition-transform duration-500',
                 cat.color === 'emerald' ? 'bg-emerald/10 text-emerald' :
                 cat.color === 'blue'    ? 'bg-blue/10    text-blue'    :
                 cat.color === 'amber'   ? 'bg-amber/10   text-amber'   :
@@ -167,9 +167,9 @@ export default function LegalLibraryPage() {
       </div>
 
       {/* Quick AI Answer Box */}
-      <div className="relative z-10 p-5 rounded-3xl bg-emerald/[0.05] border border-emerald/20 space-y-4">
+      <div className="relative z-10 p-5 rounded-[3px] bg-emerald/[0.05] border border-emerald/20 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-emerald/15 flex items-center justify-center text-emerald">
+          <div className="w-9 h-9 rounded-[3px] bg-emerald/15 flex items-center justify-center text-emerald">
             <Robot size={18} weight="bold" />
           </div>
           <div>
@@ -184,18 +184,18 @@ export default function LegalLibraryPage() {
             onChange={e => setAiQuestion(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && askAI()}
             placeholder="e.g. Can I sue if someone breaks a verbal agreement?"
-            className="flex-1 bg-ink/[0.04] border border-emerald/20 rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
+            className="flex-1 bg-ink/[0.04] border border-emerald/20 rounded-[3px] py-3 px-4 text-sm text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
           />
           <button
             onClick={askAI}
             disabled={!aiQuestion.trim() || aiLoading}
-            className="px-5 py-3 rounded-xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-all disabled:opacity-40 disabled:scale-100 flex-shrink-0"
+            className="px-5 py-3 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:scale-105 transition-all disabled:opacity-40 disabled:scale-100 flex-shrink-0"
           >
             {aiLoading ? <div className="w-4 h-4 border-2 border-paper/20 border-t-[#010101] rounded-full animate-spin" /> : <PaperPlane size={14} weight="bold" />}
           </button>
         </div>
         {aiAnswer && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-xl bg-ink/[0.04] border border-line">
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-[3px] bg-ink/[0.04] border border-line">
             <div className="flex items-center gap-2 mb-2">
               <Sparkle size={11} weight="bold" className="text-emerald" />
               <span className="text-[8px] font-black text-ink/25 uppercase tracking-widest">AgreeMint AI</span>
@@ -220,7 +220,7 @@ export default function LegalLibraryPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.06 }}
               className={cn(
-                'rounded-2xl border overflow-hidden transition-all duration-300',
+                'rounded-[3px] border overflow-hidden transition-all duration-300',
                 article.color === 'emerald' ? 'border-emerald/15 bg-emerald/[0.03]' :
                 article.color === 'blue'    ? 'border-blue/15    bg-blue/[0.03]'    :
                 article.color === 'amber'   ? 'border-amber/15   bg-amber/[0.03]'   :
@@ -231,7 +231,7 @@ export default function LegalLibraryPage() {
                 onClick={() => setExpandedArticle(expandedArticle === i ? null : i)}
                 className="w-full p-5 flex items-center gap-4 text-left"
               >
-                <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0',
+                <div className={cn('w-9 h-9 rounded-[3px] flex items-center justify-center flex-shrink-0',
                   article.color === 'emerald' ? 'bg-emerald/15 text-emerald' :
                   article.color === 'blue'    ? 'bg-blue/15    text-blue'    :
                   article.color === 'amber'   ? 'bg-amber/15   text-amber'   :
@@ -293,7 +293,7 @@ export default function LegalLibraryPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.05 }}
-              className="flex items-start gap-3 p-4 rounded-xl bg-ink/[0.02] border border-line"
+              className="flex items-start gap-3 p-4 rounded-[3px] bg-ink/[0.02] border border-line"
             >
               <fact.icon size={15} weight="bold" className={cn(fact.color, 'flex-shrink-0 mt-0.5')} />
               <p className="text-[11px] text-ink/45 leading-relaxed">{fact.text}</p>
@@ -307,7 +307,7 @@ export default function LegalLibraryPage() {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="rounded-3xl bg-emerald p-8 md:p-12 text-paper relative overflow-hidden shadow-[0_0_80px_rgba(16,119,94,0.15)] z-10"
+        className="rounded-[3px] bg-emerald p-8 md:p-12 text-paper relative overflow-hidden shadow-[var(--shadow-sheet)] z-10"
       >
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <Books size={160} weight="bold" />
@@ -316,10 +316,10 @@ export default function LegalLibraryPage() {
           <h2 className="text-3xl sm:text-4xl font-black tracking-tighter ">Need a Custom Agreement?</h2>
           <p className="text-sm font-bold opacity-70 uppercase tracking-widest leading-relaxed">Our AI generates jurisdiction-specific contracts in under 60 seconds.</p>
           <div className="flex gap-3 flex-wrap">
-            <Link href="/contracts/new" className="flex items-center gap-2 bg-ground text-emerald px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">
+            <Link href="/contracts/new" className="flex items-center gap-2 bg-ground text-emerald px-6 py-3 rounded-[3px] text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform">
               Create Agreement <ArrowRight size={16} weight="bold" />
             </Link>
-            <Link href="/verified-guidance" className="flex items-center gap-2 bg-ground/20 text-paper px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-ground/30 transition-colors">
+            <Link href="/verified-guidance" className="flex items-center gap-2 bg-ground/20 text-paper px-6 py-3 rounded-[3px] text-[11px] font-black uppercase tracking-widest hover:bg-ground/30 transition-colors">
               Ask AI <Robot size={16} weight="bold" />
             </Link>
           </div>

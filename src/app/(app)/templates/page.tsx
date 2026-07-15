@@ -2,6 +2,7 @@
 
 import { useTemplates } from '@/store/contracts';
 import { MagnifyingGlass, ArrowUpRight } from '@phosphor-icons/react';
+import { TemplateThumb, templateIcon } from '@/components/TemplateArt';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -48,7 +49,7 @@ export default function TemplatesPage() {
 
       {/* ── Masthead ── */}
       <header className="pb-8 border-b-2 border-ink/80">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-3">Card catalog</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-3">Template library</p>
         <div className="mt-3 flex flex-wrap items-end justify-between gap-6">
           <h1 className="heading-display text-5xl sm:text-6xl">Templates.</h1>
           <p className="font-display italic text-lg text-ink-2 pb-1.5 max-w-sm">
@@ -80,15 +81,15 @@ export default function TemplatesPage() {
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search the catalog…"
-            className="pl-9 pr-4 py-2 w-64 bg-card border border-line rounded-lg text-sm text-ink placeholder:text-ink-3/70 focus:outline-none focus:border-mint/50 transition-colors"
+            placeholder="Search templates…"
+            className="pl-9 pr-4 py-2 w-64 bg-card border border-line rounded-[3px] text-sm text-ink placeholder:text-ink-3/70 focus:outline-none focus:border-mint/50 transition-colors"
           />
         </label>
       </div>
 
       {filtered.length === 0 ? (
         <div className="py-24 text-center border-t border-line">
-          <p className="heading-display text-3xl text-ink-3">The catalog has no card for that.</p>
+          <p className="heading-display text-3xl text-ink-3">No template matches that.</p>
           <p className="mt-3 text-sm text-ink-2">
             Try another word — or <Link href="/contracts/new" className="text-mint hover:underline">describe your deal from scratch</Link>.
           </p>
@@ -98,7 +99,7 @@ export default function TemplatesPage() {
           {popular.length > 0 && (
             <section>
               <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-3 pb-3 border-b border-line-strong">
-                Most pulled
+                Most used
               </h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-6">
                 {popular.map((t, i) => <IndexCard key={t.id} t={t} i={i} featured />)}
@@ -109,7 +110,7 @@ export default function TemplatesPage() {
             <section>
               {popular.length > 0 && (
                 <h2 className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-3 pb-3 border-b border-line-strong">
-                  The rest of the drawer
+                  More templates
                 </h2>
               )}
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-6">
@@ -123,10 +124,11 @@ export default function TemplatesPage() {
   );
 }
 
-// ── Index card: a typographic catalog card, no images ─────────────────────
+// ── Catalog card: specimen preview on top, docket details below ───────────
 
 function IndexCard({ t, i, featured = false }: { t: any; i: number; featured?: boolean }) {
   const tone = CAT_TONE[t.category] ?? 'text-ink-3';
+  const TIcon = templateIcon(t);
   const ref = t.id.replace('tpl-', '').slice(0, 12).toUpperCase();
 
   return (
@@ -138,33 +140,37 @@ function IndexCard({ t, i, featured = false }: { t: any; i: number; featured?: b
       <Link
         href={`/templates/${t.id}`}
         className={cn(
-          'group relative flex flex-col h-full bg-card border border-line rounded-md p-6 shadow-[var(--shadow-sheet)]',
-          'hover:shadow-[var(--shadow-lift)] hover:-translate-y-1 hover:rotate-[-0.4deg] transition-all duration-300'
+          'group relative flex flex-col h-full bg-card border-[1.5px] border-line-strong shadow-[var(--shadow-sheet)]',
+          'hover:shadow-[var(--shadow-lift)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200'
         )}
       >
-        {/* Punched index hole */}
-        <span className="absolute top-4 right-4 w-2.5 h-2.5 rounded-full border border-line-strong bg-ground" />
+        {/* Specimen: the document itself, in miniature */}
+        <TemplateThumb t={t} />
 
-        <p className={cn('font-mono text-[9px] uppercase tracking-[0.22em]', tone)}>
-          {String(t.category)} · {ref}
-        </p>
-        <h3 className="mt-3 font-display text-[22px] leading-tight text-ink group-hover:italic transition-all">
-          {t.name}
-        </h3>
-        <p className="mt-2.5 text-[13px] leading-relaxed text-ink-2 flex-1">{t.description}</p>
+        <div className="flex flex-col flex-1 p-5">
+          <div className="flex items-center justify-between">
+            <p className={cn('font-mono text-[9px] uppercase tracking-[0.22em]', tone)}>
+              {String(t.category)} · {ref}
+            </p>
+            <TIcon size={16} weight="duotone" className={tone} />
+          </div>
+          <h3 className="mt-2.5 heading-display uppercase text-[17px] leading-tight text-ink">
+            {t.name}
+          </h3>
+          <p className="mt-2 text-[13px] leading-relaxed text-ink-2 flex-1">{t.description}</p>
 
-        {/* Ruled footer, like the bottom line of an index card */}
-        <div className="mt-5 pt-3 border-t border-dashed border-line flex items-center justify-between">
-          <span className="font-mono text-[10px] text-ink-3 tabular-nums">
-            {t.clauses?.length ?? 0} clauses · {t.fields?.length ?? 0} blanks
-          </span>
-          <span className="inline-flex items-center gap-1 text-[12px] font-medium text-ink group-hover:text-mint transition-colors">
-            Pull the card <ArrowUpRight size={12} weight="bold" />
-          </span>
+          <div className="mt-4 pt-3 border-t-2 border-dashed border-line flex items-center justify-between">
+            <span className="font-mono text-[10px] text-ink-3 tabular-nums">
+              {t.clauses?.length ?? 0} clauses · {t.fields?.length ?? 0} blanks
+            </span>
+            <span className="inline-flex items-center gap-1 text-[12px] font-bold uppercase tracking-wide text-ink group-hover:text-mint transition-colors">
+              Use it <ArrowUpRight size={12} weight="bold" />
+            </span>
+          </div>
         </div>
 
         {featured && (
-          <span className="absolute -top-2 left-5 font-mono text-[8px] uppercase tracking-[0.2em] bg-mint text-paper px-2 py-0.5 rounded-[3px] rotate-[-2deg]">
+          <span className="absolute -top-2 left-4 z-10 font-mono text-[8px] font-bold uppercase tracking-[0.2em] bg-mint text-paper px-2 py-0.5 rotate-[-2deg] shadow-[2px_2px_0_var(--shadow-ink)]">
             Popular
           </span>
         )}

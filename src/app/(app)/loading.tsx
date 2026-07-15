@@ -1,40 +1,27 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Seal } from "@phosphor-icons/react";
 
+/** The registry stamp, mid-air. On-brand, no assets, respects reduced motion. */
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground/60 backdrop-blur-md">
-      {/* Background Glows */}
-      <div className="vibrant-glow top-1/4 left-1/4 w-[400px] h-[400px] bg-emerald/10 blur-[100px] animate-glow-pulse" />
-      
-      <div className="relative flex flex-col items-center gap-8">
-        {/* Animated Logo Wrapper - Smaller & Faster */}
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ground">
+      <div className="flex flex-col items-center gap-6">
         <motion.div
-          animate={{
-            scale: [0.95, 1.05, 0.95],
-            opacity: [0.8, 1, 0.8]
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="w-20 h-20 relative"
+          animate={{ rotate: [-10, -6, -10], y: [0, -3, 0] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+          className="w-20 h-20 rounded-full border-[3px] border-mint text-mint bg-card
+                     flex items-center justify-center shadow-[var(--shadow-sheet)]"
         >
-          <img 
-            src="/logo_verified.png" 
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_20px_rgba(16,119,94,0.4)]" 
-            alt="Loading..." 
-          />
+          <div className="text-center leading-tight">
+            <Seal size={26} weight="fill" className="mx-auto" />
+            <p className="font-mono text-[8px] font-bold tracking-[0.2em] mt-0.5">FILING</p>
+          </div>
         </motion.div>
-
-        {/* Text - Subtler */}
-        <div className="space-y-2 text-center">
-          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-emerald animate-pulse">
-            LOADING...
-          </p>
-        </div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-ink-3">
+          Pulling the file…
+        </p>
       </div>
     </div>
   );

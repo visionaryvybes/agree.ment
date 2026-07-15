@@ -53,7 +53,7 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
     <div className="w-full max-w-2xl p-10 rounded-[48px] bg-elevated border border-line shadow-2xl relative overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-6 mb-12">
-        <div className="w-14 h-14 bg-emerald/10 rounded-2xl flex items-center justify-center text-emerald shadow-[0_0_20px_rgba(16,119,94,0.2)]">
+        <div className="w-14 h-14 bg-emerald/10 rounded-[3px] flex items-center justify-center text-emerald shadow-[var(--shadow-sheet)]">
           <Sparkle size={28} weight="bold" />
         </div>
         <div>
@@ -77,7 +77,7 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
                   key={style.id}
                   onClick={() => setSelectedStyle(style.id)}
                   className={cn(
-                    "p-6 rounded-3xl border text-left transition-all duration-500 group",
+                    "p-6 rounded-[3px] border text-left transition-all duration-500 group",
                     selectedStyle === style.id 
                       ? "bg-emerald text-paper border-emerald" 
                       : "bg-ink/[0.03] border-line hover:border-line-strong text-text-3 hover:text-ink"
@@ -108,7 +108,7 @@ export default function AgreementEnhancer({ contractTitle, contractContent, onEn
             animate={{ opacity: 1, scale: 1 }}
             className="py-12 flex flex-col items-center text-center space-y-8"
           >
-            <div className="w-24 h-24 bg-emerald rounded-full flex items-center justify-center text-paper shadow-[0_0_50px_rgba(16,119,94,0.4)]">
+            <div className="w-24 h-24 bg-emerald rounded-full flex items-center justify-center text-paper shadow-[var(--shadow-sheet)]">
               <CheckCircle size={48} weight="bold" />
             </div>
             <div>

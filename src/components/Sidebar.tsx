@@ -10,12 +10,12 @@ import NotificationCenter from "@/components/NotificationCenter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAVIGATION = [
-  { n: "01", name: "Ledger",    href: "/dashboard" },
-  { n: "02", name: "Files",     href: "/contracts" },
+  { n: "01", name: "Dashboard", href: "/dashboard" },
+  { n: "02", name: "Agreements", href: "/contracts" },
   { n: "03", name: "Templates", href: "/templates" },
-  { n: "04", name: "Explain",   href: "/explain" },
-  { n: "05", name: "Counsel",   href: "/tools" },
-  { n: "06", name: "Resolve",   href: "/verified-guidance" },
+  { n: "04", name: "Check a contract", href: "/explain" },
+  { n: "05", name: "Legal help", href: "/tools" },
+  { n: "06", name: "Disputes", href: "/verified-guidance" },
   { n: "07", name: "Settings",  href: "/settings" },
 ];
 
@@ -52,7 +52,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
       <div className="px-5 pb-6">
         <Link
           href="/contracts/new"
-          className="group flex items-center justify-between w-full px-4 py-3 bg-ink text-paper rounded-lg text-sm font-semibold hover:bg-mint transition-colors duration-300"
+          className="group flex items-center justify-between w-full px-4 py-3 bg-ink text-paper rounded-[3px] text-sm font-semibold hover:bg-mint transition-colors duration-300"
         >
           New agreement
           <Plus size={16} weight="bold" className="group-hover:rotate-90 transition-transform duration-300" />
@@ -95,7 +95,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
         <div className="flex items-center justify-between">
           <button
             onClick={() => setNotificationsOpen(true)}
-            className="relative p-2 rounded-lg text-ink-3 hover:text-ink hover:bg-card transition-colors"
+            className="relative p-2 rounded-[3px] text-ink-3 hover:text-ink hover:bg-card transition-colors"
             aria-label="Notifications"
           >
             <Bell size={18} weight="duotone" />
@@ -104,7 +104,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
           <ThemeToggle />
         </div>
         <div className="flex items-center gap-3 pt-3 border-t border-dashed border-line">
-          <div className="w-8 h-8 rounded-full bg-mint text-paper flex items-center justify-center text-xs font-display italic flex-shrink-0">
+          <div className="w-8 h-8 rounded-[3px] bg-card border-[1.5px] border-line-strong text-mint flex items-center justify-center font-mono font-bold text-xs rotate-[-2deg] shadow-[2px_2px_0_var(--shadow-ink)] flex-shrink-0">
             {user?.firstName?.charAt(0) ?? "G"}
           </div>
           <div className="min-w-0">

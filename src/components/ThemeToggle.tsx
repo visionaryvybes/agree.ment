@@ -52,8 +52,8 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       <div className={cn(
         "w-5 h-5 rounded-full transition-all duration-500 flex items-center justify-center",
         theme === 'dark'
-          ? "translate-x-0 bg-emerald shadow-[0_0_10px_rgba(16,119,94,0.3)]"
-          : "translate-x-7 bg-amber shadow-[0_0_10px_rgba(255,184,0,0.3)]"
+          ? "translate-x-0 bg-emerald shadow-[var(--shadow-sheet)]"
+          : "translate-x-7 bg-amber shadow-[var(--shadow-sheet)]"
       )}>
         {theme === 'dark' ? (
           <Moon size={12} weight="bold" className="text-paper" />

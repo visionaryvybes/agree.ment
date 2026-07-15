@@ -1,82 +1,88 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════
-   AgreeMint 3.0 — "Paper & Ink"
-   An editorial design system. Agreements are documents, so the app
-   feels like beautifully typeset paper: warm cream ground, warm ink
-   text, a deep mint accent, serif display type. Dark mode is a warm
-   ink-dark room, not a void.
+   AgreeMint 4.0 — "Registry Brutalism"
+   A municipal records office with taste. Agreements are instruments:
+   stamped, docketed, filed. Bone paper, hard black rules, one loud
+   stamp-green, hard offset shadows, zero blur. Every primary action
+   presses down like a rubber stamp hitting paper.
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Paper (default, light) ── */
-  --bg: #f6f2e9;          /* warm paper */
-  --bg-subtle: #efe9dc;   /* deeper paper wash */
-  --bg-card: #fdfbf5;     /* sheet on the desk */
-  --bg-elevated: #fffef9; /* lifted sheet */
+  /* ── Soft stone (light) — quiet paper, not glare ── */
+  --bg: #e3e1d8;          /* stone ground */
+  --bg-subtle: #dbd8cd;   /* deeper stone wash */
+  --bg-card: #edebe2;     /* filed sheet */
+  --bg-elevated: #f3f1e8; /* pulled from the drawer */
 
-  --text-1: #1c1917;      /* warm ink */
-  --text-2: #453f39;
-  --text-3: #7d766d;
-  --text-muted: #b4ac9f;
+  --text-1: #26231d;      /* rule ink, softened */
+  --text-2: #48443b;
+  --text-3: #7b7565;
+  --text-muted: #a89f8d;
 
   /* ── Accents (HSL triplets, kept for hsl(var(--x)) callers) ── */
-  --emerald: 163 76% 26%;   /* deep mint ink  #10775e */
-  --blue: 224 64% 33%;      /* archival cobalt */
-  --amber: 33 90% 34%;      /* ochre stamp */
-  --rose: 8 64% 40%;        /* sealing-wax red */
+  --emerald: 162 62% 28%;   /* stamp green, desaturated */
+  --blue: 226 52% 38%;      /* carbon-copy cobalt */
+  --amber: 34 78% 34%;      /* ochre docket */
+  --rose: 8 58% 44%;        /* sealing-wax red */
 
   --success: hsl(var(--emerald));
   --warning: hsl(var(--amber));
   --danger: hsl(var(--rose));
   --info: hsl(var(--blue));
 
-  --border: rgba(28, 25, 23, 0.12);
-  --border-strong: rgba(28, 25, 23, 0.22);
-  --glass-border: rgba(28, 25, 23, 0.08);
-  --glass-bg: rgba(253, 251, 245, 0.82);
+  --border: rgba(38, 35, 29, 0.16);
+  --border-strong: rgba(38, 35, 29, 0.75);
+  --glass-border: rgba(38, 35, 29, 0.16);
+  --glass-bg: var(--bg-card);
 
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 28px;
+  /* Sharp geometry — this system has edges */
+  --radius-xs: 0px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
 
-  --shadow-sheet: 0 1px 2px rgba(28, 25, 23, 0.05), 0 8px 24px -12px rgba(28, 25, 23, 0.18);
-  --shadow-lift: 0 2px 4px rgba(28, 25, 23, 0.06), 0 16px 40px -16px rgba(28, 25, 23, 0.25);
+  /* Hard offset shadows — no blur, but a gentler hand */
+  --shadow-ink: rgba(38, 35, 29, 0.35);
+  --shadow-sheet: 3px 3px 0 var(--shadow-ink);
+  --shadow-lift: 5px 5px 0 var(--shadow-ink);
+
+  --stamp-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Ink room (dark) ── */
+/* ── Carbon archive (dark) ── */
 [data-theme="dark"] {
-  --bg: #171310;
-  --bg-subtle: #120f0c;
-  --bg-card: #201b16;
-  --bg-elevated: #282219;
+  --bg: #1c1a16;
+  --bg-subtle: #161412;
+  --bg-card: #24211c;
+  --bg-elevated: #2d2a23;
 
-  --text-1: #f3ede1;
-  --text-2: #cfc6b6;
-  --text-3: #948b7c;
-  --text-muted: #5c554a;
+  --text-1: #e6e0d2;
+  --text-2: #c2bab0;
+  --text-3: #8b8374;
+  --text-muted: #57503f;
 
-  --emerald: 160 64% 52%;   /* mint reads brighter on ink */
-  --blue: 220 70% 66%;
-  --amber: 36 80% 58%;
-  --rose: 8 72% 62%;
+  --emerald: 160 48% 52%;   /* phosphor stamp, dimmed */
+  --blue: 221 58% 68%;
+  --amber: 37 64% 58%;
+  --rose: 8 56% 62%;
 
-  --border: rgba(243, 237, 225, 0.12);
-  --border-strong: rgba(243, 237, 225, 0.24);
-  --glass-border: rgba(243, 237, 225, 0.08);
-  --glass-bg: rgba(32, 27, 22, 0.85);
+  --border: rgba(230, 224, 210, 0.14);
+  --border-strong: rgba(230, 224, 210, 0.6);
+  --glass-border: rgba(230, 224, 210, 0.14);
+  --glass-bg: var(--bg-card);
 
-  --shadow-sheet: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
-  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+  --shadow-ink: rgba(0, 0, 0, 0.5);
+  --shadow-sheet: 3px 3px 0 var(--shadow-ink);
+  --shadow-lift: 5px 5px 0 var(--shadow-ink);
 }
 
 /* ── Tailwind theme: utilities (incl. opacity modifiers) for tokens ── */
 @theme inline {
-  --font-display: var(--font-fraunces), "Georgia", serif;
-  --font-sans: var(--font-instrument), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), monospace;
+  --font-display: var(--font-bricolage), "Arial Black", sans-serif;
+  --font-sans: var(--font-archivo), "Helvetica Neue", sans-serif;
+  --font-mono: var(--font-plexmono), "Courier New", monospace;
 
   --color-paper: var(--bg-card);
   --color-ground: var(--bg);
@@ -100,19 +106,19 @@
 body {
   background: var(--bg);
   color: var(--text-1);
-  font-family: var(--font-instrument), system-ui, sans-serif;
+  font-family: var(--font-archivo), "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Paper grain — barely-there texture */
+/* Paper tooth — coarse registry stock */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.035;
+  opacity: 0.02;
   pointer-events: none;
   z-index: 9999;
 }
@@ -122,35 +128,51 @@ body::after {
   color: var(--bg-card);
 }
 
+/* Visible focus, in-system: hard stamp outline */
+:focus-visible {
+  outline: 2px solid hsl(var(--emerald));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ─── Typography ────────────────────────────────────────────────────── */
 
 .heading-display {
-  font-family: var(--font-fraunces), "Georgia", serif;
-  font-weight: 560;
-  letter-spacing: -0.015em;
-  line-height: 1.04;
-  font-variation-settings: "opsz" 72, "SOFT" 40, "WONK" 0;
+  font-family: var(--font-bricolage), "Arial Black", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
 }
 
-/* Wordmark: Agree (ink italic serif) + Mint (stamped) */
+/* Wordmark: AGREE (rule ink) + MINT (stamped block) */
 .brand-agree {
   color: var(--text-1);
-  font-family: var(--font-fraunces), "Georgia", serif;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: -0.02em;
+  font-family: var(--font-bricolage), "Arial Black", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
 }
 
 .brand-mint {
   background: hsl(var(--emerald));
   color: var(--bg-card);
-  padding: 1px 7px 2px;
-  border-radius: 5px;
-  font-family: var(--font-fraunces), "Georgia", serif;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: -0.02em;
-  margin-left: 2px;
+  padding: 1px 6px 2px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-bricolage), "Arial Black", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin-left: 3px;
+  box-shadow: 2px 2px 0 var(--text-1);
+  display: inline-block;
+  transform: rotate(-1.5deg);
 }
 
 .text-text-1 { color: var(--text-1); }
@@ -177,32 +199,49 @@ body::after {
 .theme-amber { --accent: var(--amber); }
 .theme-rose { --accent: var(--rose); }
 
-/* Soft ambient tint (was a neon glow) */
+/* Was a neon glow; now a flat halftone field behind heroes */
 .vibrant-glow {
   position: absolute;
-  filter: blur(120px);
-  border-radius: 100%;
   z-index: -1;
-  opacity: 0.1;
+  opacity: 0.06;
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 14px 14px;
+  border-radius: 0;
+  filter: none;
 }
 
-/* ─── Buttons ───────────────────────────────────────────────────────── */
+/* ─── Buttons — the rubber-stamp interaction ────────────────────────── */
 
 .btn-vibrant {
-  font-weight: 600;
-  font-family: var(--font-instrument), system-ui, sans-serif;
+  font-weight: 700;
+  font-family: var(--font-archivo), "Helvetica Neue", sans-serif;
   padding: 0.65rem 1.3rem;
   border-radius: var(--radius-sm);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.15s var(--stamp-ease), box-shadow 0.15s var(--stamp-ease);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   font-size: 0.85rem;
-  letter-spacing: 0.01em;
-  border: none;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--text-1);
   cursor: pointer;
   white-space: nowrap;
+}
+.btn-vibrant:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lift);
+}
+.btn-vibrant:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--text-1);
+}
+.btn-vibrant:disabled {
+  opacity: 0.45;
+  transform: none;
+  box-shadow: var(--shadow-sheet);
+  cursor: not-allowed;
 }
 
 .btn-vibrant-emerald {
@@ -210,58 +249,51 @@ body::after {
   color: var(--bg-card);
   box-shadow: var(--shadow-sheet);
 }
-.btn-vibrant-emerald:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-  box-shadow: var(--shadow-lift);
-}
-
 .btn-vibrant-blue {
   background: hsl(var(--blue));
   color: var(--bg-card);
   box-shadow: var(--shadow-sheet);
 }
-.btn-vibrant-blue:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-  box-shadow: var(--shadow-lift);
-}
-
 .btn-vibrant-rose {
   background: hsl(var(--rose));
   color: var(--bg-card);
   box-shadow: var(--shadow-sheet);
 }
-.btn-vibrant-rose:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-  box-shadow: var(--shadow-lift);
-}
 
 .btn-primary {
   background: var(--text-1);
   color: var(--bg-card);
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   border-radius: var(--radius-sm);
-  transition: all 0.25s ease;
+  border: 1.5px solid var(--text-1);
+  box-shadow: var(--shadow-sheet);
+  transition: transform 0.15s var(--stamp-ease), box-shadow 0.15s var(--stamp-ease), background 0.15s ease;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
 }
 .btn-primary:hover {
   background: hsl(var(--emerald));
-  transform: translateY(-1px);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lift);
+}
+.btn-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--text-1);
 }
 
 .btn-secondary {
   background: transparent;
-  color: var(--text-2);
-  border: 1px solid var(--border);
-  font-weight: 600;
+  color: var(--text-1);
+  border: 1.5px solid var(--text-1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   border-radius: var(--radius-sm);
-  transition: all 0.25s ease;
+  transition: transform 0.15s var(--stamp-ease), box-shadow 0.15s var(--stamp-ease), background 0.15s ease;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -269,17 +301,21 @@ body::after {
 }
 .btn-secondary:hover {
   background: var(--bg-card);
-  color: var(--text-1);
-  border-color: var(--border-strong);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sheet);
+}
+.btn-secondary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--text-1);
 }
 
 .btn-titanium {
   background: var(--bg-elevated);
   color: var(--text-2);
-  border: 1px solid var(--border);
-  font-weight: 600;
+  border: 1.5px solid var(--border);
+  font-weight: 700;
   border-radius: var(--radius-sm);
-  transition: all 0.25s ease;
+  transition: transform 0.15s var(--stamp-ease), box-shadow 0.15s var(--stamp-ease), border-color 0.15s ease;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -288,15 +324,18 @@ body::after {
 .btn-titanium:hover {
   color: var(--text-1);
   border-color: var(--border-strong);
+  box-shadow: var(--shadow-sheet);
+  transform: translate(-1px, -1px);
 }
 
-/* ─── Badges ────────────────────────────────────────────────────────── */
+/* ─── Badges — dockets, not pills ───────────────────────────────────── */
 
 .badge-vibrant {
-  padding: 0.35rem 0.85rem;
-  border-radius: 30px;
-  font-size: 0.68rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.66rem;
   font-weight: 700;
+  font-family: var(--font-plexmono), monospace;
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
@@ -304,19 +343,19 @@ body::after {
 .badge-active {
   background: hsla(var(--emerald), 0.12);
   color: hsl(var(--emerald));
-  border: 1px solid hsla(var(--emerald), 0.3);
+  border: 1.5px solid hsl(var(--emerald));
 }
 
 .badge-pending {
   background: hsla(var(--blue), 0.12);
   color: hsl(var(--blue));
-  border: 1px solid hsla(var(--blue), 0.3);
+  border: 1.5px solid hsl(var(--blue));
 }
 
 .badge-disputed {
   background: hsla(var(--rose), 0.12);
   color: hsl(var(--rose));
-  border: 1px solid hsla(var(--rose), 0.3);
+  border: 1.5px solid hsl(var(--rose));
 }
 
 /* ─── Effects & Animations ──────────────────────────────────────────── */
@@ -325,8 +364,8 @@ body::after {
   animation: glow-pulse 3s ease-in-out infinite;
 }
 @keyframes glow-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.1; }
-  50% { transform: scale(1.15); opacity: 0.18; }
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.2; }
 }
 
 .shimmer-text {
@@ -341,11 +380,17 @@ body::after {
   to { background-position: 200% center; }
 }
 
+/* Formerly glass; now a hard filed sheet — no blur in this office */
 .liquid-gloss {
   background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
+  border: 1.5px solid var(--border-strong);
+  box-shadow: var(--shadow-sheet);
+}
+
+/* Perforation rule — tear-off line between sections */
+.rule-perforated {
+  border: none;
+  border-top: 2px dashed var(--border);
 }
 
 /* ─── Scrollbars ────────────────────────────────────────────────────── */
@@ -354,7 +399,7 @@ body::after {
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 2px;
+  border-radius: 0;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--border-strong);

@@ -3,18 +3,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-    "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
+    "inline-flex items-center rounded-[2px] border-[1.5px] px-2.5 py-0.5 text-xs font-mono font-bold uppercase tracking-widest transition-colors focus:outline-none focus-visible:outline-2",
     {
         variants: {
             variant: {
-                default: "border-transparent bg-slate-900 text-[var(--bg)]",
-                secondary: "border-transparent bg-slate-100 text-slate-900",
-                success: "border-transparent bg-emerald-50 text-emerald-700 border-emerald-200",
-                warning: "border-transparent bg-amber-50 text-amber-700 border-amber-200",
-                danger: "border-transparent bg-red-50 text-red-700 border-red-200",
-                info: "border-transparent bg-blue-50 text-blue-700 border-blue-200",
-                outline: "text-slate-700 border-slate-200",
-                premium: "border-transparent bg-gradient-to-r from-emerald-50 to-emerald-100 text-emerald-700 border-emerald-200",
+                default: "border-line-strong bg-ink text-paper",
+                secondary: "border-line bg-wash text-ink-2",
+                success: "border-emerald bg-emerald/10 text-emerald",
+                warning: "border-amber bg-amber/10 text-amber",
+                danger: "border-rose bg-rose/10 text-rose",
+                info: "border-blue bg-blue/10 text-blue",
+                outline: "text-ink-2 border-line",
+                premium: "border-emerald bg-emerald text-paper",
             },
         },
         defaultVariants: {

@@ -124,7 +124,7 @@ export default function VerifiedGuidancePage() {
           ].map((step, i) => (
             <div key={step.label} className="flex items-center gap-1.5">
               <div className={cn(
-                'w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black border',
+                'w-7 h-7 rounded-[3px] flex items-center justify-center text-[9px] font-black border',
                 step.active
                   ? 'bg-emerald/15 border-emerald/30 text-emerald'
                   : 'bg-ink/[0.03] border-line text-ink/20',
@@ -142,7 +142,7 @@ export default function VerifiedGuidancePage() {
       <div className="flex flex-col lg:flex-row gap-5 flex-1 min-h-0">
 
         {/* Chat */}
-        <div className="flex-1 flex flex-col bg-ink/[0.02] border border-line rounded-3xl overflow-hidden relative z-10">
+        <div className="flex-1 flex flex-col bg-ink/[0.02] border border-line rounded-[3px] overflow-hidden relative z-10">
           {/* Top fade */}
           <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#010101]/60 to-transparent z-10 pointer-events-none rounded-t-3xl" />
 
@@ -158,7 +158,7 @@ export default function VerifiedGuidancePage() {
                   className={cn('flex', m.role === 'user' ? 'justify-end' : 'justify-start')}
                 >
                   <div className={cn(
-                    'max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-2xl relative',
+                    'max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-[3px] relative',
                     m.role === 'user'
                       ? 'bg-emerald text-paper font-black rounded-br-md'
                       : 'bg-ink/[0.05] border border-line text-ink rounded-bl-md',
@@ -184,7 +184,7 @@ export default function VerifiedGuidancePage() {
                   exit={{ opacity: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-ink/[0.05] border border-line rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
+                  <div className="bg-ink/[0.05] border border-line rounded-[3px] rounded-bl-md px-4 py-3 flex items-center gap-1.5">
                     {[0, 0.15, 0.3].map(d => (
                       <motion.div key={d} className="w-1.5 h-1.5 rounded-full bg-emerald/60"
                         animate={{ opacity: [0.3, 1, 0.3] }}
@@ -204,7 +204,7 @@ export default function VerifiedGuidancePage() {
                 <button
                   key={i}
                   onClick={() => sendMessage(s)}
-                  className="text-[10px] font-bold text-ink/40 border border-line px-3 py-1.5 rounded-xl hover:border-emerald/30 hover:text-emerald transition-all"
+                  className="text-[10px] font-bold text-ink/40 border border-line px-3 py-1.5 rounded-[3px] hover:border-emerald/30 hover:text-emerald transition-all"
                 >
                   {s}
                 </button>
@@ -226,13 +226,13 @@ export default function VerifiedGuidancePage() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   placeholder="Ask a question about your agreement…"
-                  className="w-full bg-ink/[0.04] border border-line rounded-xl py-3 pl-10 pr-4 text-[12px] font-medium text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
+                  className="w-full bg-ink/[0.04] border border-line rounded-[3px] py-3 pl-10 pr-4 text-[12px] font-medium text-ink placeholder:text-ink/20 focus:outline-none focus:border-emerald/40 transition-all"
                 />
               </div>
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="w-10 h-10 rounded-xl bg-emerald text-paper flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-30 disabled:scale-100 flex-shrink-0"
+                className="w-10 h-10 rounded-[3px] bg-emerald text-paper flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-30 disabled:scale-100 flex-shrink-0"
               >
                 <PaperPlaneRight size={16} weight="bold" />
               </button>
@@ -243,15 +243,15 @@ export default function VerifiedGuidancePage() {
         {/* Sidebar */}
         <aside className="hidden lg:flex flex-col gap-4 w-72 flex-shrink-0">
           {/* Enforcement path */}
-          <div className="p-5 rounded-3xl bg-ink/[0.02] border border-line space-y-3 flex-1">
+          <div className="p-5 rounded-[3px] bg-ink/[0.02] border border-line space-y-3 flex-1">
             <h4 className="text-[10px] font-black text-amber uppercase tracking-[0.35em] mb-4">Enforcement Path</h4>
             {ESCALATION_STEPS.map((step, i) => (
               <div key={i} className={cn(
-                'p-3.5 rounded-xl border transition-all',
+                'p-3.5 rounded-[3px] border transition-all',
                 step.active ? 'bg-amber/[0.08] border-amber/25' : 'bg-ink/[0.02] border-line opacity-40',
               )}>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className={cn('w-5 h-5 rounded-lg flex items-center justify-center text-[8px] font-black border flex-shrink-0',
+                  <span className={cn('w-5 h-5 rounded-[3px] flex items-center justify-center text-[8px] font-black border flex-shrink-0',
                     step.active ? 'bg-amber/20 border-amber/30 text-amber' : 'bg-ink/[0.04] border-line text-ink/30',
                   )}>{i + 1}</span>
                   <p className="text-[10px] font-black text-ink uppercase tracking-wide">{step.title}</p>
@@ -262,7 +262,7 @@ export default function VerifiedGuidancePage() {
           </div>
 
           {/* Global sync card */}
-          <div className="p-5 rounded-3xl bg-emerald/[0.07] border border-emerald/20 group hover:bg-emerald transition-all duration-400 cursor-pointer">
+          <div className="p-5 rounded-[3px] bg-emerald/[0.07] border border-emerald/20 group hover:bg-emerald transition-all duration-400 cursor-pointer">
             <div className="flex items-center gap-3 mb-2">
               <ShieldCheck size={18} weight="bold" className="text-emerald group-hover:text-paper transition-colors" />
               <h4 className="text-[11px] font-black text-ink group-hover:text-paper uppercase tracking-wide transition-colors">Global Sync</h4>

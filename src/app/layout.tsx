@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,19 +8,18 @@ import { CookieBanner } from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import { ThemeProvider } from "@/components/ThemeToggle";
 
-const fraunces = Fraunces({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-fraunces",
-  axes: ["opsz", "SOFT", "WONK"],
+  variable: "--font-bricolage",
 });
-const instrument = Instrument_Sans({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-instrument",
+  variable: "--font-archivo",
 });
-const mono = JetBrains_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
-  weight: ["500", "700"],
-  variable: "--font-jetbrains",
+  weight: ["400", "500", "700"],
+  variable: "--font-plexmono",
 });
 
 export const metadata: Metadata = {
@@ -55,7 +54,7 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${fraunces.variable} ${instrument.variable} ${mono.variable} font-sans antialiased bg-paper text-ink selection:bg-mint selection:text-paper`}
+          className={`${bricolage.variable} ${archivo.variable} ${mono.variable} font-sans antialiased bg-paper text-ink selection:bg-mint selection:text-paper`}
         >
           <ThemeProvider>
             <TooltipProvider>

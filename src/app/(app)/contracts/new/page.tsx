@@ -120,7 +120,7 @@ export default function NewContractPage() {
 
       {/* HEADER */}
       <header className="mb-10 flex items-center justify-between relative z-10 pt-6">
-        <Link href="/dashboard" prefetch={true} className="w-11 h-11 rounded-2xl bg-ink/[0.03] border border-line flex items-center justify-center text-ink/40 hover:text-ink hover:border-emerald/50 transition-all group">
+        <Link href="/dashboard" prefetch={true} className="w-11 h-11 rounded-[3px] bg-ink/[0.03] border border-line flex items-center justify-center text-ink/40 hover:text-ink hover:border-emerald/50 transition-all group">
           <ArrowLeft size={20} weight="bold" className="group-hover:-translate-x-0.5 transition-transform" />
         </Link>
         <div className="flex items-center gap-2">
@@ -166,7 +166,7 @@ export default function NewContractPage() {
             {/* Import from Chat */}
             <button
               onClick={() => setShowChatImport(true)}
-              className="w-full p-4 rounded-2xl bg-ink/[0.03] border border-dashed border-line flex items-center justify-center gap-3 text-[11px] font-black text-ink/40 uppercase tracking-widest hover:border-emerald/40 hover:text-emerald transition-all group"
+              className="w-full p-4 rounded-[3px] bg-ink/[0.03] border border-dashed border-line flex items-center justify-center gap-3 text-[11px] font-black text-ink/40 uppercase tracking-widest hover:border-emerald/40 hover:text-emerald transition-all group"
             >
               <ChatTeardropText size={18} weight="bold" className="group-hover:text-emerald" />
               Import from Chat (WhatsApp, SMS, Email)
@@ -179,7 +179,7 @@ export default function NewContractPage() {
                   autoFocus
                   type="text"
                   placeholder="e.g. Alpha Settlement"
-                  className="w-full p-4 text-lg font-black bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-2xl transition-all text-ink placeholder:text-ink/20 uppercase tracking-tight"
+                  className="w-full p-4 text-lg font-black bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-[3px] transition-all text-ink placeholder:text-ink/20 uppercase tracking-tight"
                   value={formData.title}
                   onChange={e => setFormData({...formData, title: e.target.value})}
                 />
@@ -190,7 +190,7 @@ export default function NewContractPage() {
                 <textarea
                   placeholder="What is this agreement about? Any specific terms you need..."
                   rows={3}
-                  className="w-full p-4 text-sm font-medium bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-2xl transition-all text-ink placeholder:text-ink/20 resize-none"
+                  className="w-full p-4 text-sm font-medium bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-[3px] transition-all text-ink placeholder:text-ink/20 resize-none"
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
                 />
@@ -200,7 +200,7 @@ export default function NewContractPage() {
                 <div className="space-y-2">
                   <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Category</p>
                   <select
-                    className="w-full p-4 font-black bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-2xl transition-all text-ink text-sm appearance-none cursor-pointer"
+                    className="w-full p-4 font-black bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-[3px] transition-all text-ink text-sm appearance-none cursor-pointer"
                     value={formData.category}
                     onChange={e => setFormData({...formData, category: e.target.value})}
                   >
@@ -219,7 +219,7 @@ export default function NewContractPage() {
                   <input
                     type="number"
                     placeholder="0.00"
-                    className="w-full p-4 font-black bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-2xl transition-all text-ink text-sm placeholder:text-ink/20"
+                    className="w-full p-4 font-black bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-[3px] transition-all text-ink text-sm placeholder:text-ink/20"
                     value={formData.totalAmount || ''}
                     onChange={e => setFormData({...formData, totalAmount: Number(e.target.value)})}
                   />
@@ -231,7 +231,7 @@ export default function NewContractPage() {
                 <input
                   type="text"
                   placeholder="e.g. Lagos Nigeria, California USA, London UK"
-                  className="w-full p-4 text-sm font-medium bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-2xl transition-all text-ink placeholder:text-ink/20"
+                  className="w-full p-4 text-sm font-medium bg-ink/[0.03] border border-line focus:border-emerald/50 rounded-[3px] transition-all text-ink placeholder:text-ink/20"
                   value={formData.jurisdiction}
                   onChange={e => setFormData({...formData, jurisdiction: e.target.value})}
                 />
@@ -242,7 +242,7 @@ export default function NewContractPage() {
               <button
                 onClick={() => setStep(2)}
                 disabled={!formData.title}
-                className="flex items-center gap-2 px-8 py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_24px_rgba(16,119,94,0.25)] disabled:opacity-40 disabled:scale-100"
+                className="flex items-center gap-2 px-8 py-4 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[var(--shadow-sheet)] disabled:opacity-40 disabled:scale-100"
               >
                 Next Step
                 <ArrowRight size={18} weight="bold" />
@@ -265,8 +265,8 @@ export default function NewContractPage() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-5">
-              <div className="p-6 rounded-3xl bg-ink/[0.03] border border-line space-y-5 relative overflow-hidden group hover:border-emerald/40 transition-all duration-500">
-                <div className="w-12 h-12 bg-emerald/10 rounded-2xl flex items-center justify-center text-emerald border border-emerald/20">
+              <div className="p-6 rounded-[3px] bg-ink/[0.03] border border-line space-y-5 relative overflow-hidden group hover:border-emerald/40 transition-all duration-500">
+                <div className="w-12 h-12 bg-emerald/10 rounded-[3px] flex items-center justify-center text-emerald border border-emerald/20">
                   <User size={24} weight="bold" />
                 </div>
                 <div className="space-y-2">
@@ -281,8 +281,8 @@ export default function NewContractPage() {
                 </div>
               </div>
 
-              <div className="p-6 rounded-3xl bg-ink/[0.03] border border-line space-y-5 relative overflow-hidden group hover:border-blue/40 transition-all duration-500">
-                <div className="w-12 h-12 bg-blue/10 rounded-2xl flex items-center justify-center text-blue border border-blue/20">
+              <div className="p-6 rounded-[3px] bg-ink/[0.03] border border-line space-y-5 relative overflow-hidden group hover:border-blue/40 transition-all duration-500">
+                <div className="w-12 h-12 bg-blue/10 rounded-[3px] flex items-center justify-center text-blue border border-blue/20">
                   <Users size={24} weight="bold" />
                 </div>
                 <div className="space-y-2">
@@ -306,7 +306,7 @@ export default function NewContractPage() {
               <button
                 onClick={() => setStep(3)}
                 disabled={!formData.partyA || !formData.partyB}
-                className="flex items-center gap-2 px-8 py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_24px_rgba(16,119,94,0.25)] disabled:opacity-40 disabled:scale-100"
+                className="flex items-center gap-2 px-8 py-4 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[var(--shadow-sheet)] disabled:opacity-40 disabled:scale-100"
               >
                 Review Intent
                 <ArrowRight size={18} weight="bold" />
@@ -320,9 +320,9 @@ export default function NewContractPage() {
             key="step3"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-16 bg-ink/[0.03] border border-line rounded-3xl relative overflow-hidden backdrop-blur-sm shadow-2xl z-10"
+            className="text-center py-16 bg-ink/[0.03] border border-line rounded-[3px] relative overflow-hidden backdrop-blur-sm shadow-2xl z-10"
           >
-            <div className="vibrant-glow top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald/5 blur-[100px] rounded-full" />
+            <div className="vibrant-glow top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald/5" />
 
             {loading ? (
               <div className="space-y-8 relative z-10 flex flex-col items-center px-8">
@@ -338,7 +338,7 @@ export default function NewContractPage() {
               </div>
             ) : (
               <div className="space-y-10 relative z-10 px-8">
-                <div className="w-20 h-20 bg-emerald rounded-3xl flex items-center justify-center mx-auto text-paper shadow-[0_0_60px_rgba(16,119,94,0.4)] border-4 border-paper">
+                <div className="w-20 h-20 bg-emerald rounded-[3px] flex items-center justify-center mx-auto text-paper shadow-[var(--shadow-sheet)] border-4 border-paper">
                   <ShieldCheck size={40} weight="bold" />
                 </div>
                 <div className="space-y-4">
@@ -347,7 +347,7 @@ export default function NewContractPage() {
                 </div>
 
                 {/* Summary */}
-                <div className="text-left bg-ink/[0.03] border border-line rounded-2xl p-5 space-y-3 max-w-md mx-auto">
+                <div className="text-left bg-ink/[0.03] border border-line rounded-[3px] p-5 space-y-3 max-w-md mx-auto">
                   {[
                     { label: 'Title', val: formData.title },
                     { label: 'Category', val: formData.category },
@@ -371,7 +371,7 @@ export default function NewContractPage() {
                   <Magnetic>
                     <button
                       onClick={handleCreate}
-                      className="flex items-center gap-3 px-10 py-5 rounded-2xl bg-emerald text-paper text-sm font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(16,119,94,0.3)]"
+                      className="flex items-center gap-3 px-10 py-5 rounded-[3px] bg-emerald text-paper text-sm font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[var(--shadow-sheet)]"
                     >
                       <Sparkle size={18} weight="bold" />
                       Generate Agreement

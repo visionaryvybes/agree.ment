@@ -86,12 +86,12 @@ export default function ToolsPage() {
           { label: 'Jurisdiction Lookup', desc: 'Laws that apply to your location', icon: Scales, active: false, color: 'amber' },
         ].map(tool => (
           <div key={tool.label} className={cn(
-            'p-5 rounded-2xl border flex flex-col gap-3 transition-all',
+            'p-5 rounded-[3px] border flex flex-col gap-3 transition-all',
             tool.active
               ? 'bg-emerald/[0.08] border-emerald/25'
               : 'bg-ink/[0.02] border-line opacity-60'
           )}>
-            <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0',
+            <div className={cn('w-10 h-10 rounded-[3px] flex items-center justify-center flex-shrink-0',
               tool.color === 'emerald' ? 'bg-emerald/15 text-emerald' :
               tool.color === 'blue' ? 'bg-blue/15 text-blue' : 'bg-amber/15 text-amber'
             )}>
@@ -109,7 +109,7 @@ export default function ToolsPage() {
       {/* Contract Analyzer */}
       <div className="relative z-10 space-y-5">
         <div className="flex items-center gap-3 pb-4 border-b border-line">
-          <div className="w-8 h-8 rounded-xl bg-emerald/15 flex items-center justify-center text-emerald">
+          <div className="w-8 h-8 rounded-[3px] bg-emerald/15 flex items-center justify-center text-emerald">
             <FileMagnifyingGlass size={16} weight="bold" />
           </div>
           <div>
@@ -127,7 +127,7 @@ export default function ToolsPage() {
                 onChange={e => setText(e.target.value)}
                 placeholder="Paste your contract or agreement text here..."
                 rows={8}
-                className="w-full bg-ink/[0.03] border border-line rounded-2xl py-4 px-5 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all resize-none leading-relaxed"
+                className="w-full bg-ink/[0.03] border border-line rounded-[3px] py-4 px-5 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all resize-none leading-relaxed"
               />
             </div>
           </div>
@@ -137,12 +137,12 @@ export default function ToolsPage() {
               placeholder="Jurisdiction (optional) — e.g., Lagos Nigeria, London UK"
               value={jurisdiction}
               onChange={e => setJurisdiction(e.target.value)}
-              className="flex-1 bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all"
+              className="flex-1 bg-ink/[0.03] border border-line rounded-[3px] py-3 px-4 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all"
             />
             <button
               onClick={handleAnalyze}
               disabled={!text.trim() || loading}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(16,119,94,0.2)] disabled:opacity-40 disabled:scale-100 flex-shrink-0"
+              className="flex items-center gap-2 px-6 py-3 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-[var(--shadow-sheet)] disabled:opacity-40 disabled:scale-100 flex-shrink-0"
             >
               {loading ? (
                 <><div className="w-4 h-4 border-2 border-paper/20 border-t-[#010101] rounded-full animate-spin" /> Analyzing...</>
@@ -166,7 +166,7 @@ export default function ToolsPage() {
               className="space-y-4"
             >
               {/* Score Header */}
-              <div className="p-6 rounded-2xl bg-ink/[0.03] border border-line flex flex-col sm:flex-row items-center gap-6">
+              <div className="p-6 rounded-[3px] bg-ink/[0.03] border border-line flex flex-col sm:flex-row items-center gap-6">
                 {/* Big Score */}
                 <div className="flex flex-col items-center flex-shrink-0">
                   <div className={cn('text-6xl font-black leading-none', SCORE_COLOR(analysis.overallScore))}>
@@ -197,7 +197,7 @@ export default function ToolsPage() {
               </div>
 
               {/* Summary */}
-              <div className="p-5 rounded-2xl bg-ink/[0.02] border border-line">
+              <div className="p-5 rounded-[3px] bg-ink/[0.02] border border-line">
                 <p className="text-sm text-ink/60 leading-relaxed">{analysis.summary}</p>
                 {analysis.contractType && (
                   <div className="flex items-center gap-2 mt-3">
@@ -212,7 +212,7 @@ export default function ToolsPage() {
 
               {/* Red Flags */}
               {analysis.redFlags?.length > 0 && (
-                <div className="rounded-2xl border border-line overflow-hidden">
+                <div className="rounded-[3px] border border-line overflow-hidden">
                   <button
                     onClick={() => toggle('flags')}
                     className="w-full flex items-center justify-between p-4 hover:bg-ink/[0.02] transition-colors"
@@ -233,7 +233,7 @@ export default function ToolsPage() {
                           {analysis.redFlags.map((flag, i) => {
                             const cfg = FLAG_CONFIG[flag.severity];
                             return (
-                              <div key={i} className={cn('p-4 rounded-xl border flex gap-3', cfg.bg, cfg.border)}>
+                              <div key={i} className={cn('p-4 rounded-[3px] border flex gap-3', cfg.bg, cfg.border)}>
                                 <span className={cn('text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded border flex-shrink-0 mt-0.5', cfg.color, cfg.bg, cfg.border)}>{cfg.label}</span>
                                 <div>
                                   <p className="text-[11px] font-black text-ink">{flag.title}</p>
@@ -251,7 +251,7 @@ export default function ToolsPage() {
 
               {/* Missing Clauses */}
               {analysis.missingClauses?.length > 0 && (
-                <div className="rounded-2xl border border-line overflow-hidden">
+                <div className="rounded-[3px] border border-line overflow-hidden">
                   <button onClick={() => toggle('missing')} className="w-full flex items-center justify-between p-4 hover:bg-ink/[0.02] transition-colors">
                     <div className="flex items-center gap-3">
                       <XCircle size={16} weight="bold" className="text-amber" />
@@ -265,7 +265,7 @@ export default function ToolsPage() {
                       <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
                         <div className="p-4 pt-0 space-y-2">
                           {analysis.missingClauses.map((clause, i) => (
-                            <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-ink/[0.02] border border-line">
+                            <div key={i} className="flex items-center gap-3 p-3 rounded-[3px] bg-ink/[0.02] border border-line">
                               <div className="w-1.5 h-1.5 rounded-full bg-amber flex-shrink-0" />
                               <span className="text-[11px] font-black text-ink/60 uppercase tracking-widest">{clause}</span>
                             </div>
@@ -279,7 +279,7 @@ export default function ToolsPage() {
 
               {/* Strengths */}
               {analysis.strengths?.length > 0 && (
-                <div className="rounded-2xl border border-line overflow-hidden">
+                <div className="rounded-[3px] border border-line overflow-hidden">
                   <button onClick={() => toggle('strengths')} className="w-full flex items-center justify-between p-4 hover:bg-ink/[0.02] transition-colors">
                     <div className="flex items-center gap-3">
                       <CheckCircle size={16} weight="bold" className="text-emerald" />
@@ -293,7 +293,7 @@ export default function ToolsPage() {
                       <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
                         <div className="p-4 pt-0 space-y-2">
                           {analysis.strengths.map((s, i) => (
-                            <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-emerald/[0.04] border border-emerald/10">
+                            <div key={i} className="flex items-center gap-3 p-3 rounded-[3px] bg-emerald/[0.04] border border-emerald/10">
                               <div className="w-1.5 h-1.5 rounded-full bg-emerald flex-shrink-0" />
                               <span className="text-[11px] font-black text-ink/60 uppercase tracking-widest">{s}</span>
                             </div>
@@ -307,7 +307,7 @@ export default function ToolsPage() {
 
               {/* Recommendations */}
               {analysis.recommendations?.length > 0 && (
-                <div className="p-5 rounded-2xl bg-emerald/[0.06] border border-emerald/20 space-y-3">
+                <div className="p-5 rounded-[3px] bg-emerald/[0.06] border border-emerald/20 space-y-3">
                   <div className="flex items-center gap-2">
                     <TrendUp size={16} weight="bold" className="text-emerald" />
                     <span className="text-[11px] font-black text-emerald uppercase tracking-widest">Recommendations</span>
@@ -325,10 +325,10 @@ export default function ToolsPage() {
 
               {/* CTA */}
               <div className="flex gap-3 pt-2">
-                <Link href="/contracts/new" className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(16,119,94,0.2)]">
+                <Link href="/contracts/new" className="flex-1 flex items-center justify-center gap-2 py-4 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[var(--shadow-sheet)]">
                   <Sparkle size={16} weight="bold" /> Create Better Agreement
                 </Link>
-                <Link href="/verified-guidance" className="flex items-center gap-2 px-5 py-4 rounded-2xl bg-ink/[0.03] border border-line text-[11px] font-black text-ink/40 uppercase tracking-widest hover:text-ink hover:border-line-strong transition-all">
+                <Link href="/verified-guidance" className="flex items-center gap-2 px-5 py-4 rounded-[3px] bg-ink/[0.03] border border-line text-[11px] font-black text-ink/40 uppercase tracking-widest hover:text-ink hover:border-line-strong transition-all">
                   Ask AI <ArrowRight size={14} weight="bold" />
                 </Link>
               </div>
@@ -339,7 +339,7 @@ export default function ToolsPage() {
         {/* Empty state */}
         {!analysis && !loading && (
           <div className="py-12 flex flex-col items-center gap-4 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-ink/[0.03] border border-line flex items-center justify-center">
+            <div className="w-16 h-16 rounded-[3px] bg-ink/[0.03] border border-line flex items-center justify-center">
               <Robot size={28} weight="thin" className="text-ink/20" />
             </div>
             <p className="text-xs font-black text-ink/20 uppercase tracking-widest">Paste a contract above to get started</p>

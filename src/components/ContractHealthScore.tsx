@@ -56,14 +56,14 @@ export default function ContractHealthScore({ contract }: Props) {
   }, [contract?.id]);
 
   if (loading) return (
-    <div className="p-5 rounded-2xl bg-ink/[0.02] border border-line flex items-center gap-4">
+    <div className="p-5 bg-card border-[1.5px] border-line-strong shadow-[var(--shadow-sheet)] flex items-center gap-4">
       <CircleNotch size={20} weight="bold" className="text-emerald animate-spin" />
       <p className="text-[11px] font-black text-ink/40 uppercase tracking-widest">Analyzing contract health...</p>
     </div>
   );
 
   if (error || !health) return (
-    <div className="p-5 rounded-2xl bg-ink/[0.02] border border-line flex items-center justify-between">
+    <div className="p-5 bg-card border-[1.5px] border-line-strong shadow-[var(--shadow-sheet)] flex items-center justify-between">
       <div className="flex items-center gap-3">
         <ShieldSlash size={18} weight="bold" className="text-ink/20" />
         <p className="text-[11px] font-black text-ink/25 uppercase tracking-widest">Health Score</p>
@@ -81,7 +81,7 @@ export default function ContractHealthScore({ contract }: Props) {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-5 rounded-2xl bg-ink/[0.03] border border-line space-y-4"
+      className="p-5 bg-card border-[1.5px] border-line-strong shadow-[var(--shadow-sheet)] space-y-4"
     >
       {/* Header row */}
       <div className="flex items-center justify-between">
@@ -100,12 +100,12 @@ export default function ContractHealthScore({ contract }: Props) {
         {Object.entries(health.breakdown).map(([key, val]) => (
           <div key={key} className="flex items-center gap-3">
             <span className="text-[9px] font-black text-ink/25 uppercase tracking-widest w-20 flex-shrink-0">{key}</span>
-            <div className="flex-1 h-1 bg-ink/5 rounded-full overflow-hidden">
+            <div className="flex-1 h-1.5 bg-ink/10 border border-line overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${val}%` }}
                 transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-                className={cn('h-full rounded-full', val >= 80 ? 'bg-emerald' : val >= 60 ? 'bg-blue' : val >= 40 ? 'bg-amber' : 'bg-rose')}
+                className={cn('h-full', val >= 80 ? 'bg-emerald' : val >= 60 ? 'bg-blue' : val >= 40 ? 'bg-amber' : 'bg-rose')}
               />
             </div>
             <span className="text-[9px] font-black text-ink/30 w-6 text-right">{val}</span>

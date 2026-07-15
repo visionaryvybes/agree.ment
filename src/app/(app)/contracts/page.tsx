@@ -101,7 +101,7 @@ export default function ContractsPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search titles or people…"
-            className="pl-9 pr-4 py-2 w-64 bg-card border border-line rounded-lg text-sm text-ink placeholder:text-ink-3/70 focus:outline-none focus:border-mint/50 transition-colors"
+            className="pl-9 pr-4 py-2 w-64 bg-card border border-line rounded-[3px] text-sm text-ink placeholder:text-ink-3/70 focus:outline-none focus:border-mint/50 transition-colors"
           />
         </label>
       </div>
@@ -140,7 +140,7 @@ export default function ContractsPage() {
                     {String(contracts.length - contracts.indexOf(c)).padStart(3, '0')}
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-display text-lg leading-snug text-ink group-hover:italic truncate">{c.title}</span>
+                    <span className="block font-display text-lg leading-snug text-ink truncate">{c.title}</span>
                     <span className="block mt-0.5 text-xs text-ink-3">
                       {partiesLine(c)} · <span className="capitalize">{c.category}</span>
                     </span>

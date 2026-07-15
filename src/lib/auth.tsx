@@ -52,28 +52,18 @@ export function useUser() {
 
 // ─── UserButton ───────────────────────────────────────────────────────────────
 
-export function UserButton({ appearance }: { appearance?: any }) {
+export function UserButton(_props: { appearance?: any }) {
   const { user } = useContext(AuthContext);
   const initials = user?.firstName?.[0] ?? "G";
   return (
     <div
-      className={
-        appearance?.elements?.avatarBox ??
-        "w-10 h-10 rounded-2xl border border-line"
-      }
-      style={{
-        background: "linear-gradient(135deg,#10775e,#2a4db0)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "14px",
-        fontWeight: 900,
-        color: "#010101",
-        cursor: "default",
-        flexShrink: 0,
-      }}
+      title={user?.fullName ?? "Guest"}
+      className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-card border-[1.5px] border-line-strong rounded-[3px] shadow-[2px_2px_0_var(--shadow-ink)] rotate-[-2deg] cursor-default select-none"
     >
-      {initials}
+      <span className="font-mono font-bold text-[13px] text-mint leading-none">
+        {initials}
+        <span className="text-ink-3">/</span>
+      </span>
     </div>
   );
 }

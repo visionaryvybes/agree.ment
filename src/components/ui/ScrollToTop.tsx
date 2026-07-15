@@ -1,55 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUp } from "@phosphor-icons/react";
+import { ArrowLineUp } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
-import Magnetic from "./magnetic";
-import { cn } from "@/lib/utils";
 
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.scrollY > 400) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener("scroll", toggleVisibility);
+    const toggleVisibility = () => setIsVisible(window.scrollY > 500);
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
 
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.5, y: 20 }}
-          className="fixed bottom-10 right-10 z-[100]"
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.2 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="Back to top"
+          className="fixed bottom-28 right-5 md:bottom-8 md:right-8 z-[90] flex items-center gap-2
+                     bg-card text-ink border-[1.5px] border-line-strong rounded-[3px]
+                     px-3 py-2.5 shadow-[var(--shadow-sheet)]
+                     font-mono text-[10px] font-bold uppercase tracking-[0.18em]
+                     hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]
+                     active:translate-x-0.5 active:translate-y-0.5 active:shadow-none
+                     transition-[transform,box-shadow] duration-150"
         >
-          <Magnetic>
-            <button
-              onClick={scrollToTop}
-              className={cn(
-                "w-16 h-16 rounded-full bg-emerald text-paper flex items-center justify-center shadow-[0_0_40px_rgba(16,119,94,0.5)] border-4 border-black hover:scale-110 transition-all group overflow-hidden relative"
-              )}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <ArrowUp size={32} weight="bold" className="relative z-10 group-hover:-translate-y-1 transition-transform duration-500" />
-            </button>
-          </Magnetic>
-        </motion.div>
+          <ArrowLineUp size={13} weight="bold" className="text-mint" />
+          <span className="hidden sm:inline">Top</span>
+        </motion.button>
       )}
     </AnimatePresence>
   );

@@ -101,7 +101,7 @@ export default function PdfExport({ contract }: PdfExportProps) {
   return (
     <div className="space-y-6">
       {/* Document proof */}
-      <div className="border border-line rounded-md bg-card p-6 shadow-[var(--shadow-sheet)]">
+      <div className="border border-line rounded-[3px] bg-card p-6 shadow-[var(--shadow-sheet)]">
         <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-ink-3">
           {contract.jurisdiction || 'General'} · {new Date(contract.createdAt).toLocaleDateString()}
         </p>

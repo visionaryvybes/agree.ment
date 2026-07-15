@@ -1,7 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Plus, FileText, Check } from "@phosphor-icons/react";
+import {
+  ArrowLeft, Plus, FileText, Handshake, Briefcase, FileLock,
+  HandCoins, PaintBrush, HouseLine, Car, PenNib, Scales,
+} from "@phosphor-icons/react";
 import Link from 'next/link';
 import { useState } from 'react';
 import { useContracts } from '@/store/contracts';
@@ -15,10 +18,21 @@ export default function NewTemplatePage() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('personal');
-  const [icon, setIcon] = useState('📄');
+  const [icon, setIcon] = useState('document');
   const [saving, setSaving] = useState(false);
 
-  const ICONS = ['📄', '🤝', '💼', '🔐', '💰', '🎨', '🏠', '🚗', '✍️', '⚖️'];
+  const ICONS = [
+    { id: 'document',    Icon: FileText },
+    { id: 'handshake',   Icon: Handshake },
+    { id: 'business',    Icon: Briefcase },
+    { id: 'confidential',Icon: FileLock },
+    { id: 'money',       Icon: HandCoins },
+    { id: 'creative',    Icon: PaintBrush },
+    { id: 'home',        Icon: HouseLine },
+    { id: 'vehicle',     Icon: Car },
+    { id: 'signature',   Icon: PenNib },
+    { id: 'legal',       Icon: Scales },
+  ];
 
   const handleSave = async () => {
     if (!name.trim()) return;
@@ -32,7 +46,7 @@ export default function NewTemplatePage() {
   return (
     <div className="max-w-xl mx-auto pb-24 px-4 pt-6">
       <header className="mb-8 flex items-center gap-4">
-        <Link href="/templates" className="w-10 h-10 rounded-xl bg-ink/[0.03] border border-line flex items-center justify-center text-ink/40 hover:text-ink hover:border-emerald/50 transition-all">
+        <Link href="/templates" className="w-10 h-10 rounded-[3px] bg-ink/[0.03] border border-line flex items-center justify-center text-ink/40 hover:text-ink hover:border-emerald/50 transition-all">
           <ArrowLeft size={18} weight="bold" />
         </Link>
         <div>
@@ -46,17 +60,19 @@ export default function NewTemplatePage() {
         <div className="space-y-2">
           <p className="text-[10px] font-black text-ink/30 uppercase tracking-[0.4em]">Icon</p>
           <div className="flex flex-wrap gap-2">
-            {ICONS.map(ic => (
+            {ICONS.map(({ id, Icon }) => (
               <button
-                key={ic}
-                onClick={() => setIcon(ic)}
-                className={`w-10 h-10 rounded-xl border flex items-center justify-center text-xl transition-all ${
-                  icon === ic
-                    ? 'bg-emerald/10 border-emerald/30'
-                    : 'bg-ink/[0.03] border-line hover:border-line-strong'
+                key={id}
+                onClick={() => setIcon(id)}
+                aria-label={id}
+                aria-pressed={icon === id}
+                className={`w-10 h-10 border-[1.5px] flex items-center justify-center transition-all ${
+                  icon === id
+                    ? 'bg-emerald/10 border-emerald text-emerald shadow-[2px_2px_0_var(--shadow-ink)]'
+                    : 'bg-ink/[0.03] border-line text-ink-3 hover:border-line-strong hover:text-ink'
                 }`}
               >
-                {ic}
+                <Icon size={18} weight="duotone" />
               </button>
             ))}
           </div>
@@ -70,7 +86,7 @@ export default function NewTemplatePage() {
             placeholder="e.g. Freelance Design Agreement"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="w-full bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm font-black text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all uppercase tracking-tight"
+            className="w-full bg-ink/[0.03] border border-line rounded-[3px] py-3 px-4 text-sm font-black text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all uppercase tracking-tight"
           />
         </div>
 
@@ -81,7 +97,7 @@ export default function NewTemplatePage() {
             placeholder="What is this template for?"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            className="w-full bg-ink/[0.03] border border-line rounded-xl py-3 px-4 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all resize-none"
+            className="w-full bg-ink/[0.03] border border-line rounded-[3px] py-3 px-4 text-sm text-ink placeholder:text-ink/15 focus:outline-none focus:border-emerald/40 transition-all resize-none"
           />
         </div>
 
@@ -92,7 +108,7 @@ export default function NewTemplatePage() {
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                className={`px-3 py-2 rounded-[3px] text-[10px] font-black uppercase tracking-widest border transition-all ${
                   category === cat
                     ? 'bg-emerald text-paper border-emerald'
                     : 'bg-ink/[0.03] text-ink/35 border-line hover:text-ink hover:border-line-strong'
@@ -108,7 +124,7 @@ export default function NewTemplatePage() {
           <button
             onClick={handleSave}
             disabled={!name.trim() || saving}
-            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_24px_rgba(16,119,94,0.2)] disabled:opacity-40 disabled:scale-100"
+            className="w-full flex items-center justify-center gap-3 py-4 rounded-[3px] bg-emerald text-paper text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[var(--shadow-sheet)] disabled:opacity-40 disabled:scale-100"
           >
             {saving ? (
               <><div className="w-4 h-4 border-2 border-paper/20 border-t-[#010101] rounded-full animate-spin" /> Saving...</>

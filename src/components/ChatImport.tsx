@@ -52,7 +52,7 @@ export default function ChatImport({ onImport, onCancel }: ChatImportProps) {
       {/* Header */}
       <div className="p-8 border-b border-line flex items-center justify-between bg-ink/[0.02]">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-emerald/10 rounded-xl flex items-center justify-center text-emerald">
+          <div className="w-10 h-10 bg-emerald/10 rounded-[3px] flex items-center justify-center text-emerald">
             <MagnifyingGlass size={24} weight="bold" />
           </div>
           <h3 className="text-xl font-semibold text-ink tracking-tighter">Review Chat</h3>
@@ -79,7 +79,7 @@ export default function ChatImport({ onImport, onCancel }: ChatImportProps) {
                     <button
                       key={s.id}
                       onClick={() => { setSource(s.id); setStep(2); }}
-                      className="p-6 rounded-3xl bg-ink/[0.03] border border-line hover:border-emerald/30 transition-all flex flex-col items-center gap-4 group"
+                      className="p-6 rounded-[3px] bg-ink/[0.03] border border-line hover:border-emerald/30 transition-all flex flex-col items-center gap-4 group"
                     >
                       <s.icon size={32} weight="bold" className={cn("transition-transform group-hover:scale-110", s.color)} />
                       <span className="text-[10px] font-black text-ink uppercase tracking-widest">{s.label}</span>

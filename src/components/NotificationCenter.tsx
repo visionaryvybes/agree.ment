@@ -96,7 +96,7 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
                     Mark All Read
                   </button>
                 )}
-                <button onClick={onClose} className="p-2 rounded-lg bg-ink/5 text-text-3 hover:text-ink transition-colors">
+                <button onClick={onClose} className="p-2 rounded-[3px] bg-ink/5 text-text-3 hover:text-ink transition-colors">
                   <X size={18} weight="bold" />
                 </button>
               </div>
@@ -118,11 +118,11 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
                       transition={{ delay: i * 0.03 }}
                       onClick={() => markRead(notification.id)}
                       className={cn(
-                        "p-5 rounded-2xl border flex gap-4 cursor-pointer transition-all group",
+                        "p-5 rounded-[3px] border flex gap-4 cursor-pointer transition-all group",
                         notification.read ? "bg-ink/[0.02] border-line" : "bg-ink/[0.05] border-line"
                       )}
                     >
-                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0", notification.read ? "bg-ink/5" : "bg-ink/10")}>
+                      <div className={cn("w-10 h-10 rounded-[3px] flex items-center justify-center flex-shrink-0", notification.read ? "bg-ink/5" : "bg-ink/10")}>
                         <Icon size={20} weight="bold" className={color} />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -135,7 +135,7 @@ export default function NotificationCenter({ isOpen, onClose, notifications = SA
                       </div>
                       <button
                         onClick={(e) => { e.stopPropagation(); dismiss(notification.id); }}
-                        className="p-1 rounded-lg text-text-3 opacity-0 group-hover:opacity-100 hover:text-ink transition-all self-start"
+                        className="p-1 rounded-[3px] text-text-3 opacity-0 group-hover:opacity-100 hover:text-ink transition-all self-start"
                       >
                         <X size={14} weight="bold" />
                       </button>

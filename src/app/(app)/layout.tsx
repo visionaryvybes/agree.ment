@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser, UserButton } from '@/lib/auth';
+import { useUser } from '@/lib/auth';
 import { usePathname } from 'next/navigation';
 import {
   Plus,
@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!mounted) return (
     <div className="min-h-screen bg-ground flex items-center justify-center">
-      <div className="w-10 h-10 border-2 border-emerald/20 border-t-emerald rounded-full animate-spin shadow-[0_0_15px_rgba(16,119,94,0.2)]" />
+      <div className="w-10 h-10 border-2 border-emerald/20 border-t-emerald rounded-full animate-spin" />
     </div>
   );
 
@@ -47,12 +47,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* ── MOBILE BOTTOM DOCK ────────────────────────────────────── */}
       {isMobile && (
         <div className="fixed bottom-8 left-6 right-6 z-[100]">
-          <nav className="liquid-gloss rounded-2xl px-6 py-4 flex items-center justify-between shadow-[var(--shadow-lift)]">
+          <nav className="liquid-gloss rounded-[3px] px-6 py-4 flex items-center justify-between shadow-[var(--shadow-lift)]">
             {[
-              { name: 'Ledger', icon: Browsers, href: '/dashboard' },
-              { name: 'Files', icon: FileText, href: '/contracts' },
+              { name: 'Home', icon: Browsers, href: '/dashboard' },
+              { name: 'Agreements', icon: FileText, href: '/contracts' },
               { name: 'Templates', icon: Stack, href: '/templates' },
-              { name: 'Explain', icon: MagnifyingGlass, href: '/explain' },
+              { name: 'Check', icon: MagnifyingGlass, href: '/explain' },
             ].map((item) => {
               const active = pathname === item.href;
               return (
@@ -64,7 +64,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
-            <Link href="/contracts/new" className="w-12 h-12 bg-ink text-paper rounded-xl flex items-center justify-center active:scale-90 transition-transform">
+            <Link href="/contracts/new" className="w-12 h-12 bg-ink text-paper rounded-[3px] flex items-center justify-center active:scale-90 transition-transform">
               <Plus size={24} weight="bold" />
             </Link>
           </nav>
@@ -73,15 +73,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* ── MAIN CONTENT ─────────────────────────────────────────── */}
       <main className="flex-1 relative min-h-screen overflow-y-auto">
-        <div className="p-6 md:p-12 lg:p-16 max-w-7xl mx-auto">
+        <div className={cn("p-6 md:p-12 lg:p-16 max-w-7xl mx-auto", isMobile && "pb-40")}>
           {/* Mobile Header Branding */}
           {isMobile && (
-            <header className="mb-12 flex items-center justify-between">
+            <header className="mb-12">
               <span className="text-xl leading-none">
                 <span className="brand-agree">Agree</span>
                 <span className="brand-mint">Mint</span>
               </span>
-              <UserButton appearance={{ elements: { avatarBox: "w-10 h-10 rounded-2xl border border-line" } }} />
             </header>
           )}
 
